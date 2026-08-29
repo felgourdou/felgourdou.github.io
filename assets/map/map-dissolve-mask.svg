@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1000" preserveAspectRatio="none">
+  <defs>
+    <path id="diamond" d="M 0 -1 L 1 0 L 0 1 L -1 0 Z"/>
+  </defs>
+  <g fill="#fff">
+    <rect x="0" y="0" width="790" height="1000"/>
+
+    <use href="#diamond" transform="translate(790 32) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 100) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 168) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 236) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 304) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 372) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 440) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 508) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 576) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 644) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 712) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 780) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 848) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 916) scale(30 34)"/>
+    <use href="#diamond" transform="translate(790 984) scale(30 34)"/>
+
+    <use href="#diamond" transform="translate(833 58) scale(25 29)"/>
+    <use href="#diamond" transform="translate(833 124) scale(23 27)"/>
+    <use href="#diamond" transform="translate(833 204) scale(26 30)"/>
+    <use href="#diamond" transform="translate(833 268) scale(24 28)"/>
+    <use href="#diamond" transform="translate(833 348) scale(25 29)"/>
+    <use href="#diamond" transform="translate(833 414) scale(23 27)"/>
+    <use href="#diamond" transform="translate(833 494) scale(26 30)"/>
+    <use href="#diamond" transform="translate(833 562) scale(24 28)"/>
+    <use href="#diamond" transform="translate(833 642) scale(25 29)"/>
+    <use href="#diamond" transform="translate(833 708) scale(23 27)"/>
+    <use href="#diamond" transform="translate(833 786) scale(26 30)"/>
+    <use href="#diamond" transform="translate(833 856) scale(24 28)"/>
+    <use href="#diamond" transform="translate(833 936) scale(25 29)"/>
+
+    <use href="#diamond" transform="translate(874 28) scale(19 23)"/>
+    <use href="#diamond" transform="translate(874 88) scale(21 25)"/>
+    <use href="#diamond" transform="translate(874 164) scale(18 22)"/>
+    <use href="#diamond" transform="translate(874 224) scale(20 24)"/>
+    <use href="#diamond" transform="translate(874 304) scale(22 26)"/>
+    <use href="#diamond" transform="translate(874 366) scale(19 23)"/>
+    <use href="#diamond" transform="translate(874 446) scale(21 25)"/>
+    <use href="#diamond" transform="translate(874 506) scale(18 22)"/>
+    <use href="#diamond" transform="translate(874 588) scale(20 24)"/>
+    <use href="#diamond" transform="translate(874 652) scale(22 26)"/>
+    <use href="#diamond" transform="translate(874 732) scale(19 23)"/>
+    <use href="#diamond" transform="translate(874 794) scale(21 25)"/>
+    <use href="#diamond" transform="translate(874 874) scale(18 22)"/>
+    <use href="#diamond" transform="translate(874 936) scale(20 24)"/>
+
+    <use href="#diamond" transform="translate(913 66) scale(16 20)"/>
+    <use href="#diamond" transform="translate(913 128) scale(14 18)"/>
+    <use href="#diamond" transform="translate(913 210) scale(17 21)"/>
+    <use href="#diamond" transform="translate(913 286) scale(15 19)"/>
+    <use href="#diamond" transform="translate(913 350) scale(16 20)"/>
+    <use href="#diamond" transform="translate(913 430) scale(14 18)"/>
+    <use href="#diamond" transform="translate(913 492) scale(17 21)"/>
+    <use href="#diamond" transform="translate(913 572) scale(15 19)"/>
+    <use href="#diamond" transform="translate(913 650) scale(16 20)"/>
+    <use href="#diamond" transform="translate(913 714) scale(14 18)"/>
+    <use href="#diamond" transform="translate(913 796) scale(17 21)"/>
+    <use href="#diamond" transform="translate(913 872) scale(15 19)"/>
+    <use href="#diamond" transform="translate(913 950) scale(16 20)"/>
+
+    <use href="#diamond" transform="translate(949 36) scale(12 16)"/>
+    <use href="#diamond" transform="translate(949 106) scale(11 15)"/>
+    <use href="#diamond" transform="translate(949 190) scale(13 17)"/>
+    <use href="#diamond" transform="translate(949 266) scale(12 16)"/>
+    <use href="#diamond" transform="translate(949 346) scale(11 15)"/>
+    <use href="#diamond" transform="translate(949 430) scale(13 17)"/>
+    <use href="#diamond" transform="translate(949 506) scale(12 16)"/>
+    <use href="#diamond" transform="translate(949 586) scale(11 15)"/>
+    <use href="#diamond" transform="translate(949 672) scale(13 17)"/>
+    <use href="#diamond" transform="translate(949 746) scale(12 16)"/>
+    <use href="#diamond" transform="translate(949 826) scale(11 15)"/>
+    <use href="#diamond" transform="translate(949 912) scale(13 17)"/>
+
+    <use href="#diamond" transform="translate(981 82) scale(9 12)"/>
+    <use href="#diamond" transform="translate(981 178) scale(8 11)"/>
+    <use href="#diamond" transform="translate(981 278) scale(9 12)"/>
+    <use href="#diamond" transform="translate(981 382) scale(8 11)"/>
+    <use href="#diamond" transform="translate(981 482) scale(9 12)"/>
+    <use href="#diamond" transform="translate(981 586) scale(8 11)"/>
+    <use href="#diamond" transform="translate(981 686) scale(9 12)"/>
+    <use href="#diamond" transform="translate(981 790) scale(8 11)"/>
+    <use href="#diamond" transform="translate(981 890) scale(9 12)"/>
+    <use href="#diamond" transform="translate(981 972) scale(8 11)"/>
+
+    <use href="#diamond" transform="translate(1008 150) scale(6 9)"/>
+    <use href="#diamond" transform="translate(1008 318) scale(7 10)"/>
+    <use href="#diamond" transform="translate(1008 456) scale(6 9)"/>
+    <use href="#diamond" transform="translate(1008 626) scale(7 10)"/>
+    <use href="#diamond" transform="translate(1008 766) scale(6 9)"/>
+    <use href="#diamond" transform="translate(1008 930) scale(7 10)"/>
+  </g>
+</svg>

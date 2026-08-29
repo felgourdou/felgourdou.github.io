@@ -1,0 +1,18 @@
+# Local Codex/session metadata
+.agents/
+.codex/
+
+# Draft sources and reference material not served by the site
+inspiration/
+police/
+tools/
+
+# Local/editor clutter
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Python caches
+__pycache__/
+*.py[cod]

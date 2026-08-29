@@ -1,0 +1,1615 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Florian El Gourdou</title>
+    <meta
+      name="description"
+      content="Personal academic website of Florian El Gourdou."
+    >
+    <meta name="robots" content="noindex, nofollow, nosnippet">
+    <link rel="icon" href="favicon.ico?v=1" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/feg-32.png?v=1">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/feg-180.png?v=1">
+    <link rel="preload" as="image" href="assets/map/mediterranean-network-map.png">
+    <link rel="preload" as="image" href="assets/map/night-map-reveal.png?v=4">
+    <link rel="preload" as="image" href="assets/map/network-portrait-selected-ink.png?v=2">
+    <link rel="preload" as="image" href="assets/map/network-portrait-night-generated-aligned.png?v=1">
+    <link rel="stylesheet" href="styles.css?v=143">
+  </head>
+  <body data-flow-mode="x1">
+    <header class="top-bar">
+      <div class="institution-links" aria-label="Institution links">
+        <a
+          class="logo-link logo-link-sciences-po"
+          href="https://www.sciencespo.fr/department-economics/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Sciences Po"
+        >
+          <img
+            class="logo-image sciences-po-logo"
+            src="assets/logos/sciences-po.svg"
+            alt=""
+            aria-hidden="true"
+          >
+        </a>
+        <a
+          class="logo-link logo-link-farhi"
+          href="https://www.farhi-innovation-lab.fr/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Farhi Innovation Lab"
+        >
+          <img
+            class="logo-image farhi-logo"
+            src="assets/logos/farhi-innovation-lab.svg"
+            alt=""
+            aria-hidden="true"
+          >
+        </a>
+      </div>
+
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#home" aria-current="page"><span class="nav-text">home</span></a>
+        <a href="#research"><span class="nav-text">research</span></a>
+        <a href="#teaching"><span class="nav-text">teaching</span></a>
+        <button class="nav-icon-button theme-toggle" type="button" aria-label="Switch to night mode" aria-pressed="false">
+          <span class="nav-tool-mark" aria-hidden="true">
+            <svg class="nav-tool-icon nav-tool-icon-moon" viewBox="0 0 24 24">
+              <path d="M12 3a9 9 0 1 0 8.2 12.7A7 7 0 0 1 12 3Z"></path>
+              <g class="moon-stars">
+                <path d="M18.2 4.4v3.2"></path>
+                <path d="M16.6 6h3.2"></path>
+                <path d="M20 10.8v2.4"></path>
+                <path d="M18.8 12h2.4"></path>
+              </g>
+            </svg>
+          </span>
+        </button>
+        <button class="nav-icon-button language-toggle" type="button" aria-label="Translate site to French" aria-pressed="false">
+          <span class="nav-tool-mark" aria-hidden="true">
+            <svg class="nav-tool-icon nav-tool-icon-baguette" viewBox="0 0 24 24">
+              <path d="M5.2 18.8c-1.15-1.15-.4-4.3 1.68-7.03 2.07-2.73 4.9-5.2 7.62-6.67 2.73-1.47 4.52-1.42 5.3-.64.78.78.83 2.57-.64 5.3-1.47 2.72-3.94 5.55-6.67 7.62-2.73 2.08-5.88 2.83-7.29 1.42Z"></path>
+              <path d="M9.15 14.85 7.45 13.15"></path>
+              <path d="M12.18 11.82l-1.7-1.7"></path>
+              <path d="M15.18 8.82l-1.7-1.7"></path>
+              <g class="baguette-flag">
+                <path class="flag-pole" d="M13.65 7.05V.55"></path>
+                <path class="flag-frame" d="M13.65 .55h6.3v4.35h-6.3Z"></path>
+                <path class="flag-blue" d="M13.65 .55h2.1V4.9h-2.1Z"></path>
+                <path class="flag-white" d="M15.75 .55h2.1V4.9h-2.1Z"></path>
+                <path class="flag-red" d="M17.85 .55h2.1V4.9h-2.1Z"></path>
+              </g>
+            </svg>
+          </span>
+        </button>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="hero" id="home" aria-labelledby="intro-title">
+        <div
+          class="visual-canvas"
+          role="img"
+          aria-label="Antique-style map of the Mediterranean covered with network lines"
+        >
+          <div class="map-plane" aria-hidden="true"></div>
+          <img
+            class="map-reveal-plane"
+            src="assets/map/night-map-reveal.png?v=4"
+            alt=""
+            aria-hidden="true"
+          >
+          <object
+            class="flow-overlay"
+            type="image/svg+xml"
+            data="assets/map/animated-route-network.svg?v=36"
+            aria-hidden="true"
+            tabindex="-1"
+          ></object>
+          <button class="map-pause-toggle" type="button" aria-label="Pause map animations" aria-pressed="false">
+            <svg class="map-pause-icon pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14"></path>
+              <path d="M16 5v14"></path>
+            </svg>
+            <svg class="map-pause-icon play-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7Z"></path>
+            </svg>
+          </button>
+          <div class="map-speed-toggle" role="group" aria-label="Map animation intensity">
+            <button class="map-speed-option" type="button" data-flow-mode="x1" aria-pressed="true">x1</button>
+            <button class="map-speed-option" type="button" data-flow-mode="x2" aria-pressed="false">x2</button>
+          </div>
+        </div>
+
+        <article class="intro-panel">
+          <div class="portrait-zone" data-section-view="home">
+            <img
+              class="portrait-field portrait-field-day"
+              src="assets/map/network-portrait-selected-ink.png?v=2"
+              alt=""
+              aria-hidden="true"
+            >
+            <img
+              class="portrait-field portrait-field-night"
+              src="assets/map/network-portrait-night-generated-aligned.png?v=1"
+              alt=""
+              aria-hidden="true"
+            >
+            <div class="contact-dock" aria-label="Contact links">
+              <div class="mail-contact">
+                <button
+                  class="contact-action mail-toggle"
+                  type="button"
+                  aria-label="Show email address"
+                  aria-expanded="false"
+                  aria-controls="email-address"
+                >
+                  <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 6.5h16v11H4z"></path>
+                    <path d="m4.7 7.2 7.3 5.7 7.3-5.7"></path>
+                  </svg>
+                </button>
+                <button
+                  id="email-address"
+                  class="email-copy"
+                  type="button"
+                  aria-label="Copy email address"
+                  tabindex="-1"
+                >
+                  <span class="email-copy-cue" aria-hidden="true">click to copy</span>
+                  <span class="email-copy-text">florian.elgourdou@sciencespo.fr</span>
+                </button>
+              </div>
+              <a
+                class="contact-action"
+                href="https://www.linkedin.com/in/florian-e-241097210/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <svg class="contact-icon contact-icon-fill linkedin-icon" viewBox="0 0 448 512" aria-hidden="true">
+                  <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.18 61.9 111.18 142.3z"></path>
+                </svg>
+              </a>
+              <a
+                class="contact-action"
+                href="https://github.com/felgourdou"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                <svg class="contact-icon contact-icon-fill" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2.8a9.4 9.4 0 0 0-3 18.3c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 0 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-4.7 0-1 .4-1.9 1-2.6-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.2 9.2 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.5 1 2.6 0 3.6-2.4 4.4-4.6 4.7.4.3.7.9.7 1.8v2.7c0 .3.2.6.7.5A9.4 9.4 0 0 0 12 2.8z"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="intro-content" data-section-view="home">
+            <h1 id="intro-title" class="typewriter-title" aria-label="Hi!">
+              <span class="typed-text">Hi!</span><span class="typing-cursor" aria-hidden="true"></span>
+            </h1>
+            <p class="lede">
+              My name is <span class="accent-name">Florian El Gourdou</span>. I am a
+              first-year PhD candidate in economics at
+              <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, under the supervision of
+              <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a>
+              and
+              <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, and a research affiliate at the
+              <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a>, Coll&egrave;ge de France.
+            </p>
+            <p class="lede">
+              My research interests lie at the intersection of technological
+              change and international trade, with a particular interest in how
+              openness reshapes governments' industrial policy choices.
+            </p>
+          </div>
+          <div class="research-content" data-section-view="research" hidden>
+            <div class="research-list" aria-label="Research overview">
+              <section class="research-entry">
+                <h2>Work in progress</h2>
+                <article class="research-paper">
+                  <h3>The Returns to Industrial Policy: Evidence From France's Mission-Oriented Programs</h3>
+                  <p class="paper-authors">
+                    with
+                    <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a>,
+                    <a href="https://sites.google.com/view/simon-bunel/home" target="_blank" rel="noopener noreferrer">Simon Bunel</a>,
+                    <a href="https://www.xavierjaravel.com/" target="_blank" rel="noopener noreferrer">Xavier Jaravel</a>,
+                    and <a href="https://www.insead.edu/faculty-personal-site/alexandra-roulet" target="_blank" rel="noopener noreferrer">Alexandra Roulet</a>
+                  </p>
+                  <div class="paper-actions">
+                    <div class="paper-action-row">
+                      <button class="abstract-button is-disabled" type="button" disabled aria-disabled="true">abstract</button>
+                      <span class="paper-resource-link is-disabled" aria-disabled="true">
+                        <svg class="paper-resource-icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12 15V3"></path>
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                          <path d="m7 10 5 5 5-5"></path>
+                        </svg>
+                        download
+                      </span>
+                    </div>
+                  </div>
+                </article>
+                <article class="research-paper">
+                  <h3>The Global Incidence of Data Regulation</h3>
+                  <div class="paper-actions">
+                    <div class="paper-action-row">
+                      <button class="abstract-button is-disabled" type="button" disabled aria-disabled="true">abstract</button>
+                      <span class="paper-resource-link is-disabled" aria-disabled="true">
+                        <svg class="paper-resource-icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12 15V3"></path>
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                          <path d="m7 10 5 5 5-5"></path>
+                        </svg>
+                        download
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </section>
+              <section class="research-entry published-entry">
+                <h2>Policy reports</h2>
+                <div class="published-list">
+                  <article class="research-paper published-paper">
+                    <div class="publication-marker" aria-label="Publication details">
+                      <span class="publication-date">2026</span>
+                    </div>
+                    <div class="paper-main">
+                      <h3>
+                        <a class="paper-title-link" href="assets/docs/focus-france-2030.pdf" target="_blank" rel="noopener noreferrer">
+                          From PIA to France 2030: Evaluating Competitive Support for Firm Growth
+                        </a>
+                      </h3>
+                      <p class="paper-authors">
+                        with
+                        <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a>,
+                        <a href="https://sites.google.com/view/simon-bunel/home" target="_blank" rel="noopener noreferrer">Simon Bunel</a>,
+                        <a href="https://www.xavierjaravel.com/" target="_blank" rel="noopener noreferrer">Xavier Jaravel</a>,
+                        and <a href="https://www.insead.edu/faculty-personal-site/alexandra-roulet" target="_blank" rel="noopener noreferrer">Alexandra Roulet</a>
+                      </p>
+                      <p class="publication-note">French Council of Economic Analysis (CAE)</p>
+                      <div class="paper-actions">
+                        <div class="paper-action-row">
+                          <button class="abstract-button" type="button" aria-expanded="false" aria-controls="abstract-focus-france-2030">abstract</button>
+                          <a class="paper-resource-link paper-download-link" href="assets/docs/focus-france-2030.pdf" download="focus-france-2030.pdf" aria-label="Download From PIA to France 2030">
+                            <svg class="paper-resource-icon" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M12 15V3"></path>
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                              <path d="m7 10 5 5 5-5"></path>
+                            </svg>
+                            download
+                          </a>
+                        </div>
+                        <p class="paper-abstract" id="abstract-focus-france-2030" hidden>
+                          This Focus provides a causal evaluation of competitive support
+                          granted by Bpifrance to firms under the PIA programs and France
+                          2030. Using a new panel that matches applications filed since
+                          2010 with administrative firm data, it compares funded firms
+                          with non-selected applicants within the same calls for projects.
+                          The results show persistent gains in employment, research
+                          effort, patenting, capital accumulation, sales, and value added.
+                          Additional tax and social security revenues generated by funded
+                          firms exceed the committed public support within three years,
+                          although the findings apply only to competitively awarded
+                          funding.
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                  <article class="research-paper published-paper">
+                    <div class="publication-marker" aria-label="Publication details">
+                      <span class="publication-date">2024</span>
+                    </div>
+                    <div class="paper-main">
+                      <h3>
+                        <a class="paper-title-link" href="assets/docs/evaluation-france-2030-decarbonation-rapport-synthetique-public.pdf" target="_blank" rel="noopener noreferrer">
+                          Evaluation of the Impact of France 2030 on the Decarbonization of the Economy
+                        </a>
+                      </h3>
+                      <p class="publication-note">French Environment and Energy Management Agency (ADEME)</p>
+                      <div class="paper-actions">
+                        <div class="paper-action-row">
+                          <button class="abstract-button" type="button" aria-expanded="false" aria-controls="abstract-decarbonation-report">abstract</button>
+                          <a class="paper-resource-link paper-download-link" href="assets/docs/evaluation-france-2030-decarbonation-rapport-synthetique-public.pdf" download="evaluation-france-2030-decarbonation-rapport-synthetique-public.pdf" aria-label="Download France 2030 Decarbonation Evaluation">
+                            <svg class="paper-resource-icon" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M12 15V3"></path>
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                              <path d="m7 10 5 5 5-5"></path>
+                            </svg>
+                            download
+                          </a>
+                        </div>
+                        <p class="paper-abstract" id="abstract-decarbonation-report" hidden>
+                          This public summary assesses how France 2030 contributes to
+                          decarbonizing the French economy. It reviews the first stage of
+                          deployment, characterizes supported decarbonization solutions,
+                          examines impact measurement practices for greenhouse-gas
+                          reductions, and evaluates the strategic positioning of the
+                          project portfolio.
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="research-content teaching-content" data-section-view="teaching" hidden>
+            <div class="research-list teaching-list" aria-label="Teaching overview">
+              <section class="research-entry">
+                <h2>Paris 1 Panth&eacute;on-Sorbonne</h2>
+                <article class="research-paper teaching-paper">
+                  <h3>
+                    <a class="paper-title-link" href="https://cours.univ-paris1.fr/course/view.php?id=44057" target="_blank" rel="noopener noreferrer">
+                      International Trade <span class="course-level">3<sup>rd</sup> year undergraduate</span>
+                    </a>
+                  </h3>
+                  <p class="paper-authors">
+                    Teaching assistant for
+                    <a href="https://leamarchal.fr/" target="_blank" rel="noopener noreferrer">L&eacute;a Marchal</a>
+                  </p>
+                  <p class="publication-note">Summer 2026</p>
+                </article>
+                <article class="research-paper teaching-paper">
+                  <h3>
+                    <a class="paper-title-link" href="https://cours.univ-paris1.fr/course/view.php?id=49059" target="_blank" rel="noopener noreferrer">
+                      International Monetary Economics <span class="course-level">3<sup>rd</sup> year undergraduate</span>
+                    </a>
+                  </h3>
+                  <p class="paper-authors">
+                    Teaching assistant for
+                    Omar Joya
+                    and
+                    <a href="https://ferdi.fr/en/biographies/sandra-poncet" target="_blank" rel="noopener noreferrer">Sandra Poncet</a>
+                  </p>
+                  <p class="publication-note">Spring 2025</p>
+                </article>
+              </section>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const navLinks = [...document.querySelectorAll(".site-nav a")];
+      const pageViews = [...document.querySelectorAll("[data-section-view]")];
+      const themeToggle = document.querySelector(".theme-toggle");
+      const languageToggle = document.querySelector(".language-toggle");
+      let currentLanguage = "en";
+
+      const visualCanvas = document.querySelector(".visual-canvas");
+      const mapLayers = [...document.querySelectorAll(".map-plane, .map-reveal-plane, .flow-overlay")];
+      const mapPlane = document.querySelector(".map-plane");
+      const flowOverlay = document.querySelector(".flow-overlay");
+      const mapPauseToggle = document.querySelector(".map-pause-toggle");
+      const mapSpeedToggle = document.querySelector(".map-speed-toggle");
+      const mapSpeedButtons = [...document.querySelectorAll(".map-speed-option")];
+      const introPanelForMap = document.querySelector(".intro-panel");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const staticMapLayout = window.matchMedia("(max-width: 980px), (orientation: portrait)");
+      const mapBaseZoom = 1.28;
+      const mapMaxZoom = 2.12;
+      let mapPanX = 0;
+      let mapPanY = 0;
+      let mapZoom = mapBaseZoom;
+      let dragOrigin = null;
+      let mapDriftActive = false;
+      let mapAnimationsPaused = false;
+      let panelScrollHoldUntil = 0;
+      let routeSchedulerFrame = 0;
+      let routeSchedulerTimer = 0;
+      let routePauseFallbackTimer = 0;
+      let routeMotionMode = "x1";
+      const routeMotionModes = {
+        x1: {
+          budgetShare: 0.075,
+          minBudget: 52,
+          maxBudget: 86,
+          speedMultiplier: 1.16,
+          durationMultiplier: 1.2,
+          opacityBoost: 0,
+          widthMultiplier: 1,
+        },
+        x2: {
+          budgetShare: 0.16,
+          minBudget: 108,
+          maxBudget: 164,
+          speedMultiplier: 0.82,
+          durationMultiplier: 0.84,
+          opacityBoost: 0.055,
+          widthMultiplier: 1.04,
+        },
+      };
+      const routeVisibility = {
+        ready: false,
+        routes: [],
+        cursor: 0,
+        pausedAll: false,
+      };
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+      const currentPanelCut = () => {
+        const width = window.innerWidth;
+        const section = document.body.dataset.section;
+
+        if (section === "teaching") {
+          return { slant: 0, bottom: 0 };
+        }
+
+        if (section === "research") {
+          const slant = clamp(width * 0.048, 54, 78);
+          return { slant, bottom: slant };
+        }
+
+        return {
+          slant: clamp(width * 0.124, 146, 214),
+          bottom: 0,
+        };
+      };
+
+      const routeActivationBudget = () => {
+        if (document.hidden || reducedMotion.matches || staticMapLayout.matches) {
+          return 0;
+        }
+
+        const routeCount = routeVisibility.routes.length;
+        const mode = routeMotionModes[routeMotionMode] || routeMotionModes.x1;
+        return clamp(Math.round(routeCount * mode.budgetShare), mode.minBudget, mode.maxBudget);
+      };
+
+      const routeActiveDuration = (route) => {
+        const isHub = route.path.classList.contains("hub");
+        const isPriority = route.path.classList.contains("priority");
+        const base = isHub || isPriority ? 1850 : 1250;
+        const spread = isHub || isPriority ? 850 : 650;
+        const mode = routeMotionModes[routeMotionMode] || routeMotionModes.x1;
+        return (base + Math.random() * spread) * mode.durationMultiplier;
+      };
+
+      const parseCssSeconds = (value, fallback) => {
+        const normalized = String(value || "").trim();
+        if (normalized.endsWith("ms")) {
+          return Number.parseFloat(normalized) / 1000 || fallback;
+        }
+        if (normalized.endsWith("s")) {
+          return Number.parseFloat(normalized) || fallback;
+        }
+        return Number.parseFloat(normalized) || fallback;
+      };
+
+      const applyRouteMotionMode = () => {
+        const mode = routeMotionModes[routeMotionMode] || routeMotionModes.x1;
+        document.body.dataset.flowMode = routeMotionMode;
+        mapSpeedButtons.forEach((button) => {
+          const active = button.dataset.flowMode === routeMotionMode;
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        routeVisibility.routes.forEach((route) => {
+          route.path.style.setProperty("--speed", `${(route.baseSpeed * mode.speedMultiplier).toFixed(2)}s`);
+          route.path.style.setProperty("--opacity", String(clamp(route.baseOpacity + mode.opacityBoost, 0.03, 0.68)));
+          route.path.style.setProperty("--width", (route.baseWidth * mode.widthMultiplier).toFixed(2));
+        });
+      };
+
+      const setRouteActive = (route, active, time = performance.now()) => {
+        if (route.active === active) {
+          return;
+        }
+
+        route.active = active;
+        route.path.classList.toggle("route-idle", !active);
+        if (active) {
+          route.activeUntil = time + routeActiveDuration(route);
+        }
+      };
+
+      const updateRouteScheduler = (time = performance.now()) => {
+        routeSchedulerFrame = 0;
+
+        if (!routeVisibility.ready) {
+          return;
+        }
+
+        const budget = mapAnimationsPaused ? 0 : routeActivationBudget();
+        if (!budget) {
+          if (mapAnimationsPaused) {
+            let activeCount = 0;
+            routeVisibility.routes.forEach((route) => {
+              if (route.active && route.activeUntil <= time) {
+                setRouteActive(route, false, time);
+              }
+              if (route.active) {
+                activeCount += 1;
+              }
+            });
+
+            if (activeCount > 0) {
+              scheduleRouteVisibilityUpdate();
+              return;
+            }
+
+            if (!routeVisibility.pausedAll) {
+              routeVisibility.routes.forEach((route) => {
+                route.path.classList.add("route-paused", "route-idle");
+              });
+              routeVisibility.pausedAll = true;
+              setFlowOverlayFrozen(true);
+            }
+            return;
+          }
+
+          if (!routeVisibility.pausedAll) {
+            routeVisibility.routes.forEach((route) => {
+              route.active = false;
+              route.activeUntil = 0;
+              route.path.classList.add("route-paused", "route-idle");
+            });
+            routeVisibility.pausedAll = true;
+            setFlowOverlayFrozen(true);
+          }
+          return;
+        }
+
+        let activeCount = 0;
+        if (routeVisibility.pausedAll) {
+          routeVisibility.routes.forEach((route) => {
+            route.path.classList.remove("route-paused");
+          });
+          routeVisibility.pausedAll = false;
+          setFlowOverlayFrozen(false);
+        }
+
+        routeVisibility.routes.forEach((route) => {
+          if (route.active && route.activeUntil <= time) {
+            setRouteActive(route, false, time);
+          }
+          if (route.active) {
+            activeCount += 1;
+          }
+        });
+
+        let slots = Math.max(0, budget - activeCount);
+        let attempts = 0;
+        const maxAttempts = routeVisibility.routes.length * 2;
+
+        while (slots > 0 && attempts < maxAttempts) {
+          const route = routeVisibility.routes[routeVisibility.cursor % routeVisibility.routes.length];
+          routeVisibility.cursor += 1;
+          attempts += 1;
+
+          if (route.active) {
+            continue;
+          }
+
+          setRouteActive(route, true, time);
+          slots -= 1;
+        }
+      };
+
+      const scheduleRouteVisibilityUpdate = () => {
+        if (!routeVisibility.ready || routeSchedulerFrame) {
+          return;
+        }
+
+        routeSchedulerFrame = window.requestAnimationFrame(updateRouteScheduler);
+      };
+
+      const startRouteScheduler = () => {
+        window.clearInterval(routeSchedulerTimer);
+        routeSchedulerTimer = window.setInterval(scheduleRouteVisibilityUpdate, 260);
+        scheduleRouteVisibilityUpdate();
+      };
+
+      const prepareRouteVisibility = () => {
+        const svgDocument = flowOverlay?.contentDocument;
+        if (!svgDocument) {
+          return;
+        }
+
+        const routes = [...svgDocument.querySelectorAll("#animated-routes .flow")];
+        routeVisibility.routes = routes.map((path) => {
+          path.classList.add("route-idle");
+          return {
+            path,
+            active: false,
+            activeUntil: 0,
+            baseSpeed: parseCssSeconds(path.style.getPropertyValue("--speed"), 2.8),
+            baseOpacity: Number.parseFloat(path.style.getPropertyValue("--opacity")) || 0.1,
+            baseWidth: Number.parseFloat(path.style.getPropertyValue("--width")) || 0.9,
+          };
+        });
+        routeVisibility.cursor = Math.floor(Math.random() * Math.max(routeVisibility.routes.length, 1));
+        routeVisibility.ready = true;
+        applyRouteMotionMode();
+        startRouteScheduler();
+      };
+
+      const setRouteNetworkNightMode = (enabled) => {
+        const svgRoot = flowOverlay?.contentDocument?.documentElement;
+        svgRoot?.classList.toggle("night-mode", enabled);
+      };
+
+      const setFlowOverlayFrozen = (enabled) => {
+        flowOverlay?.classList.toggle("is-soft-paused", enabled);
+        const svgRoot = flowOverlay?.contentDocument?.documentElement;
+        if (!svgRoot) {
+          return;
+        }
+
+        if (enabled) {
+          svgRoot.pauseAnimations?.();
+        } else {
+          svgRoot.unpauseAnimations?.();
+        }
+      };
+
+      const finishRoutePause = () => {
+        routeVisibility.routes.forEach((route) => {
+          route.active = false;
+          route.activeUntil = 0;
+          route.path.classList.add("route-paused", "route-idle");
+        });
+        routeVisibility.pausedAll = true;
+        setFlowOverlayFrozen(true);
+      };
+
+      const setMapAnimationsPaused = (enabled) => {
+        window.clearTimeout(routePauseFallbackTimer);
+        mapAnimationsPaused = enabled;
+        document.body.classList.toggle("animations-paused", enabled);
+
+        if (enabled) {
+          setFlowOverlayFrozen(false);
+          routePauseFallbackTimer = window.setTimeout(() => {
+            if (!mapAnimationsPaused) {
+              return;
+            }
+
+            finishRoutePause();
+          }, 2900);
+        } else if (routeVisibility.pausedAll) {
+          routeVisibility.routes.forEach((route) => {
+            route.path.classList.remove("route-paused");
+          });
+          routeVisibility.pausedAll = false;
+          setFlowOverlayFrozen(false);
+        } else {
+          setFlowOverlayFrozen(false);
+        }
+        mapPauseToggle?.setAttribute("aria-pressed", String(enabled));
+        mapPauseToggle?.setAttribute(
+          "aria-label",
+          enabled ? "Resume map animations" : "Pause map animations"
+        );
+        scheduleRouteVisibilityUpdate();
+      };
+
+      const setNightMode = (enabled) => {
+        document.body.classList.toggle("night-mode", enabled);
+        setRouteNetworkNightMode(enabled);
+        if (mapAnimationsPaused) {
+          if (routeVisibility.ready) {
+            finishRoutePause();
+          } else {
+            setFlowOverlayFrozen(true);
+          }
+        }
+        if (!themeToggle) {
+          return;
+        }
+
+        themeToggle.setAttribute("aria-pressed", String(enabled));
+        themeToggle.setAttribute(
+          "aria-label",
+          enabled
+            ? (currentLanguage === "fr" ? "Passer en mode jour" : "Switch to day mode")
+            : (currentLanguage === "fr" ? "Passer en mode nuit" : "Switch to night mode")
+        );
+      };
+
+      themeToggle?.addEventListener("click", () => {
+        setNightMode(!document.body.classList.contains("night-mode"));
+      });
+
+      flowOverlay?.addEventListener("load", () => {
+        setRouteNetworkNightMode(document.body.classList.contains("night-mode"));
+        prepareRouteVisibility();
+        if (mapAnimationsPaused) {
+          finishRoutePause();
+        }
+      });
+
+      window.requestAnimationFrame(() => {
+        if (!routeVisibility.ready && flowOverlay?.contentDocument) {
+          setRouteNetworkNightMode(document.body.classList.contains("night-mode"));
+          prepareRouteVisibility();
+        }
+      });
+
+      const mapPanLimits = () => {
+        if (!visualCanvas || !mapPlane) {
+          return { minX: 0, maxX: 0, minY: 0, maxY: 0 };
+        }
+
+        const canvasBounds = visualCanvas.getBoundingClientRect();
+        const panelBounds = introPanelForMap?.getBoundingClientRect();
+        const mapWidth = mapPlane.offsetWidth;
+        const mapHeight = mapPlane.offsetHeight;
+        const mapLeft = mapPlane.offsetLeft;
+        const mapTop = mapPlane.offsetTop;
+        const scaledWidth = mapWidth * mapZoom;
+        const scaledHeight = mapHeight * mapZoom;
+        const zoomBleedX = (scaledWidth - mapWidth) / 2;
+        const zoomBleedY = (scaledHeight - mapHeight) / 2;
+        const visibleRight = panelBounds
+          ? Math.min(canvasBounds.width, panelBounds.left - canvasBounds.left + 34)
+          : canvasBounds.width;
+        const guardX = Math.max(178, Math.min(canvasBounds.width, canvasBounds.height) * 0.16);
+        const guardY = Math.max(62, Math.min(canvasBounds.width, canvasBounds.height) * 0.07);
+
+        return {
+          minX: visibleRight + guardX - mapLeft - mapWidth - zoomBleedX,
+          maxX: -guardX - mapLeft + zoomBleedX,
+          minY: canvasBounds.height + guardY - mapTop - mapHeight - zoomBleedY,
+          maxY: -guardY - mapTop + zoomBleedY,
+        };
+      };
+
+      const normalizePanLimits = (limits) => {
+        const xLocked = limits.minX > limits.maxX;
+        const yLocked = limits.minY > limits.maxY;
+        return {
+          minX: xLocked ? (limits.minX + limits.maxX) / 2 : limits.minX,
+          maxX: xLocked ? (limits.minX + limits.maxX) / 2 : limits.maxX,
+          minY: yLocked ? (limits.minY + limits.maxY) / 2 : limits.minY,
+          maxY: yLocked ? (limits.minY + limits.maxY) / 2 : limits.maxY,
+        };
+      };
+
+      const boundedMapPosition = (x, y) => {
+        const limits = normalizePanLimits(mapPanLimits());
+        return {
+          x: clamp(x, limits.minX, limits.maxX),
+          y: clamp(y, limits.minY, limits.maxY),
+        };
+      };
+
+      const clampMapPan = () => {
+        const bounded = boundedMapPosition(mapPanX, mapPanY);
+        mapPanX = bounded.x;
+        mapPanY = bounded.y;
+      };
+
+      const setMapTransform = (x, y, rotation = 0, updateRoutes = true) => {
+        if (staticMapLayout.matches) {
+          mapLayers.forEach((layer) => {
+            layer.style.transform = "none";
+          });
+          return;
+        }
+
+        const bounded = boundedMapPosition(x, y);
+        const transform = `translate3d(${bounded.x.toFixed(2)}px, ${bounded.y.toFixed(2)}px, 0) rotate(${rotation.toFixed(4)}deg) scale(${mapZoom.toFixed(4)})`;
+        mapLayers.forEach((layer) => {
+          layer.style.transform = transform;
+        });
+      };
+
+      const animateMap = (time) => {
+        const drifting =
+          time > panelScrollHoldUntil &&
+          !dragOrigin &&
+          !reducedMotion.matches &&
+          !staticMapLayout.matches;
+
+        if (!drifting) {
+          if (mapDriftActive) {
+            mapDriftActive = false;
+            setMapTransform(mapPanX, mapPanY, 0, false);
+          }
+          window.requestAnimationFrame(animateMap);
+          return;
+        }
+
+        mapDriftActive = true;
+        const seconds = time * 0.001;
+        const driftX =
+          Math.sin(seconds * 0.54) * 7.2 +
+          Math.sin(seconds * 0.31 + 1.8) * 4.8 +
+          Math.sin(seconds * 0.13 + 4.2) * 3.2;
+        const driftY =
+          Math.cos(seconds * 0.47 + 0.6) * 5.8 +
+          Math.sin(seconds * 0.26 + 2.4) * 4.2 +
+          Math.cos(seconds * 0.16 + 3.1) * 2.8;
+        const liquidTilt =
+          Math.sin(seconds * 0.22 + 1.1) * 0.035 +
+          Math.sin(seconds * 0.39 + 3.7) * 0.022;
+
+        setMapTransform(mapPanX + driftX, mapPanY + driftY, liquidTilt, false);
+        window.requestAnimationFrame(animateMap);
+      };
+
+      if (visualCanvas) {
+        visualCanvas.tabIndex = 0;
+        visualCanvas.setAttribute(
+          "aria-label",
+          "Antique-style draggable map of the Mediterranean covered with network lines"
+        );
+
+        visualCanvas.addEventListener("pointerdown", (event) => {
+          if (staticMapLayout.matches) {
+            return;
+          }
+
+          if (event.target.closest("button, a, input, textarea, select")) {
+            return;
+          }
+
+          if (event.button !== 0) {
+            return;
+          }
+
+          visualCanvas.classList.add("is-dragging");
+          visualCanvas.setPointerCapture(event.pointerId);
+          dragOrigin = {
+            pointerId: event.pointerId,
+            x: event.clientX,
+            y: event.clientY,
+            panX: mapPanX,
+            panY: mapPanY,
+          };
+          event.preventDefault();
+        });
+
+        visualCanvas.addEventListener("pointermove", (event) => {
+          if (!dragOrigin || dragOrigin.pointerId !== event.pointerId) {
+            return;
+          }
+
+          mapPanX = dragOrigin.panX + event.clientX - dragOrigin.x;
+          mapPanY = dragOrigin.panY + event.clientY - dragOrigin.y;
+          clampMapPan();
+          setMapTransform(mapPanX, mapPanY);
+        });
+
+        const releaseMapDrag = (event) => {
+          if (!dragOrigin || dragOrigin.pointerId !== event.pointerId) {
+            return;
+          }
+
+          dragOrigin = null;
+          visualCanvas.classList.remove("is-dragging");
+          if (visualCanvas.hasPointerCapture(event.pointerId)) {
+            visualCanvas.releasePointerCapture(event.pointerId);
+          }
+        };
+
+        visualCanvas.addEventListener("pointerup", releaseMapDrag);
+        visualCanvas.addEventListener("pointercancel", releaseMapDrag);
+        visualCanvas.addEventListener(
+          "wheel",
+          (event) => {
+            if (staticMapLayout.matches) {
+              return;
+            }
+
+            event.preventDefault();
+
+            const nextZoom = clamp(mapZoom * Math.exp(-event.deltaY * 0.0012), mapBaseZoom, mapMaxZoom);
+            const bounds = visualCanvas.getBoundingClientRect();
+            const cursorX = event.clientX - bounds.left;
+            const cursorY = event.clientY - bounds.top;
+            const ratio = nextZoom / mapZoom;
+            mapPanX = cursorX - (cursorX - mapPanX) * ratio;
+            mapPanY = cursorY - (cursorY - mapPanY) * ratio;
+            mapZoom = nextZoom;
+            clampMapPan();
+            setMapTransform(mapPanX, mapPanY);
+          },
+          { passive: false }
+        );
+        visualCanvas.addEventListener("keydown", (event) => {
+          if (staticMapLayout.matches) {
+            return;
+          }
+
+          const step = event.shiftKey ? 42 : 22;
+          if (event.key === "ArrowLeft") {
+            mapPanX += step;
+          } else if (event.key === "ArrowRight") {
+            mapPanX -= step;
+          } else if (event.key === "ArrowUp") {
+            mapPanY += step;
+          } else if (event.key === "ArrowDown") {
+            mapPanY -= step;
+          } else if (event.key === "+" || event.key === "=") {
+            mapZoom = clamp(mapZoom * 1.08, mapBaseZoom, mapMaxZoom);
+          } else if (event.key === "-") {
+            mapZoom = clamp(mapZoom / 1.08, mapBaseZoom, mapMaxZoom);
+          } else {
+            return;
+          }
+
+          clampMapPan();
+          setMapTransform(mapPanX, mapPanY);
+          event.preventDefault();
+        });
+
+        window.addEventListener("resize", () => {
+          clampMapPan();
+          setMapTransform(mapPanX, mapPanY);
+        });
+        staticMapLayout.addEventListener?.("change", () => {
+          clampMapPan();
+          setMapTransform(mapPanX, mapPanY);
+          scheduleRouteVisibilityUpdate(true);
+        });
+        window.requestAnimationFrame(animateMap);
+      }
+
+      ["pointerdown", "pointerup", "pointercancel", "click", "wheel"].forEach((eventName) => {
+        mapPauseToggle?.addEventListener(
+          eventName,
+          (event) => {
+            event.stopPropagation();
+            if (eventName === "click") {
+              setMapAnimationsPaused(!mapAnimationsPaused);
+            }
+          },
+          eventName === "wheel" ? { passive: true } : undefined
+        );
+      });
+
+      ["pointerdown", "pointerup", "pointercancel", "click", "wheel"].forEach((eventName) => {
+        mapSpeedToggle?.addEventListener(
+          eventName,
+          (event) => {
+            event.stopPropagation();
+          },
+          eventName === "wheel" ? { passive: true } : undefined
+        );
+      });
+
+      mapSpeedButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const nextMode = button.dataset.flowMode === "x2" ? "x2" : "x1";
+          if (routeMotionMode === nextMode) {
+            return;
+          }
+
+          routeMotionMode = nextMode;
+          applyRouteMotionMode();
+          scheduleRouteVisibilityUpdate();
+        });
+      });
+
+      const introPanel = document.querySelector(".intro-panel");
+      const introContent = document.querySelector(".intro-content");
+      const introTitle = document.querySelector("#intro-title");
+      const typedTitle = introTitle?.querySelector(".typed-text");
+      const flowingParagraphs = [...document.querySelectorAll(".intro-content .lede")];
+      const captureSourceParagraphs = () => flowingParagraphs.map((paragraph) => ({
+        paragraph,
+        nodes: [...paragraph.childNodes].map((node) => node.cloneNode(true)),
+      }));
+      let sourceParagraphs = captureSourceParagraphs();
+      const measureLine = document.createElement("span");
+
+      introPanel?.addEventListener(
+        "scroll",
+        () => {
+          panelScrollHoldUntil = performance.now() + 260;
+          if (mapDriftActive) {
+            mapDriftActive = false;
+            setMapTransform(mapPanX, mapPanY, 0, false);
+          }
+        },
+        { passive: true }
+      );
+      measureLine.className = "lede lede-line";
+      measureLine.style.cssText = "position:absolute;left:-9999px;top:0;visibility:hidden;margin:0;padding:0;max-width:none;width:max-content;white-space:nowrap;";
+      document.body.appendChild(measureLine);
+      const measureCssLength = document.createElement("span");
+      measureCssLength.style.cssText = "position:absolute;left:-9999px;top:0;visibility:hidden;height:0;overflow:hidden;";
+      document.body.appendChild(measureCssLength);
+
+      const parseCssLength = (value) => {
+        const parsed = Number.parseFloat(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+      };
+
+      const readCssLength = (property) => {
+        measureCssLength.style.width = `var(${property})`;
+        const measured = measureCssLength.getBoundingClientRect().width;
+        if (measured) {
+          return measured;
+        }
+        return parseCssLength(getComputedStyle(document.documentElement).getPropertyValue(property));
+      };
+
+      const diagonalMetrics = () => ({
+        panelHeight: introPanel.clientHeight || window.innerHeight,
+        slant: readCssLength("--panel-slant"),
+        edgeGap: readCssLength("--edge-gap"),
+      });
+
+      const diagonalOffsetAt = (y, metrics) => {
+        const panelHeight = introPanel.clientHeight || window.innerHeight;
+        const progress = Math.min(Math.max(y / (metrics?.panelHeight || panelHeight), 0), 1);
+        return metrics.slant * (1 - progress) + metrics.edgeGap;
+      };
+
+      const minimumSafeOffset = (metrics) => {
+        return metrics?.edgeGap || readCssLength("--edge-gap");
+      };
+
+      const panelContentY = (element) => {
+        const panelRect = introPanel.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        return elementRect.top - panelRect.top + introPanel.scrollTop;
+      };
+
+      const tokenClone = (token) => {
+        let parent = null;
+        let leaf = null;
+
+        token.wrappers.forEach((wrapper) => {
+          const clone = wrapper.cloneNode(false);
+          if (!parent) {
+            parent = clone;
+          } else {
+            leaf.appendChild(clone);
+          }
+          leaf = clone;
+        });
+
+        const text = document.createTextNode(token.text);
+        if (leaf) {
+          leaf.appendChild(text);
+          return parent;
+        }
+        return text;
+      };
+
+      const tokenize = (node, wrappers = []) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          return (node.textContent || "")
+            .replace(/\s+/g, " ")
+            .match(/\s*\S+\s*/g)?.map((text) => ({ text, wrappers })) || [];
+        }
+
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+          return [];
+        }
+
+        const wrapper = node.cloneNode(false);
+        if (node.matches("a, .accent-name")) {
+          return [{ text: (node.textContent || "").replace(/\s+/g, " ").trim(), wrappers: [...wrappers, wrapper] }];
+        }
+
+        return [...node.childNodes].flatMap((child) => tokenize(child, [...wrappers, wrapper]));
+      };
+
+      const measureTokens = (tokens) => {
+        measureLine.replaceChildren(...tokens.map(tokenClone));
+        return measureLine.getBoundingClientRect().width;
+      };
+
+      const appendLine = (paragraph, tokens, offset, metrics) => {
+        const line = document.createElement("span");
+        line.className = "lede-line";
+        line.style.setProperty("--line-offset", `${Math.max(minimumSafeOffset(metrics), Math.round(offset))}px`);
+        line.append(...tokens.map(tokenClone));
+        paragraph.appendChild(line);
+      };
+
+      const layoutDiagonalText = () => {
+        if (!introPanel || !introContent || staticMapLayout.matches) {
+          sourceParagraphs.forEach(({ paragraph, nodes }) => {
+            paragraph.classList.remove("is-flowed");
+            paragraph.replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+          });
+          if (introTitle) {
+            introTitle.style.removeProperty("--diagonal-title-offset");
+          }
+          return;
+        }
+
+        try {
+          const metrics = diagonalMetrics();
+          if (introTitle) {
+            const titleY = panelContentY(introTitle);
+            introTitle.style.setProperty("--diagonal-title-offset", `${Math.round(diagonalOffsetAt(titleY, metrics))}px`);
+          }
+
+          sourceParagraphs.forEach(({ paragraph, nodes }) => {
+            paragraph.replaceChildren();
+
+            const tokens = nodes.flatMap((node) => tokenize(node));
+            const paragraphStyles = getComputedStyle(paragraph);
+            measureLine.style.font = paragraphStyles.font;
+            measureLine.style.letterSpacing = paragraphStyles.letterSpacing;
+            measureLine.style.lineHeight = paragraphStyles.lineHeight;
+            const lineHeight = parseCssLength(paragraphStyles.lineHeight);
+            const paragraphTop = panelContentY(paragraph);
+            let lineTokens = [];
+            let lineIndex = 0;
+
+            tokens.forEach((token) => {
+              const lineY = paragraphTop + (lineIndex * lineHeight);
+              const offset = diagonalOffsetAt(lineY, metrics);
+              const availableWidth = Math.max(160, paragraph.clientWidth - offset);
+              const nextLine = [...lineTokens, token];
+
+              if (lineTokens.length && measureTokens(nextLine) > availableWidth) {
+                appendLine(paragraph, lineTokens, offset, metrics);
+                lineTokens = [token];
+                lineIndex += 1;
+                return;
+              }
+
+              lineTokens = nextLine;
+            });
+
+            if (lineTokens.length) {
+              const lineY = paragraphTop + (lineIndex * lineHeight);
+              appendLine(paragraph, lineTokens, diagonalOffsetAt(lineY, metrics), metrics);
+            }
+
+            paragraph.classList.add("is-flowed");
+          });
+        } catch (error) {
+          sourceParagraphs.forEach(({ paragraph, nodes }) => {
+            paragraph.classList.remove("is-flowed");
+            paragraph.replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+          });
+          console.warn("Diagonal text layout failed", error);
+        }
+      };
+
+      let diagonalLayoutFrame = 0;
+      const scheduleDiagonalLayout = () => {
+        window.cancelAnimationFrame(diagonalLayoutFrame);
+        diagonalLayoutFrame = window.requestAnimationFrame(layoutDiagonalText);
+      };
+
+      window.addEventListener("resize", scheduleDiagonalLayout);
+      window.addEventListener("load", scheduleDiagonalLayout);
+      document.fonts?.ready?.then(scheduleDiagonalLayout);
+      new ResizeObserver(scheduleDiagonalLayout).observe(introPanel);
+      scheduleDiagonalLayout();
+
+      let titleTypingStarted = false;
+      let titleTypingTimers = [];
+
+      const clearTitleTypingTimers = () => {
+        titleTypingTimers.forEach((timer) => window.clearTimeout(timer));
+        titleTypingTimers = [];
+      };
+
+      const queueTitleTimer = (callback, delay) => {
+        const timer = window.setTimeout(callback, delay);
+        titleTypingTimers.push(timer);
+        return timer;
+      };
+
+      const startTitleTyping = () => {
+        if (!introTitle || !typedTitle || titleTypingStarted) {
+          return;
+        }
+
+        clearTitleTypingTimers();
+        titleTypingStarted = true;
+        const phrase = introTitle.getAttribute("aria-label") || "Hi!";
+        const cipherGlyphs = [
+          "\u5c71", "\u6d77", "\u5716", "\u7dda", "\u9580", "\u661f",
+          "\u8def", "\u6587", "\u7d21", "\u8c61", "\u03a9", "\u03bb",
+          "\u03c0", "\u2211", "\u25c7", "\u25c8", "\u2736", "\u2022",
+          "0", "1", "#", "%"
+        ];
+        const preludeGlyphs = Array.from({ length: 7 }, () => (
+          cipherGlyphs[Math.floor(Math.random() * cipherGlyphs.length)]
+        ));
+        const preludeDelay = 230;
+        const glyphSpeed = 34;
+        const typingStart = preludeDelay + preludeGlyphs.length * glyphSpeed + 70;
+        typedTitle.textContent = "";
+        introTitle.classList.remove("is-typed");
+
+        preludeGlyphs.forEach((glyph, index) => {
+          queueTitleTimer(() => {
+            typedTitle.textContent = glyph;
+          }, preludeDelay + index * glyphSpeed);
+        });
+
+        queueTitleTimer(() => {
+          typedTitle.textContent = "";
+        }, typingStart - 50);
+
+        [...phrase].forEach((letter, index) => {
+          queueTitleTimer(() => {
+            typedTitle.textContent += letter;
+            if (index === phrase.length - 1) {
+              queueTitleTimer(() => {
+                introTitle.classList.add("is-typed");
+              }, 1450);
+            }
+          }, typingStart + index * 145);
+        });
+      };
+
+      const languageCopy = {
+        en: {
+          lang: "en",
+          nav: {
+            home: "home",
+            research: "research",
+            teaching: "teaching",
+          },
+          title: "Hi!",
+          languageLabel: "Translate site to French",
+          homeParagraphs: [
+            `My name is <span class="accent-name">Florian El Gourdou</span>. I am a first-year PhD candidate in economics at <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, under the supervision of <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a> and <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, and a research affiliate at the <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a>, Coll&egrave;ge de France.`,
+            `My research interests lie at the intersection of technological change and international trade, with a particular interest in how openness reshapes governments' industrial policy choices.`,
+          ],
+          sectionHeadings: ["Work in progress", "Policy reports", "Paris 1 Panth&eacute;on-Sorbonne"],
+          paperTitles: [
+            "The Returns to Industrial Policy: Evidence From France's Mission-Oriented Programs",
+            "The Global Incidence of Data Regulation",
+            "From PIA to France 2030: Evaluating Competitive Support for Firm Growth",
+            "Evaluation of the Impact of France 2030 on the Decarbonization of the Economy",
+          ],
+          publicationNotes: [
+            "French Council of Economic Analysis (CAE)",
+            "French Environment and Energy Management Agency (ADEME)",
+          ],
+          abstracts: {
+            focus: `This Focus provides a causal evaluation of competitive support granted by Bpifrance to firms under the PIA programs and France 2030. Using a new panel that matches applications filed since 2010 with administrative firm data, it compares funded firms with non-selected applicants within the same calls for projects. The results show persistent gains in employment, research effort, patenting, capital accumulation, sales, and value added. Additional tax and social security revenues generated by funded firms exceed the committed public support within three years, although the findings apply only to competitively awarded funding.`,
+            decarbonation: `This public summary assesses how France 2030 contributes to decarbonizing the French economy. It reviews the first stage of deployment, characterizes supported decarbonization solutions, examines impact measurement practices for greenhouse-gas reductions, and evaluates the strategic positioning of the project portfolio.`,
+          },
+          abstract: "abstract",
+          download: "download",
+          courseLevel: `3<sup>rd</sup> year undergraduate`,
+          courseTitles: ["International Trade", "International Monetary Economics"],
+          teachingAuthors: [
+            `Teaching assistant for <a href="https://leamarchal.fr/" target="_blank" rel="noopener noreferrer">L&eacute;a Marchal</a>`,
+            `Teaching assistant for Omar Joya and <a href="https://ferdi.fr/en/biographies/sandra-poncet" target="_blank" rel="noopener noreferrer">Sandra Poncet</a>`,
+          ],
+          teachingDates: ["Summer 2026", "Spring 2025"],
+          copyCue: "click to copy",
+          copiedCue: "copied!",
+        },
+        fr: {
+          lang: "fr",
+          nav: {
+            home: "accueil",
+            research: "recherche",
+            teaching: "enseignement",
+          },
+          title: "Bonjour!",
+          languageLabel: "Revenir au site en anglais",
+          homeParagraphs: [
+            `Je m'appelle <span class="accent-name">Florian El Gourdou</span>. Je suis doctorant de premi&egrave;re ann&eacute;e en &eacute;conomie &agrave; <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, sous la direction de <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a> et <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, et chercheur affili&eacute; au <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a>, Coll&egrave;ge de France.`,
+            `Mes int&eacute;r&ecirc;ts de recherche se situent &agrave; l'intersection du changement technologique et du commerce international, avec un int&eacute;r&ecirc;t particulier pour la mani&egrave;re dont l'ouverture recompose les choix de politique industrielle des gouvernements.`,
+          ],
+          sectionHeadings: ["Travaux en cours", "Rapports de politique publique", "Paris 1 Panth&eacute;on-Sorbonne"],
+          paperTitles: [
+            "Les rendements de la politique industrielle : enseignements des programmes orient&eacute;s mission en France",
+            "L'incidence mondiale de la r&eacute;gulation des donn&eacute;es",
+            "Du PIA &agrave; France 2030 : &eacute;valuer le soutien comp&eacute;titif &agrave; la croissance des entreprises",
+            "&Eacute;valuation de l'impact de France 2030 sur la d&eacute;carbonation de l'&eacute;conomie",
+          ],
+          publicationNotes: [
+            "Conseil d'analyse &eacute;conomique (CAE)",
+            "Agence de la transition &eacute;cologique (ADEME)",
+          ],
+          abstracts: {
+            focus: `Ce Focus propose une &eacute;valuation causale du soutien comp&eacute;titif accord&eacute; par Bpifrance aux entreprises dans le cadre des programmes PIA et France 2030. &Agrave; partir d'un nouveau panel associant les candidatures d&eacute;pos&eacute;es depuis 2010 &agrave; des donn&eacute;es administratives d'entreprises, il compare les entreprises financ&eacute;es aux candidates non retenues au sein des m&ecirc;mes appels &agrave; projets. Les r&eacute;sultats montrent des gains persistants en emploi, effort de recherche, brevets, accumulation de capital, chiffre d'affaires et valeur ajout&eacute;e. Les recettes fiscales et sociales suppl&eacute;mentaires g&eacute;n&eacute;r&eacute;es par les entreprises financ&eacute;es d&eacute;passent le soutien public engag&eacute; en moins de trois ans, m&ecirc;me si ces r&eacute;sultats ne concernent que les financements attribu&eacute;s sur une base comp&eacute;titive.`,
+            decarbonation: `Cette synth&egrave;se publique &eacute;value la contribution de France 2030 &agrave; la d&eacute;carbonation de l'&eacute;conomie fran&ccedil;aise. Elle examine la premi&egrave;re phase de d&eacute;ploiement, caract&eacute;rise les solutions de d&eacute;carbonation soutenues, analyse les pratiques de mesure d'impact sur les r&eacute;ductions d'&eacute;missions de gaz &agrave; effet de serre et &eacute;value le positionnement strat&eacute;gique du portefeuille de projets.`,
+          },
+          abstract: "r&eacute;sum&eacute;",
+          download: "t&eacute;l&eacute;charger",
+          courseLevel: `3<sup>e</sup> ann&eacute;e de licence`,
+          courseTitles: ["Commerce international", "&Eacute;conomie mon&eacute;taire internationale"],
+          teachingAuthors: [
+            `Charg&eacute; de TD pour <a href="https://leamarchal.fr/" target="_blank" rel="noopener noreferrer">L&eacute;a Marchal</a>`,
+            `Charg&eacute; de TD pour Omar Joya et <a href="https://ferdi.fr/en/biographies/sandra-poncet" target="_blank" rel="noopener noreferrer">Sandra Poncet</a>`,
+          ],
+          teachingDates: ["&Eacute;t&eacute; 2026", "Printemps 2025"],
+          copyCue: "cliquer pour copier",
+          copiedCue: "copi&eacute;!",
+        },
+      };
+
+      const setTextContent = (selector, value) => {
+        const element = document.querySelector(selector);
+        if (element) {
+          element.textContent = value;
+        }
+      };
+
+      const setHtmlContent = (selector, value) => {
+        const element = document.querySelector(selector);
+        if (element) {
+          element.innerHTML = value;
+        }
+      };
+
+      const setResourceLabel = (resource, label) => {
+        const icon = resource.querySelector("svg");
+        resource.replaceChildren();
+        if (icon) {
+          resource.appendChild(icon);
+        }
+        resource.appendChild(document.createTextNode(" "));
+        const labelNode = document.createElement("span");
+        labelNode.innerHTML = label;
+        resource.appendChild(labelNode);
+      };
+
+      const applyLanguage = (language) => {
+        const copy = languageCopy[language] || languageCopy.en;
+        currentLanguage = copy.lang;
+        document.documentElement.lang = copy.lang;
+
+        navLinks.forEach((link) => {
+          const key = (link.getAttribute("href") || "#home").replace("#", "");
+          const label = copy.nav[key];
+          const labelNode = link.querySelector(".nav-text");
+          if (labelNode && label) {
+            labelNode.textContent = label;
+          }
+        });
+
+        languageToggle?.setAttribute("aria-pressed", String(copy.lang === "fr"));
+        languageToggle?.setAttribute("aria-label", copy.languageLabel);
+
+        flowingParagraphs.forEach((paragraph, index) => {
+          paragraph.classList.remove("is-flowed");
+          paragraph.innerHTML = copy.homeParagraphs[index] || "";
+        });
+        sourceParagraphs = captureSourceParagraphs();
+
+        if (introTitle && typedTitle) {
+          clearTitleTypingTimers();
+          introTitle.setAttribute("aria-label", copy.title);
+          introTitle.classList.remove("is-typed");
+          typedTitle.textContent = copy.title;
+          titleTypingStarted = false;
+          if (document.body.dataset.section === "home") {
+            startTitleTyping();
+          }
+        }
+
+        const researchHeadings = [...document.querySelectorAll('[data-section-view="research"] .research-entry > h2')];
+        researchHeadings.forEach((heading, index) => {
+          heading.innerHTML = copy.sectionHeadings[index] || heading.innerHTML;
+        });
+        setHtmlContent('[data-section-view="teaching"] .research-entry > h2', copy.sectionHeadings[2]);
+
+        const publicationNotes = [...document.querySelectorAll('[data-section-view="research"] .published-paper .publication-note')];
+        publicationNotes.forEach((note, index) => {
+          note.innerHTML = copy.publicationNotes[index] || note.innerHTML;
+        });
+
+        setHtmlContent("#abstract-focus-france-2030", copy.abstracts.focus);
+        setHtmlContent("#abstract-decarbonation-report", copy.abstracts.decarbonation);
+
+        const researchTitles = [...document.querySelectorAll('[data-section-view="research"] .research-paper h3')];
+        researchTitles.forEach((title, index) => {
+          const titleLink = title.querySelector(".paper-title-link");
+          if (titleLink) {
+            titleLink.innerHTML = copy.paperTitles[index] || titleLink.innerHTML;
+          } else {
+            title.innerHTML = copy.paperTitles[index] || title.innerHTML;
+          }
+        });
+
+        document.querySelectorAll(".abstract-button").forEach((button) => {
+          button.innerHTML = copy.abstract;
+        });
+        document.querySelectorAll(".paper-resource-link").forEach((resource) => {
+          setResourceLabel(resource, copy.download);
+        });
+
+        const courseLinks = [...document.querySelectorAll('[data-section-view="teaching"] .paper-title-link')];
+        courseLinks.forEach((link, index) => {
+          link.innerHTML = `${copy.courseTitles[index] || ""} <span class="course-level">${copy.courseLevel}</span>`;
+        });
+        const teachingAuthors = [...document.querySelectorAll('[data-section-view="teaching"] .paper-authors')];
+        teachingAuthors.forEach((authors, index) => {
+          authors.innerHTML = copy.teachingAuthors[index] || authors.innerHTML;
+        });
+        const teachingDates = [...document.querySelectorAll('[data-section-view="teaching"] .publication-note')];
+        teachingDates.forEach((date, index) => {
+          date.innerHTML = copy.teachingDates[index] || date.innerHTML;
+        });
+
+        setNightMode(document.body.classList.contains("night-mode"));
+        const copyCueElement = document.querySelector(".email-copy-cue");
+        if (copyCueElement && !document.querySelector(".mail-contact")?.classList.contains("is-copied")) {
+          copyCueElement.innerHTML = copy.copyCue;
+        }
+        scheduleDiagonalLayout();
+      };
+
+      languageToggle?.addEventListener("click", () => {
+        applyLanguage(currentLanguage === "fr" ? "en" : "fr");
+      });
+
+      const setActiveSection = () => {
+        const section = (window.location.hash || "#home").slice(1);
+        const panelSection = section === "research" || section === "teaching" ? section : "home";
+
+        document.body.dataset.section = panelSection;
+        navLinks.forEach((link) => {
+          const isCurrent = link.getAttribute("href") === `#${section || "home"}`;
+          if (isCurrent) {
+            link.setAttribute("aria-current", "page");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+
+        pageViews.forEach((view) => {
+          view.hidden = view.dataset.sectionView !== panelSection;
+        });
+
+        if (introPanel) {
+          introPanel.scrollTop = 0;
+        }
+        clampMapPan();
+        setMapTransform(mapPanX, mapPanY);
+        scheduleDiagonalLayout();
+        if (panelSection === "home") {
+          startTitleTyping();
+        }
+      };
+
+      window.addEventListener("hashchange", setActiveSection);
+      setActiveSection();
+
+      document.querySelectorAll(".abstract-button").forEach((button) => {
+        const abstract = document.getElementById(button.getAttribute("aria-controls"));
+        if (!abstract) {
+          return;
+        }
+
+        button.addEventListener("click", () => {
+          const isOpen = button.getAttribute("aria-expanded") === "true";
+          button.setAttribute("aria-expanded", String(!isOpen));
+          button.innerHTML = languageCopy[currentLanguage].abstract;
+          abstract.hidden = isOpen;
+        });
+      });
+
+      document.querySelectorAll(".paper-download-link").forEach((link) => {
+        link.addEventListener("click", async (event) => {
+          event.preventDefault();
+
+          const filename = link.getAttribute("download") || "paper.pdf";
+          const href = link.getAttribute("href");
+          const fallbackDownload = () => {
+            const downloadLink = document.createElement("a");
+            downloadLink.href = href;
+            downloadLink.download = filename;
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
+          };
+
+          try {
+            const response = await fetch(href);
+            if (!response.ok) {
+              throw new Error(`Download failed: ${response.status}`);
+            }
+            const blob = await response.blob();
+
+            if ("showSaveFilePicker" in window) {
+              const handle = await window.showSaveFilePicker({
+                suggestedName: filename,
+                types: [{
+                  description: "PDF document",
+                  accept: { "application/pdf": [".pdf"] },
+                }],
+              });
+              const writable = await handle.createWritable();
+              await writable.write(blob);
+              await writable.close();
+              return;
+            }
+
+            const objectUrl = URL.createObjectURL(blob);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = objectUrl;
+            downloadLink.download = filename;
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
+            URL.revokeObjectURL(objectUrl);
+          } catch (error) {
+            if (error?.name !== "AbortError") {
+              fallbackDownload();
+            }
+          }
+        });
+      });
+
+      const mailContact = document.querySelector(".mail-contact");
+      const mailToggle = document.querySelector(".mail-toggle");
+      const emailAddress = document.querySelector("#email-address");
+      const copyCue = document.querySelector(".email-copy-cue");
+      const emailValue = "florian.elgourdou@sciencespo.fr";
+      let copyResetTimer = 0;
+
+      const copyEmail = async () => {
+        try {
+          await navigator.clipboard.writeText(emailValue);
+        } catch {
+          const helper = document.createElement("textarea");
+          helper.value = emailValue;
+          helper.setAttribute("readonly", "");
+          helper.style.position = "fixed";
+          helper.style.opacity = "0";
+          document.body.appendChild(helper);
+          helper.select();
+          document.execCommand("copy");
+          helper.remove();
+        }
+
+        window.clearTimeout(copyResetTimer);
+        mailContact.classList.add("is-copied");
+        emailAddress.setAttribute(
+          "aria-label",
+          currentLanguage === "fr" ? "Adresse e-mail copiee" : "Email address copied"
+        );
+        copyCue.innerHTML = languageCopy[currentLanguage].copiedCue;
+        copyResetTimer = window.setTimeout(() => {
+          mailContact.classList.remove("is-copied");
+          emailAddress.setAttribute(
+            "aria-label",
+            currentLanguage === "fr" ? "Copier l'adresse e-mail" : "Copy email address"
+          );
+          copyCue.innerHTML = languageCopy[currentLanguage].copyCue;
+        }, 1000);
+      };
+
+      mailToggle.addEventListener("click", () => {
+        if (!mailContact.classList.contains("is-open")) {
+          mailContact.classList.add("is-open");
+          mailToggle.setAttribute("aria-expanded", "true");
+          mailToggle.setAttribute(
+            "aria-label",
+            currentLanguage === "fr" ? "Masquer l'adresse e-mail" : "Hide email address"
+          );
+          emailAddress.tabIndex = 0;
+          return;
+        }
+
+        mailContact.classList.remove("is-open");
+        mailContact.classList.remove("is-copied");
+        mailToggle.setAttribute("aria-expanded", "false");
+        mailToggle.setAttribute(
+          "aria-label",
+          currentLanguage === "fr" ? "Afficher l'adresse e-mail" : "Show email address"
+        );
+        emailAddress.setAttribute(
+          "aria-label",
+          currentLanguage === "fr" ? "Copier l'adresse e-mail" : "Copy email address"
+        );
+        emailAddress.tabIndex = -1;
+        copyCue.innerHTML = languageCopy[currentLanguage].copyCue;
+      });
+
+      emailAddress.addEventListener("click", copyEmail);
+    </script>
+  </body>
+</html>
