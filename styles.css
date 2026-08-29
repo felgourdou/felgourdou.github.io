@@ -984,6 +984,7 @@ body.night-mode .flow-overlay-night {
 
 .flow-overlay.is-soft-paused {
   opacity: 0;
+  visibility: hidden;
 }
 
 body.night-mode .visual-canvas {
@@ -1025,11 +1026,8 @@ body.night-mode .map-reveal-plane {
 
 body.night-mode .flow-overlay {
   opacity: 1;
-  mix-blend-mode: normal;
-  filter:
-    brightness(1.12)
-    contrast(1.04)
-    saturate(1.08);
+  mix-blend-mode: screen;
+  filter: none;
 }
 
 body.night-mode .flow-overlay.is-soft-paused {

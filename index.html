@@ -140,13 +140,13 @@
           >
           <img
             class="flow-overlay flow-overlay-day"
-            src="assets/map/animated-route-network.svg?v=41"
+            src="assets/map/animated-route-network.svg?v=43"
             alt=""
             aria-hidden="true"
           >
           <img
             class="flow-overlay flow-overlay-night"
-            src="assets/map/animated-route-network-night.svg?v=1"
+            src="assets/map/animated-route-network-night.svg?v=4"
             alt=""
             aria-hidden="true"
           >
@@ -442,25 +442,7 @@
       let mapDriftActive = false;
       let mapAnimationsPaused = true;
       let panelScrollHoldUntil = 0;
-      let routeSchedulerFrame = 0;
-      let routeSchedulerTimer = 0;
-      let routePauseFallbackTimer = 0;
       let layoutTransitionTimer = 0;
-      const routeMotionSettings = {
-        budgetShare: 0.16,
-        minBudget: 108,
-        maxBudget: 164,
-        speedMultiplier: 0.82,
-        durationMultiplier: 0.84,
-        opacityBoost: 0.055,
-        widthMultiplier: 1.04,
-      };
-      const routeVisibility = {
-        ready: false,
-        routes: [],
-        cursor: 0,
-        pausedAll: false,
-      };
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
       const currentPanelCut = () => {
@@ -482,253 +464,26 @@
         };
       };
 
-      const routeActivationBudget = () => {
-        if (document.hidden || reducedMotion.matches || isStaticMapMode()) {
-          return 0;
-        }
-
-        const routeCount = routeVisibility.routes.length;
-        return clamp(
-          Math.round(routeCount * routeMotionSettings.budgetShare),
-          routeMotionSettings.minBudget,
-          routeMotionSettings.maxBudget
-        );
-      };
-
-      const routeActiveDuration = (route) => {
-        const isHub = route.path.classList.contains("hub");
-        const isPriority = route.path.classList.contains("priority");
-        const base = isHub || isPriority ? 1850 : 1250;
-        const spread = isHub || isPriority ? 850 : 650;
-        return (base + Math.random() * spread) * routeMotionSettings.durationMultiplier;
-      };
-
-      const parseCssSeconds = (value, fallback) => {
-        const normalized = String(value || "").trim();
-        if (normalized.endsWith("ms")) {
-          return Number.parseFloat(normalized) / 1000 || fallback;
-        }
-        if (normalized.endsWith("s")) {
-          return Number.parseFloat(normalized) || fallback;
-        }
-        return Number.parseFloat(normalized) || fallback;
-      };
-
-      const applyRouteMotionMode = () => {
-        routeVisibility.routes.forEach((route) => {
-          route.path.style.setProperty("--speed", `${(route.baseSpeed * routeMotionSettings.speedMultiplier).toFixed(2)}s`);
-          route.path.style.setProperty("--opacity", String(clamp(route.baseOpacity + routeMotionSettings.opacityBoost, 0.03, 0.68)));
-          route.path.style.setProperty("--width", (route.baseWidth * routeMotionSettings.widthMultiplier).toFixed(2));
-        });
-      };
-
-      const setRouteActive = (route, active, time = performance.now()) => {
-        if (route.active === active) {
-          return;
-        }
-
-        route.active = active;
-        route.path.classList.toggle("route-idle", !active);
-        if (active) {
-          route.activeUntil = time + routeActiveDuration(route);
-        }
-      };
-
-      const updateRouteScheduler = (time = performance.now()) => {
-        routeSchedulerFrame = 0;
-
-        if (!routeVisibility.ready) {
-          return;
-        }
-
-        const budget = mapAnimationsPaused ? 0 : routeActivationBudget();
-        if (!budget) {
-          if (mapAnimationsPaused) {
-            let activeCount = 0;
-            routeVisibility.routes.forEach((route) => {
-              if (route.active && route.activeUntil <= time) {
-                setRouteActive(route, false, time);
-              }
-              if (route.active) {
-                activeCount += 1;
-              }
-            });
-
-            if (activeCount > 0) {
-              scheduleRouteVisibilityUpdate();
-              return;
-            }
-
-            if (!routeVisibility.pausedAll) {
-              routeVisibility.routes.forEach((route) => {
-                route.path.classList.add("route-paused", "route-idle");
-              });
-              routeVisibility.pausedAll = true;
-              setFlowOverlayFrozen(true);
-            }
-            return;
-          }
-
-          if (!routeVisibility.pausedAll) {
-            routeVisibility.routes.forEach((route) => {
-              route.active = false;
-              route.activeUntil = 0;
-              route.path.classList.add("route-paused", "route-idle");
-            });
-            routeVisibility.pausedAll = true;
-            setFlowOverlayFrozen(true);
-          }
-          return;
-        }
-
-        let activeCount = 0;
-        if (routeVisibility.pausedAll) {
-          routeVisibility.routes.forEach((route) => {
-            route.path.classList.remove("route-paused");
-          });
-          routeVisibility.pausedAll = false;
-          setFlowOverlayFrozen(false);
-        }
-
-        routeVisibility.routes.forEach((route) => {
-          if (route.active && route.activeUntil <= time) {
-            setRouteActive(route, false, time);
-          }
-          if (route.active) {
-            activeCount += 1;
-          }
-        });
-
-        let slots = Math.max(0, budget - activeCount);
-        let attempts = 0;
-        const maxAttempts = routeVisibility.routes.length * 2;
-
-        while (slots > 0 && attempts < maxAttempts) {
-          const route = routeVisibility.routes[routeVisibility.cursor % routeVisibility.routes.length];
-          routeVisibility.cursor += 1;
-          attempts += 1;
-
-          if (route.active) {
-            continue;
-          }
-
-          setRouteActive(route, true, time);
-          slots -= 1;
-        }
-      };
-
-      const scheduleRouteVisibilityUpdate = () => {
-        if (!routeVisibility.ready || routeSchedulerFrame) {
-          return;
-        }
-
-        routeSchedulerFrame = window.requestAnimationFrame(updateRouteScheduler);
-      };
-
-      const startRouteScheduler = () => {
-        window.clearInterval(routeSchedulerTimer);
-        routeSchedulerTimer = window.setInterval(scheduleRouteVisibilityUpdate, 260);
-        scheduleRouteVisibilityUpdate();
-      };
-
-      const routeSvgRoot = () => flowOverlay?.querySelector("svg");
-
-      const prepareRouteVisibility = () => {
-        const svgRoot = routeSvgRoot();
-        if (!svgRoot) {
-          return;
-        }
-
-        const routes = [...svgRoot.querySelectorAll("#animated-routes .flow")];
-        routeVisibility.routes = routes.map((path) => {
-          path.classList.add("route-idle");
-          return {
-            path,
-            active: false,
-            activeUntil: 0,
-            baseSpeed: parseCssSeconds(path.style.getPropertyValue("--speed"), 2.8),
-            baseOpacity: Number.parseFloat(path.style.getPropertyValue("--opacity")) || 0.1,
-            baseWidth: Number.parseFloat(path.style.getPropertyValue("--width")) || 0.9,
-          };
-        });
-        routeVisibility.cursor = Math.floor(Math.random() * Math.max(routeVisibility.routes.length, 1));
-        routeVisibility.ready = true;
-        applyRouteMotionMode();
-        startRouteScheduler();
-      };
-
-      const setRouteNetworkNightMode = (enabled) => {
-        const svgRoot = routeSvgRoot();
-        svgRoot?.classList.toggle("night-mode", enabled);
-      };
-
       const setFlowOverlayFrozen = (enabled) => {
         flowOverlays.forEach((overlay) => {
           overlay.classList.toggle("is-soft-paused", enabled);
         });
-        const svgRoot = routeSvgRoot();
-        if (!svgRoot) {
-          return;
-        }
-
-        if (enabled) {
-          svgRoot.pauseAnimations?.();
-        } else {
-          svgRoot.unpauseAnimations?.();
-        }
-      };
-
-      const finishRoutePause = () => {
-        routeVisibility.routes.forEach((route) => {
-          route.active = false;
-          route.activeUntil = 0;
-          route.path.classList.add("route-paused", "route-idle");
-        });
-        routeVisibility.pausedAll = true;
-        setFlowOverlayFrozen(true);
       };
 
       const setMapAnimationsPaused = (enabled) => {
-        window.clearTimeout(routePauseFallbackTimer);
         mapAnimationsPaused = enabled;
         document.body.classList.toggle("animations-paused", enabled);
-
-        if (enabled) {
-          setFlowOverlayFrozen(false);
-          routePauseFallbackTimer = window.setTimeout(() => {
-            if (!mapAnimationsPaused) {
-              return;
-            }
-
-            finishRoutePause();
-          }, 2900);
-        } else if (routeVisibility.pausedAll) {
-          routeVisibility.routes.forEach((route) => {
-            route.path.classList.remove("route-paused");
-          });
-          routeVisibility.pausedAll = false;
-          setFlowOverlayFrozen(false);
-        } else {
-          setFlowOverlayFrozen(false);
-        }
+        setFlowOverlayFrozen(enabled);
         mapPauseToggle?.setAttribute("aria-pressed", String(enabled));
         mapPauseToggle?.setAttribute(
           "aria-label",
           enabled ? "Resume map flows" : "Pause map flows"
         );
-        scheduleRouteVisibilityUpdate();
       };
 
       const setNightMode = (enabled) => {
         document.body.classList.toggle("night-mode", enabled);
-        setRouteNetworkNightMode(enabled);
-        if (mapAnimationsPaused) {
-          if (routeVisibility.ready) {
-            finishRoutePause();
-          } else {
-            setFlowOverlayFrozen(true);
-          }
-        }
+        setFlowOverlayFrozen(mapAnimationsPaused);
         if (!themeToggle) {
           return;
         }
@@ -752,21 +507,6 @@
         setNightMode(!document.body.classList.contains("night-mode"));
       });
       setNightMode(document.body.classList.contains("night-mode") || shouldUseNightModeByClock());
-
-      flowOverlay?.addEventListener("load", () => {
-        setRouteNetworkNightMode(document.body.classList.contains("night-mode"));
-        prepareRouteVisibility();
-        if (mapAnimationsPaused) {
-          finishRoutePause();
-        }
-      });
-
-      window.requestAnimationFrame(() => {
-        if (!routeVisibility.ready && routeSvgRoot()) {
-          setRouteNetworkNightMode(document.body.classList.contains("night-mode"));
-          prepareRouteVisibility();
-        }
-      });
 
       const mapPanLimits = () => {
         if (!visualCanvas || !mapPlane) {
@@ -849,7 +589,6 @@
         }
         clampMapPan();
         setMapTransform(mapPanX, mapPanY);
-        scheduleRouteVisibilityUpdate();
       };
 
       const animateMap = (time) => {
@@ -999,7 +738,6 @@
         staticMapLayout.addEventListener?.("change", () => {
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
-          scheduleRouteVisibilityUpdate(true);
         });
         mapPlane?.addEventListener("error", () => {
           if (mapPlane instanceof HTMLImageElement) {
@@ -1039,7 +777,6 @@
           updateLayoutToggle();
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
-          scheduleRouteVisibilityUpdate(true);
         };
 
         let layoutTransitionFrame = 0;
