@@ -16,9 +16,9 @@
     <link rel="preload" as="image" href="assets/map/night-map-reveal.png?v=4">
     <link rel="preload" as="image" href="assets/map/network-portrait-selected-ink.png?v=2">
     <link rel="preload" as="image" href="assets/map/network-portrait-night-generated-aligned.png?v=1">
-    <link rel="stylesheet" href="styles.css?v=156">
+    <link rel="stylesheet" href="styles.css?v=159">
   </head>
-  <body data-flow-mode="x1">
+  <body>
     <header class="top-bar">
       <div class="institution-links" aria-label="Institution links">
         <a
@@ -109,19 +109,9 @@
             aria-hidden="true"
             tabindex="-1"
           ></object>
-          <button class="map-pause-toggle" type="button" aria-label="Pause map animations" aria-pressed="false">
-            <svg class="map-pause-icon pause-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 5v14"></path>
-              <path d="M16 5v14"></path>
-            </svg>
-            <svg class="map-pause-icon play-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 5v14l11-7Z"></path>
-            </svg>
+          <button class="map-pause-toggle" type="button" aria-label="Pause map flows" aria-pressed="false">
+            <span class="map-animation-dot" aria-hidden="true"></span>
           </button>
-          <div class="map-speed-toggle" role="group" aria-label="Map animation intensity">
-            <button class="map-speed-option" type="button" data-flow-mode="x1" aria-pressed="true">x1</button>
-            <button class="map-speed-option" type="button" data-flow-mode="x2" aria-pressed="false">x2</button>
-          </div>
         </div>
 
         <article class="intro-panel">
@@ -164,7 +154,7 @@
                 </button>
               </div>
               <a
-                class="contact-action"
+                class="contact-action contact-action-linkedin"
                 href="https://www.linkedin.com/in/florian-e-241097210/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -175,7 +165,7 @@
                 </svg>
               </a>
               <a
-                class="contact-action"
+                class="contact-action contact-action-github"
                 href="https://github.com/felgourdou"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -210,7 +200,7 @@
             <div class="research-list" aria-label="Research overview">
               <section class="research-entry">
                 <h2>Work in progress</h2>
-                <article class="research-paper">
+                <article class="research-paper wip-main-paper">
                   <h3>The Returns to Industrial Policy: Evidence From France's Mission-Oriented Programs</h3>
                   <p class="paper-authors">
                     with
@@ -233,7 +223,7 @@
                     </div>
                   </div>
                 </article>
-                <article class="research-paper">
+                <article class="research-paper data-regulation-paper">
                   <h3>The Global Incidence of Data Regulation</h3>
                   <div class="paper-actions">
                     <div class="paper-action-row">
@@ -253,7 +243,7 @@
               <section class="research-entry published-entry">
                 <h2>Policy reports</h2>
                 <div class="published-list">
-                  <article class="research-paper published-paper">
+                  <article class="research-paper published-paper focus-pia-paper">
                     <div class="publication-marker" aria-label="Publication details">
                       <span class="publication-date">2026</span>
                     </div>
@@ -299,7 +289,7 @@
                       </div>
                     </div>
                   </article>
-                  <article class="research-paper published-paper">
+                  <article class="research-paper published-paper decarbonation-paper">
                     <div class="publication-marker" aria-label="Publication details">
                       <span class="publication-date">2024</span>
                     </div>
@@ -341,7 +331,7 @@
             <div class="research-list teaching-list" aria-label="Teaching overview">
               <section class="research-entry">
                 <h2>Paris 1 Panth&eacute;on-Sorbonne</h2>
-                <article class="research-paper teaching-paper">
+                <article class="research-paper teaching-paper trade-course">
                   <h3>
                     <a class="paper-title-link" href="https://cours.univ-paris1.fr/course/view.php?id=44057" target="_blank" rel="noopener noreferrer">
                       International Trade <span class="course-level">3<sup>rd</sup> year undergraduate</span>
@@ -353,7 +343,7 @@
                   </p>
                   <p class="publication-note">Summer 2026</p>
                 </article>
-                <article class="research-paper teaching-paper">
+                <article class="research-paper teaching-paper monetary-course">
                   <h3>
                     <a class="paper-title-link" href="https://cours.univ-paris1.fr/course/view.php?id=49059" target="_blank" rel="noopener noreferrer">
                       International Monetary Economics <span class="course-level">3<sup>rd</sup> year undergraduate</span>
@@ -392,8 +382,6 @@
       const mapPlane = document.querySelector(".map-plane");
       const flowOverlay = document.querySelector(".flow-overlay");
       const mapPauseToggle = document.querySelector(".map-pause-toggle");
-      const mapSpeedToggle = document.querySelector(".map-speed-toggle");
-      const mapSpeedButtons = [...document.querySelectorAll(".map-speed-option")];
       const introPanelForMap = document.querySelector(".intro-panel");
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const staticMapLayout = window.matchMedia("(max-width: 980px), (orientation: portrait)");
@@ -413,28 +401,15 @@
       let routeSchedulerFrame = 0;
       let routeSchedulerTimer = 0;
       let routePauseFallbackTimer = 0;
-      let routeMotionMode = "x1";
       let layoutTransitionTimer = 0;
-      let releaseNavTransitionLock = null;
-      const routeMotionModes = {
-        x1: {
-          budgetShare: 0.075,
-          minBudget: 52,
-          maxBudget: 86,
-          speedMultiplier: 1.16,
-          durationMultiplier: 1.2,
-          opacityBoost: 0,
-          widthMultiplier: 1,
-        },
-        x2: {
-          budgetShare: 0.16,
-          minBudget: 108,
-          maxBudget: 164,
-          speedMultiplier: 0.82,
-          durationMultiplier: 0.84,
-          opacityBoost: 0.055,
-          widthMultiplier: 1.04,
-        },
+      const routeMotionSettings = {
+        budgetShare: 0.16,
+        minBudget: 108,
+        maxBudget: 164,
+        speedMultiplier: 0.82,
+        durationMultiplier: 0.84,
+        opacityBoost: 0.055,
+        widthMultiplier: 1.04,
       };
       const routeVisibility = {
         ready: false,
@@ -470,8 +445,11 @@
         }
 
         const routeCount = routeVisibility.routes.length;
-        const mode = routeMotionModes[routeMotionMode] || routeMotionModes.x1;
-        return clamp(Math.round(routeCount * mode.budgetShare), mode.minBudget, mode.maxBudget);
+        return clamp(
+          Math.round(routeCount * routeMotionSettings.budgetShare),
+          routeMotionSettings.minBudget,
+          routeMotionSettings.maxBudget
+        );
       };
 
       const routeActiveDuration = (route) => {
@@ -479,8 +457,7 @@
         const isPriority = route.path.classList.contains("priority");
         const base = isHub || isPriority ? 1850 : 1250;
         const spread = isHub || isPriority ? 850 : 650;
-        const mode = routeMotionModes[routeMotionMode] || routeMotionModes.x1;
-        return (base + Math.random() * spread) * mode.durationMultiplier;
+        return (base + Math.random() * spread) * routeMotionSettings.durationMultiplier;
       };
 
       const parseCssSeconds = (value, fallback) => {
@@ -495,17 +472,10 @@
       };
 
       const applyRouteMotionMode = () => {
-        const mode = routeMotionModes[routeMotionMode] || routeMotionModes.x1;
-        document.body.dataset.flowMode = routeMotionMode;
-        mapSpeedButtons.forEach((button) => {
-          const active = button.dataset.flowMode === routeMotionMode;
-          button.setAttribute("aria-pressed", String(active));
-        });
-
         routeVisibility.routes.forEach((route) => {
-          route.path.style.setProperty("--speed", `${(route.baseSpeed * mode.speedMultiplier).toFixed(2)}s`);
-          route.path.style.setProperty("--opacity", String(clamp(route.baseOpacity + mode.opacityBoost, 0.03, 0.68)));
-          route.path.style.setProperty("--width", (route.baseWidth * mode.widthMultiplier).toFixed(2));
+          route.path.style.setProperty("--speed", `${(route.baseSpeed * routeMotionSettings.speedMultiplier).toFixed(2)}s`);
+          route.path.style.setProperty("--opacity", String(clamp(route.baseOpacity + routeMotionSettings.opacityBoost, 0.03, 0.68)));
+          route.path.style.setProperty("--width", (route.baseWidth * routeMotionSettings.widthMultiplier).toFixed(2));
         });
       };
 
@@ -697,7 +667,7 @@
         mapPauseToggle?.setAttribute("aria-pressed", String(enabled));
         mapPauseToggle?.setAttribute(
           "aria-label",
-          enabled ? "Resume map animations" : "Pause map animations"
+          enabled ? "Resume map flows" : "Pause map flows"
         );
         scheduleRouteVisibilityUpdate();
       };
@@ -975,8 +945,6 @@
         const finishLayoutTransition = () => {
           window.clearTimeout(layoutTransitionTimer);
           document.body.classList.remove("layout-transition-to-vertical");
-          releaseNavTransitionLock?.();
-          releaseNavTransitionLock = null;
           updateLayoutToggle();
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
@@ -988,32 +956,6 @@
           updateLayoutToggle();
         };
 
-        const lockSiteNavForTransition = () => {
-          const siteNav = document.querySelector(".site-nav");
-          if (!siteNav) {
-            return null;
-          }
-
-          const navBounds = siteNav.getBoundingClientRect();
-          const clone = siteNav.cloneNode(true);
-          clone.classList.add("site-nav-transition-clone");
-          clone.setAttribute("aria-hidden", "true");
-          clone.querySelectorAll("a, button").forEach((item) => {
-            item.tabIndex = -1;
-          });
-          clone.style.left = `${navBounds.left}px`;
-          clone.style.top = `${navBounds.top}px`;
-          clone.style.width = `${navBounds.width}px`;
-          clone.style.height = `${navBounds.height}px`;
-          document.body.classList.add("nav-transition-lock");
-          document.body.appendChild(clone);
-
-          return () => {
-            clone.remove();
-            document.body.classList.remove("nav-transition-lock");
-          };
-        };
-
         const setForcedVerticalLayout = (enabled, animate = false) => {
           const forced = document.body.classList.contains("force-vertical");
           if (forced === enabled) {
@@ -1022,11 +964,8 @@
           }
 
           window.clearTimeout(layoutTransitionTimer);
-          releaseNavTransitionLock?.();
-          releaseNavTransitionLock = null;
 
           if (animate && !reducedMotion.matches && "startViewTransition" in document) {
-            releaseNavTransitionLock = lockSiteNavForTransition();
             const transition = document.startViewTransition(() => {
               applyForcedVerticalLayout(enabled);
             });
@@ -1070,34 +1009,19 @@
         );
       });
 
-      ["pointerdown", "pointerup", "pointercancel", "click", "wheel"].forEach((eventName) => {
-        mapSpeedToggle?.addEventListener(
-          eventName,
-          (event) => {
-            event.stopPropagation();
-          },
-          eventName === "wheel" ? { passive: true } : undefined
-        );
-      });
-
-      mapSpeedButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const nextMode = button.dataset.flowMode === "x2" ? "x2" : "x1";
-          if (routeMotionMode === nextMode) {
-            return;
-          }
-
-          routeMotionMode = nextMode;
-          applyRouteMotionMode();
-          scheduleRouteVisibilityUpdate();
-        });
-      });
-
       const introPanel = document.querySelector(".intro-panel");
       const introContent = document.querySelector(".intro-content");
       const introTitle = document.querySelector("#intro-title");
       const typedTitle = introTitle?.querySelector(".typed-text");
       const flowingParagraphs = [...document.querySelectorAll(".intro-content .lede")];
+      const updateHomeFooterReveal = () => {
+        const shouldReveal =
+          document.body.dataset.section === "home" &&
+          Boolean(introPanel) &&
+          introPanel.scrollTop > 56 &&
+          !isStaticMapMode();
+        document.body.classList.toggle("home-footer-visible", shouldReveal);
+      };
       const captureSourceParagraphs = () => flowingParagraphs.map((paragraph) => ({
         paragraph,
         nodes: [...paragraph.childNodes].map((node) => node.cloneNode(true)),
@@ -1113,6 +1037,7 @@
             mapDriftActive = false;
             setMapTransform(mapPanX, mapPanY, 0, false);
           }
+          updateHomeFooterReveal();
         },
         { passive: true }
       );
@@ -1568,6 +1493,8 @@
         if (introPanel) {
           introPanel.scrollTop = 0;
         }
+        document.body.classList.remove("home-footer-visible");
+        updateHomeFooterReveal();
         clampMapPan();
         setMapTransform(mapPanX, mapPanY);
         scheduleDiagonalLayout();
@@ -1577,6 +1504,7 @@
       };
 
       window.addEventListener("hashchange", setActiveSection);
+      window.addEventListener("resize", updateHomeFooterReveal);
       setActiveSection();
 
       document.querySelectorAll(".abstract-button").forEach((button) => {
