@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -16,11 +16,40 @@
     <link rel="preload" as="image" href="assets/map/night-map-reveal.png?v=4">
     <link rel="preload" as="image" href="assets/map/network-portrait-selected-ink.png?v=2">
     <link rel="preload" as="image" href="assets/map/network-portrait-night-generated-aligned.png?v=1">
-    <link rel="stylesheet" href="styles.css?v=159">
+    <link rel="preload" as="image" href="assets/patterns/irregular-network-tile.svg">
+    <link rel="preload" as="image" href="assets/patterns/irregular-network-tile-night.svg">
+    <link rel="stylesheet" href="styles.css?v=221">
   </head>
   <body>
+    <script>
+      (() => {
+        const hour = new Date().getHours();
+        if (hour >= 19 || hour < 7) {
+          document.body.classList.add("night-mode");
+        }
+        document.body.classList.add("animations-paused");
+      })();
+    </script>
     <header class="top-bar">
       <div class="institution-links" aria-label="Institution links">
+        <button class="nav-icon-button layout-toggle" type="button" aria-label="Switch to vertical layout" aria-pressed="false" data-nav-label="full screen">
+          <span class="nav-tool-mark layout-toggle-mark" aria-hidden="true">
+            <svg class="nav-tool-icon nav-tool-icon-layout" viewBox="0 0 24 24">
+              <g class="layout-icon-enter">
+                <path class="layout-corner-a" d="M9 3H3v6"></path>
+                <path class="layout-corner-b" d="M15 21h6v-6"></path>
+                <path class="layout-diagonal-a" d="m3 3 7 7"></path>
+                <path class="layout-diagonal-b" d="m21 21-7-7"></path>
+              </g>
+              <g class="layout-icon-exit">
+                <path class="layout-corner-a" d="M4 10h6V4"></path>
+                <path class="layout-corner-b" d="M20 14h-6v6"></path>
+                <path class="layout-diagonal-a" d="m10 10-7-7"></path>
+                <path class="layout-diagonal-b" d="m14 14 7 7"></path>
+              </g>
+            </svg>
+          </span>
+        </button>
         <a
           class="logo-link logo-link-sciences-po"
           href="https://www.sciencespo.fr/department-economics/"
@@ -55,7 +84,7 @@
         <a href="#home" aria-current="page"><span class="nav-text">home</span></a>
         <a href="#research"><span class="nav-text">research</span></a>
         <a href="#teaching"><span class="nav-text">teaching</span></a>
-        <button class="nav-icon-button theme-toggle" type="button" aria-label="Switch to night mode" aria-pressed="false">
+        <button class="nav-icon-button theme-toggle" type="button" aria-label="Switch to night mode" aria-pressed="false" data-nav-label="night mode">
           <span class="nav-tool-mark" aria-hidden="true">
             <svg class="nav-tool-icon nav-tool-icon-moon" viewBox="0 0 24 24">
               <path d="M12 3a9 9 0 1 0 8.2 12.7A7 7 0 0 1 12 3Z"></path>
@@ -68,7 +97,7 @@
             </svg>
           </span>
         </button>
-        <button class="nav-icon-button language-toggle" type="button" aria-label="Translate site to French" aria-pressed="false">
+        <button class="nav-icon-button language-toggle" type="button" aria-label="Translate site to French" aria-pressed="false" data-nav-label="french">
           <span class="nav-tool-mark" aria-hidden="true">
             <svg class="nav-tool-icon nav-tool-icon-baguette" viewBox="0 0 24 24">
               <path d="M5.2 18.8c-1.15-1.15-.4-4.3 1.68-7.03 2.07-2.73 4.9-5.2 7.62-6.67 2.73-1.47 4.52-1.42 5.3-.64.78.78.83 2.57-.64 5.3-1.47 2.72-3.94 5.55-6.67 7.62-2.73 2.08-5.88 2.83-7.29 1.42Z"></path>
@@ -87,6 +116,8 @@
         </button>
       </nav>
     </header>
+    <div class="side-polygons side-polygons-left" aria-hidden="true"></div>
+    <div class="side-polygons side-polygons-right" aria-hidden="true"></div>
 
     <main class="page-shell">
       <section class="hero" id="home" aria-labelledby="intro-title">
@@ -95,21 +126,31 @@
           role="img"
           aria-label="Antique-style map of the Mediterranean covered with network lines"
         >
-          <div class="map-plane" aria-hidden="true"></div>
+          <img
+            class="map-plane map-base-plane"
+            src="assets/map/mediterranean-network-map.png?v=1"
+            alt=""
+            aria-hidden="true"
+          >
           <img
             class="map-reveal-plane"
             src="assets/map/night-map-reveal.png?v=4"
             alt=""
             aria-hidden="true"
           >
-          <object
-            class="flow-overlay"
-            type="image/svg+xml"
-            data="assets/map/animated-route-network.svg?v=36"
+          <img
+            class="flow-overlay flow-overlay-day"
+            src="assets/map/animated-route-network.svg?v=41"
+            alt=""
             aria-hidden="true"
-            tabindex="-1"
-          ></object>
-          <button class="map-pause-toggle" type="button" aria-label="Pause map flows" aria-pressed="false">
+          >
+          <img
+            class="flow-overlay flow-overlay-night"
+            src="assets/map/animated-route-network-night.svg?v=1"
+            alt=""
+            aria-hidden="true"
+          >
+          <button class="map-pause-toggle" type="button" aria-label="Resume map flows" aria-pressed="true">
             <span class="map-animation-dot" aria-hidden="true"></span>
           </button>
         </div>
@@ -363,9 +404,6 @@
           <footer class="site-footer site-footer-panel"><span class="site-footer__bar">&copy; 2026 Florian El Gourdou</span></footer>
         </article>
         <footer class="site-footer site-footer-mobile"><span class="site-footer__bar">&copy; 2026 Florian El Gourdou</span></footer>
-        <button class="layout-toggle" type="button" aria-label="Switch to vertical layout" aria-pressed="false">
-          <span class="layout-toggle-mark" aria-hidden="true">&lt;</span>
-        </button>
       </section>
     </main>
 
@@ -376,10 +414,16 @@
       const languageToggle = document.querySelector(".language-toggle");
       const layoutToggle = document.querySelector(".layout-toggle");
       let currentLanguage = "en";
+      const shouldUseNightModeByClock = () => {
+        const hour = new Date().getHours();
+        return hour >= 19 || hour < 7;
+      };
 
       const visualCanvas = document.querySelector(".visual-canvas");
       const mapLayers = [...document.querySelectorAll(".map-plane, .map-reveal-plane, .flow-overlay")];
       const mapPlane = document.querySelector(".map-plane");
+      const mapBaseSrc = "assets/map/mediterranean-network-map.png?v=1";
+      const flowOverlays = [...document.querySelectorAll(".flow-overlay")];
       const flowOverlay = document.querySelector(".flow-overlay");
       const mapPauseToggle = document.querySelector(".map-pause-toggle");
       const introPanelForMap = document.querySelector(".intro-panel");
@@ -396,7 +440,7 @@
       let mapZoom = mapBaseZoom;
       let dragOrigin = null;
       let mapDriftActive = false;
-      let mapAnimationsPaused = false;
+      let mapAnimationsPaused = true;
       let panelScrollHoldUntil = 0;
       let routeSchedulerFrame = 0;
       let routeSchedulerTimer = 0;
@@ -417,7 +461,6 @@
         cursor: 0,
         pausedAll: false,
       };
-
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
       const currentPanelCut = () => {
@@ -588,13 +631,15 @@
         scheduleRouteVisibilityUpdate();
       };
 
+      const routeSvgRoot = () => flowOverlay?.querySelector("svg");
+
       const prepareRouteVisibility = () => {
-        const svgDocument = flowOverlay?.contentDocument;
-        if (!svgDocument) {
+        const svgRoot = routeSvgRoot();
+        if (!svgRoot) {
           return;
         }
 
-        const routes = [...svgDocument.querySelectorAll("#animated-routes .flow")];
+        const routes = [...svgRoot.querySelectorAll("#animated-routes .flow")];
         routeVisibility.routes = routes.map((path) => {
           path.classList.add("route-idle");
           return {
@@ -613,13 +658,15 @@
       };
 
       const setRouteNetworkNightMode = (enabled) => {
-        const svgRoot = flowOverlay?.contentDocument?.documentElement;
+        const svgRoot = routeSvgRoot();
         svgRoot?.classList.toggle("night-mode", enabled);
       };
 
       const setFlowOverlayFrozen = (enabled) => {
-        flowOverlay?.classList.toggle("is-soft-paused", enabled);
-        const svgRoot = flowOverlay?.contentDocument?.documentElement;
+        flowOverlays.forEach((overlay) => {
+          overlay.classList.toggle("is-soft-paused", enabled);
+        });
+        const svgRoot = routeSvgRoot();
         if (!svgRoot) {
           return;
         }
@@ -693,11 +740,18 @@
             ? (currentLanguage === "fr" ? "Passer en mode jour" : "Switch to day mode")
             : (currentLanguage === "fr" ? "Passer en mode nuit" : "Switch to night mode")
         );
+        themeToggle.setAttribute(
+          "data-nav-label",
+          enabled
+            ? (currentLanguage === "fr" ? "day mode" : "day mode")
+            : (currentLanguage === "fr" ? "night mode" : "night mode")
+        );
       };
 
       themeToggle?.addEventListener("click", () => {
         setNightMode(!document.body.classList.contains("night-mode"));
       });
+      setNightMode(document.body.classList.contains("night-mode") || shouldUseNightModeByClock());
 
       flowOverlay?.addEventListener("load", () => {
         setRouteNetworkNightMode(document.body.classList.contains("night-mode"));
@@ -708,7 +762,7 @@
       });
 
       window.requestAnimationFrame(() => {
-        if (!routeVisibility.ready && flowOverlay?.contentDocument) {
+        if (!routeVisibility.ready && routeSvgRoot()) {
           setRouteNetworkNightMode(document.body.classList.contains("night-mode"));
           prepareRouteVisibility();
         }
@@ -781,6 +835,21 @@
         mapLayers.forEach((layer) => {
           layer.style.transform = transform;
         });
+      };
+
+      const restoreMapBaseLayer = () => {
+        if (mapPlane instanceof HTMLImageElement) {
+          mapPlane.style.visibility = "";
+          mapPlane.style.opacity = "";
+          if (!mapPlane.getAttribute("src")) {
+            mapPlane.src = mapBaseSrc;
+          } else if (mapPlane.complete && mapPlane.naturalWidth === 0) {
+            mapPlane.src = `${mapBaseSrc}&restore=${Date.now()}`;
+          }
+        }
+        clampMapPan();
+        setMapTransform(mapPanX, mapPanY);
+        scheduleRouteVisibilityUpdate();
       };
 
       const animateMap = (time) => {
@@ -932,18 +1001,40 @@
           setMapTransform(mapPanX, mapPanY);
           scheduleRouteVisibilityUpdate(true);
         });
+        mapPlane?.addEventListener("error", () => {
+          if (mapPlane instanceof HTMLImageElement) {
+            mapPlane.src = `${mapBaseSrc}&retry=${Date.now()}`;
+          }
+        });
+        window.addEventListener("pageshow", () => {
+          restoreMapBaseLayer();
+        });
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) {
+            restoreMapBaseLayer();
+          }
+        });
 
         const updateLayoutToggle = () => {
           const forced = document.body.classList.contains("force-vertical");
           layoutToggle?.setAttribute("aria-pressed", String(forced));
           layoutToggle?.setAttribute(
             "aria-label",
-            forced ? "Return to diagonal layout" : "Switch to vertical layout"
+            forced ? "Exit full screen" : "Enter full screen"
+          );
+          layoutToggle?.setAttribute(
+            "data-nav-label",
+            forced ? "exit" : "full screen"
           );
         };
 
         const finishLayoutTransition = () => {
           window.clearTimeout(layoutTransitionTimer);
+          window.cancelAnimationFrame(layoutTransitionFrame);
+          layoutTransitionFrame = 0;
+          document.documentElement.classList.remove("layout-transition-no-root");
+          document.body.classList.remove("layout-decor-ready");
+          document.body.classList.remove("layout-polygons-entering");
           document.body.classList.remove("layout-transition-to-vertical");
           updateLayoutToggle();
           clampMapPan();
@@ -951,6 +1042,7 @@
           scheduleRouteVisibilityUpdate(true);
         };
 
+        let layoutTransitionFrame = 0;
         const applyForcedVerticalLayout = (enabled) => {
           document.body.classList.toggle("force-vertical", enabled);
           updateLayoutToggle();
@@ -964,22 +1056,42 @@
           }
 
           window.clearTimeout(layoutTransitionTimer);
+          window.cancelAnimationFrame(layoutTransitionFrame);
+          layoutTransitionFrame = 0;
 
-          if (animate && !reducedMotion.matches && "startViewTransition" in document) {
-            const transition = document.startViewTransition(() => {
-              applyForcedVerticalLayout(enabled);
+          if (animate && !reducedMotion.matches && enabled && "startViewTransition" in document) {
+            document.documentElement.classList.add("layout-transition-no-root");
+            document.body.classList.add("layout-decor-ready");
+            layoutTransitionFrame = window.requestAnimationFrame(() => {
+              document.body.classList.add("layout-polygons-entering");
+              layoutTransitionFrame = window.requestAnimationFrame(() => {
+                const transition = document.startViewTransition(() => {
+                  document.body.classList.add("layout-transition-to-vertical");
+                  applyForcedVerticalLayout(true);
+                });
+                layoutTransitionTimer = window.setTimeout(finishLayoutTransition, 760);
+                transition.finished.finally(finishLayoutTransition);
+              });
             });
-            transition.finished.finally(finishLayoutTransition);
             return;
           }
 
           if (animate && !reducedMotion.matches && enabled) {
+            document.body.classList.add("layout-decor-ready");
+            document.body.classList.add("layout-polygons-entering");
             document.body.classList.add("layout-transition-to-vertical");
-            updateLayoutToggle();
+            applyForcedVerticalLayout(true);
             layoutTransitionTimer = window.setTimeout(() => {
-              applyForcedVerticalLayout(true);
               finishLayoutTransition();
             }, 680);
+            return;
+          }
+
+          if (animate && !reducedMotion.matches && !enabled && "startViewTransition" in document) {
+            const transition = document.startViewTransition(() => {
+              applyForcedVerticalLayout(false);
+            });
+            transition.finished.finally(finishLayoutTransition);
             return;
           }
 
@@ -1032,28 +1144,81 @@
         return introPanel;
       };
 
+      const isHomeSection = () => document.body.dataset.section === "home";
+
       const isAtFooterRevealPoint = (target) => {
         if (!target) {
           return false;
         }
 
         const footerHeight = activeFooter()?.offsetHeight || 0;
-        const revealPoint = Math.max(0, target.scrollHeight - target.clientHeight - footerHeight);
+        const maxScroll = Math.max(0, target.scrollHeight - target.clientHeight);
+        let revealPoint = Math.max(0, maxScroll - footerHeight);
+        if (isHomeSection()) {
+          const homeContactDock = document.querySelector('[data-section-view="home"] .contact-dock');
+          const documentTarget =
+            target === document.scrollingElement ||
+            target === document.documentElement ||
+            target === document.body;
+          const targetTop = documentTarget ? 0 : target.getBoundingClientRect().top;
+          const contentBottom = homeContactDock
+            ? homeContactDock.getBoundingClientRect().bottom - targetTop + target.scrollTop
+            : target.scrollHeight;
+          revealPoint = Math.max(0, Math.min(revealPoint, contentBottom - target.clientHeight + 18));
+        }
         return target.scrollTop >= revealPoint - 3;
       };
 
       const revealFooterFromWheel = (event) => {
-        if (event.deltaY <= 0 || document.body.classList.contains("footer-revealed")) {
+        if (event.deltaY < 0) {
+          document.body.classList.remove("footer-revealed");
+          return;
+        }
+
+        if (event.deltaY === 0 || document.body.classList.contains("footer-revealed")) {
           return;
         }
 
         const target = footerRevealTarget();
         if (isAtFooterRevealPoint(target)) {
           document.body.classList.add("footer-revealed");
+          if (isHomeSection()) {
+            window.requestAnimationFrame(() => {
+              target.scrollTo({
+                top: Math.max(0, target.scrollHeight - target.clientHeight),
+                behavior: reducedMotion.matches ? "auto" : "smooth",
+              });
+            });
+          }
         }
       };
 
+      let lastFooterScrollTop = 0;
+      const hideFooterOnScrollUp = () => {
+        const target = footerRevealTarget();
+        if (!target) {
+          return;
+        }
+
+        const scrollTop = target.scrollTop;
+        if (scrollTop < lastFooterScrollTop - 2) {
+          document.body.classList.remove("footer-revealed");
+        }
+        lastFooterScrollTop = scrollTop;
+      };
+
       introPanel?.addEventListener("wheel", revealFooterFromWheel, { passive: true });
+      introPanel?.addEventListener("scroll", hideFooterOnScrollUp, { passive: true });
+      document.addEventListener("wheel", revealFooterFromWheel, { passive: true, capture: true });
+      window.addEventListener(
+        "keydown",
+        (event) => {
+          if (["ArrowUp", "PageUp", "Home"].includes(event.key)) {
+            document.body.classList.remove("footer-revealed");
+          }
+        },
+        { passive: true }
+      );
       window.addEventListener(
         "wheel",
         (event) => {
@@ -1061,8 +1226,9 @@
             revealFooterFromWheel(event);
           }
         },
-        { passive: true }
+        { passive: true, capture: true }
       );
+      window.addEventListener("scroll", hideFooterOnScrollUp, { passive: true });
 
       introPanel?.addEventListener(
         "scroll",
@@ -1432,6 +1598,10 @@
 
         languageToggle?.setAttribute("aria-pressed", String(copy.lang === "fr"));
         languageToggle?.setAttribute("aria-label", copy.languageLabel);
+        languageToggle?.setAttribute(
+          "data-nav-label",
+          copy.lang === "fr" ? "english" : "french"
+        );
 
         flowingParagraphs.forEach((paragraph, index) => {
           paragraph.classList.remove("is-flowed");
@@ -1506,12 +1676,40 @@
         applyLanguage(currentLanguage === "fr" ? "en" : "fr");
       });
 
+      const closeMailContact = () => {
+        const mailContactElement = document.querySelector(".mail-contact");
+        const mailToggleElement = document.querySelector(".mail-toggle");
+        const emailAddressElement = document.querySelector("#email-address");
+        const copyCueElement = document.querySelector(".email-copy-cue");
+        if (!mailContactElement || !mailToggleElement || !emailAddressElement) {
+          return;
+        }
+
+        mailContactElement.classList.remove("is-open", "is-copied");
+        mailToggleElement.setAttribute("aria-expanded", "false");
+        mailToggleElement.setAttribute(
+          "aria-label",
+          currentLanguage === "fr" ? "Afficher l'adresse e-mail" : "Show email address"
+        );
+        emailAddressElement.setAttribute(
+          "aria-label",
+          currentLanguage === "fr" ? "Copier l'adresse e-mail" : "Copy email address"
+        );
+        emailAddressElement.tabIndex = -1;
+        if (copyCueElement) {
+          copyCueElement.innerHTML = languageCopy[currentLanguage].copyCue;
+        }
+      };
+
       const setActiveSection = () => {
         const section = (window.location.hash || "#home").slice(1);
         const panelSection = section === "research" || section === "teaching" ? section : "home";
 
         document.body.dataset.section = panelSection;
         document.body.classList.remove("footer-revealed");
+        if (panelSection !== "home") {
+          closeMailContact();
+        }
         navLinks.forEach((link) => {
           const isCurrent = link.getAttribute("href") === `#${section || "home"}`;
           if (isCurrent) {
@@ -1658,19 +1856,7 @@
           return;
         }
 
-        mailContact.classList.remove("is-open");
-        mailContact.classList.remove("is-copied");
-        mailToggle.setAttribute("aria-expanded", "false");
-        mailToggle.setAttribute(
-          "aria-label",
-          currentLanguage === "fr" ? "Afficher l'adresse e-mail" : "Show email address"
-        );
-        emailAddress.setAttribute(
-          "aria-label",
-          currentLanguage === "fr" ? "Copier l'adresse e-mail" : "Copy email address"
-        );
-        emailAddress.tabIndex = -1;
-        copyCue.innerHTML = languageCopy[currentLanguage].copyCue;
+        closeMailContact();
       });
 
       emailAddress.addEventListener("click", copyEmail);
