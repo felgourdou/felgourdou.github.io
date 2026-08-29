@@ -16,7 +16,7 @@
     <link rel="preload" as="image" href="assets/map/night-map-reveal.png?v=4">
     <link rel="preload" as="image" href="assets/map/network-portrait-selected-ink.png?v=2">
     <link rel="preload" as="image" href="assets/map/network-portrait-night-generated-aligned.png?v=1">
-    <link rel="stylesheet" href="styles.css?v=143">
+    <link rel="stylesheet" href="styles.css?v=153">
   </head>
   <body data-flow-mode="x1">
     <header class="top-bar">
@@ -259,9 +259,9 @@
                     </div>
                     <div class="paper-main">
                       <h3>
-                        <a class="paper-title-link" href="assets/docs/focus-france-2030.pdf" target="_blank" rel="noopener noreferrer">
+                        <span class="paper-title-link is-disabled">
                           From PIA to France 2030: Evaluating Competitive Support for Firm Growth
-                        </a>
+                        </span>
                       </h3>
                       <p class="paper-authors">
                         with
@@ -274,14 +274,14 @@
                       <div class="paper-actions">
                         <div class="paper-action-row">
                           <button class="abstract-button" type="button" aria-expanded="false" aria-controls="abstract-focus-france-2030">abstract</button>
-                          <a class="paper-resource-link paper-download-link" href="assets/docs/focus-france-2030.pdf" download="focus-france-2030.pdf" aria-label="Download From PIA to France 2030">
+                          <span class="paper-resource-link is-disabled" aria-disabled="true">
                             <svg class="paper-resource-icon" viewBox="0 0 24 24" aria-hidden="true">
                               <path d="M12 15V3"></path>
                               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                               <path d="m7 10 5 5 5-5"></path>
                             </svg>
                             download
-                          </a>
+                          </span>
                         </div>
                         <p class="paper-abstract" id="abstract-focus-france-2030" hidden>
                           This Focus provides a causal evaluation of competitive support
@@ -370,7 +370,12 @@
               </section>
             </div>
           </div>
+          <footer class="site-footer site-footer-panel"><span class="site-footer__bar">&copy; 2026 Florian El Gourdou</span></footer>
         </article>
+        <footer class="site-footer site-footer-mobile"><span class="site-footer__bar">&copy; 2026 Florian El Gourdou</span></footer>
+        <button class="layout-toggle" type="button" aria-label="Switch to vertical layout" aria-pressed="false">
+          <span class="layout-toggle-mark" aria-hidden="true">&lt;</span>
+        </button>
       </section>
     </main>
 
@@ -379,6 +384,7 @@
       const pageViews = [...document.querySelectorAll("[data-section-view]")];
       const themeToggle = document.querySelector(".theme-toggle");
       const languageToggle = document.querySelector(".language-toggle");
+      const layoutToggle = document.querySelector(".layout-toggle");
       let currentLanguage = "en";
 
       const visualCanvas = document.querySelector(".visual-canvas");
@@ -391,6 +397,10 @@
       const introPanelForMap = document.querySelector(".intro-panel");
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const staticMapLayout = window.matchMedia("(max-width: 980px), (orientation: portrait)");
+      const isStaticMapMode = () =>
+        staticMapLayout.matches ||
+        document.body.classList.contains("force-vertical") ||
+        document.body.classList.contains("layout-transition-to-vertical");
       const mapBaseZoom = 1.28;
       const mapMaxZoom = 2.12;
       let mapPanX = 0;
@@ -404,6 +414,7 @@
       let routeSchedulerTimer = 0;
       let routePauseFallbackTimer = 0;
       let routeMotionMode = "x1";
+      let layoutTransitionTimer = 0;
       const routeMotionModes = {
         x1: {
           budgetShare: 0.075,
@@ -453,7 +464,7 @@
       };
 
       const routeActivationBudget = () => {
-        if (document.hidden || reducedMotion.matches || staticMapLayout.matches) {
+        if (document.hidden || reducedMotion.matches || isStaticMapMode()) {
           return 0;
         }
 
@@ -787,7 +798,7 @@
       };
 
       const setMapTransform = (x, y, rotation = 0, updateRoutes = true) => {
-        if (staticMapLayout.matches) {
+        if (isStaticMapMode()) {
           mapLayers.forEach((layer) => {
             layer.style.transform = "none";
           });
@@ -806,7 +817,7 @@
           time > panelScrollHoldUntil &&
           !dragOrigin &&
           !reducedMotion.matches &&
-          !staticMapLayout.matches;
+          !isStaticMapMode();
 
         if (!drifting) {
           if (mapDriftActive) {
@@ -843,7 +854,7 @@
         );
 
         visualCanvas.addEventListener("pointerdown", (event) => {
-          if (staticMapLayout.matches) {
+          if (isStaticMapMode()) {
             return;
           }
 
@@ -895,7 +906,7 @@
         visualCanvas.addEventListener(
           "wheel",
           (event) => {
-            if (staticMapLayout.matches) {
+            if (isStaticMapMode()) {
               return;
             }
 
@@ -915,7 +926,7 @@
           { passive: false }
         );
         visualCanvas.addEventListener("keydown", (event) => {
-          if (staticMapLayout.matches) {
+          if (isStaticMapMode()) {
             return;
           }
 
@@ -950,6 +961,68 @@
           setMapTransform(mapPanX, mapPanY);
           scheduleRouteVisibilityUpdate(true);
         });
+
+        const updateLayoutToggle = () => {
+          const forced = document.body.classList.contains("force-vertical");
+          layoutToggle?.setAttribute("aria-pressed", String(forced));
+          layoutToggle?.setAttribute(
+            "aria-label",
+            forced ? "Return to diagonal layout" : "Switch to vertical layout"
+          );
+        };
+
+        const finishLayoutTransition = () => {
+          window.clearTimeout(layoutTransitionTimer);
+          document.body.classList.remove("layout-transition-to-vertical");
+          updateLayoutToggle();
+          clampMapPan();
+          setMapTransform(mapPanX, mapPanY);
+          scheduleRouteVisibilityUpdate(true);
+        };
+
+        const applyForcedVerticalLayout = (enabled) => {
+          document.body.classList.toggle("force-vertical", enabled);
+          updateLayoutToggle();
+        };
+
+        const setForcedVerticalLayout = (enabled, animate = false) => {
+          const forced = document.body.classList.contains("force-vertical");
+          if (forced === enabled) {
+            finishLayoutTransition();
+            return;
+          }
+
+          window.clearTimeout(layoutTransitionTimer);
+
+          if (animate && !reducedMotion.matches && "startViewTransition" in document) {
+            document.body.classList.add("layout-transition-to-vertical");
+            const transition = document.startViewTransition(() => {
+              applyForcedVerticalLayout(enabled);
+            });
+            transition.finished.finally(finishLayoutTransition);
+            return;
+          }
+
+          if (animate && !reducedMotion.matches && enabled) {
+            document.body.classList.add("layout-transition-to-vertical");
+            updateLayoutToggle();
+            layoutTransitionTimer = window.setTimeout(() => {
+              applyForcedVerticalLayout(true);
+              finishLayoutTransition();
+            }, 680);
+            return;
+          }
+
+          applyForcedVerticalLayout(enabled);
+          finishLayoutTransition();
+        };
+
+        layoutToggle?.addEventListener("click", () => {
+          const forced = document.body.classList.contains("force-vertical");
+          setForcedVerticalLayout(!forced, true);
+        });
+
+        updateLayoutToggle();
         window.requestAnimationFrame(animateMap);
       }
 
@@ -1110,7 +1183,7 @@
       };
 
       const layoutDiagonalText = () => {
-        if (!introPanel || !introContent || staticMapLayout.matches) {
+        if (!introPanel || !introContent || isStaticMapMode()) {
           sourceParagraphs.forEach(({ paragraph, nodes }) => {
             paragraph.classList.remove("is-flowed");
             paragraph.replaceChildren(...nodes.map((node) => node.cloneNode(true)));

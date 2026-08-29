@@ -14,8 +14,10 @@
   --panel-width: clamp(590px, 52vw, 760px);
   --panel-slant: clamp(146px, 12.4vw, 214px);
   --panel-bottom-cut: 0px;
+  --layout-toggle-edge-x: clamp(41px, 3.47vw, 60px);
   --edge-gap: clamp(22px, 2vw, 30px);
   --intro-top: clamp(78px, 7.4vw, 106px);
+  --mobile-map-height: clamp(150px, 18vh, 210px);
   --map-layer-width: max(162vh, calc(100vw - var(--panel-width) + var(--panel-slant) + 220px));
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-serif: Georgia, "Times New Roman", serif;
@@ -25,12 +27,14 @@ body[data-section="research"] {
   --panel-width: clamp(820px, 76vw, 1140px);
   --panel-slant: clamp(54px, 4.8vw, 78px);
   --panel-bottom-cut: var(--panel-slant);
+  --layout-toggle-edge-x: var(--panel-slant);
 }
 
 body[data-section="teaching"] {
   --panel-width: clamp(590px, 52vw, 760px);
   --panel-slant: 0px;
   --panel-bottom-cut: 0px;
+  --layout-toggle-edge-x: 0px;
 }
 
 * {
@@ -82,7 +86,7 @@ a {
 .institution-links {
   display: flex;
   align-items: center;
-  gap: clamp(12px, 1.2vw, 18px);
+  gap: clamp(16px, 1.45vw, 22px);
   min-width: 0;
 }
 
@@ -103,10 +107,10 @@ a {
 .logo-link::before {
   content: ">";
   position: absolute;
-  right: calc(100% + 0.28em);
+  right: calc(100% + 0.04em);
   color: var(--rust);
   opacity: 0;
-  transform: translateX(-2px);
+  transform: translateX(-1px);
   transition:
     opacity 160ms ease,
     transform 180ms ease;
@@ -115,7 +119,7 @@ a {
 .logo-link:hover {
   color: var(--rust);
   opacity: 1;
-  transform: translateX(3px);
+  transform: translateX(5px);
 }
 
 .logo-link:hover::before {
@@ -416,6 +420,44 @@ body.night-mode .logo-link:hover .logo-image {
   display: none;
 }
 
+.hero::after {
+  content: "";
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 18;
+  width: var(--panel-width);
+  min-height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(115, 82, 48, 0.035) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 72% 42%, rgba(255, 246, 214, 0.06) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 44% 78%, rgba(117, 84, 50, 0.026) 0 1.2px, transparent 1.8px),
+    var(--paper);
+  background-size: 31px 29px, 43px 37px, 53px 47px, auto;
+  background-position: 0 0, 13px 9px, 27px 18px, 0 0;
+  clip-path: polygon(var(--panel-slant) 0, 100% 0, 100% 100%, var(--panel-bottom-cut) 100%);
+  transition:
+    opacity 100ms ease,
+    width 680ms cubic-bezier(0.2, 0.86, 0.22, 1),
+    clip-path 680ms cubic-bezier(0.2, 0.86, 0.22, 1);
+}
+
+body.night-mode .hero::after {
+  background:
+    radial-gradient(circle at 22% 20%, rgba(232, 221, 195, 0.018) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 68% 54%, rgba(232, 221, 195, 0.012) 0 1px, transparent 1.8px),
+    #171615;
+  background-size: 36px 32px, 58px 46px, auto;
+  background-position: 0 0, 19px 14px, 0 0;
+}
+
+body.layout-transition-to-vertical .hero::after {
+  width: 100vw;
+  opacity: 1;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
 .visual-canvas {
   position: absolute;
   inset: 0;
@@ -475,6 +517,131 @@ body.night-mode .logo-link:hover .logo-image {
 .map-pause-toggle:focus-visible {
   outline: 1px solid rgba(228, 209, 172, 0.8);
   outline-offset: 3px;
+}
+
+.layout-toggle {
+  position: fixed;
+  top: 72%;
+  left: calc(100vw - var(--panel-width) + var(--layout-toggle-edge-x) - clamp(22px, 1.9vw, 31px));
+  z-index: 14;
+  display: inline-grid;
+  width: clamp(48px, 4.2vw, 64px);
+  height: clamp(70px, 5.8vw, 88px);
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  color: var(--rust);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.9;
+  transform: translateY(-50%);
+  transition:
+    top 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    left 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+.layout-toggle:hover,
+.layout-toggle:focus-visible,
+.layout-toggle[aria-pressed="true"] {
+  color: var(--rust);
+  opacity: 1;
+  transform: translate(-4px, -50%);
+}
+
+.layout-toggle:focus-visible {
+  outline: 0;
+  text-shadow: 0 0 0 currentColor;
+}
+
+.layout-toggle-mark {
+  position: relative;
+  display: block;
+  width: clamp(25px, 2.2vw, 34px);
+  height: clamp(46px, 4vw, 60px);
+  transition: transform 180ms ease;
+  user-select: none;
+}
+
+.layout-toggle-mark::before,
+.layout-toggle-mark::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: clamp(5px, 0.42vw, 7px);
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: 0 50%;
+}
+
+.layout-toggle-mark::before {
+  transform: rotate(-50deg);
+}
+
+.layout-toggle-mark::after {
+  transform: rotate(50deg);
+}
+
+body.force-vertical .layout-toggle {
+  top: auto;
+  right: clamp(16px, 2vw, 28px);
+  bottom: clamp(14px, 2vw, 24px);
+  left: auto;
+  transform: none;
+}
+
+body.force-vertical .layout-toggle-mark {
+  transform: rotate(180deg);
+}
+
+body.night-mode .layout-toggle {
+  color: var(--rust);
+}
+
+body.night-mode .layout-toggle:hover,
+body.night-mode .layout-toggle:focus-visible,
+body.night-mode .layout-toggle[aria-pressed="true"] {
+  color: var(--rust);
+}
+
+@supports (view-transition-name: none) {
+  .top-bar {
+    view-transition-name: site-top-bar;
+  }
+
+  .visual-canvas {
+    view-transition-name: site-map;
+  }
+
+  .intro-panel {
+    view-transition-name: site-panel;
+  }
+
+  .intro-content[data-section-view="home"] {
+    view-transition-name: home-copy;
+  }
+
+  .portrait-zone[data-section-view="home"] {
+    view-transition-name: home-portrait;
+  }
+
+  .layout-toggle {
+    view-transition-name: layout-toggle;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 680ms;
+    animation-timing-function: cubic-bezier(0.2, 0.86, 0.22, 1);
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 680ms;
+    animation-timing-function: cubic-bezier(0.2, 0.86, 0.22, 1);
+  }
 }
 
 .map-pause-icon {
@@ -1423,6 +1590,7 @@ body.night-mode .research-paper h3 .paper-title-link:focus-visible {
   z-index: 4;
   order: 1;
   width: 100%;
+  min-height: 100vh;
   min-width: 0;
   padding:
     var(--intro-top)
@@ -1430,6 +1598,224 @@ body.night-mode .research-paper h3 .paper-title-link:focus-visible {
     clamp(38px, 5vh, 62px)
     0;
   color: var(--muted);
+}
+
+.site-footer {
+  position: relative;
+  z-index: 4;
+  order: 8;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 30px;
+  flex: 0 0 auto;
+  margin: clamp(46px, 7vh, 86px) 0 0;
+  padding: 7px var(--edge-gap) 8px var(--panel-slant);
+  background: rgba(24, 32, 36, 0.78);
+  color: var(--paper);
+  font: 540 0.68rem/1 var(--font-sans);
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.site-footer__bar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.site-footer-mobile {
+  display: none;
+}
+
+body[data-section="research"] .site-footer,
+body[data-section="teaching"] .site-footer {
+  margin-top: 0;
+}
+
+body[data-section="home"] .site-footer {
+  margin-top: clamp(120px, 18vh, 220px);
+  padding-right: 0;
+}
+
+body[data-section="home"] .site-footer__bar {
+  width: min(76%, 420px);
+  margin-left: auto;
+  margin-right: clamp(34px, 8vw, 118px);
+}
+
+body.night-mode .site-footer {
+  background: rgba(10, 10, 9, 0.76);
+  color: rgba(232, 221, 195, 0.78);
+}
+
+body.force-vertical {
+  overflow: auto;
+}
+
+body.layout-transition-to-vertical .intro-panel {
+  overflow: hidden;
+}
+
+body.layout-transition-to-vertical .layout-toggle {
+  pointer-events: none;
+}
+
+body.force-vertical .page-shell {
+  min-height: auto;
+}
+
+body.force-vertical .top-bar {
+  position: absolute;
+  top: 14px;
+  left: clamp(20px, 5vw, 44px);
+  right: clamp(20px, 5vw, 44px);
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 4vw, 34px);
+}
+
+body.force-vertical .institution-links {
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+}
+
+body.force-vertical .site-nav {
+  margin-left: auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
+body.force-vertical .hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  background: var(--paper);
+}
+
+body.force-vertical.night-mode .hero {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(232, 221, 195, 0.018) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 68% 54%, rgba(232, 221, 195, 0.012) 0 1px, transparent 1.8px),
+    #171615;
+  background-size: 36px 32px, 58px 46px, auto;
+  background-position: 0 0, 19px 14px, 0 0;
+}
+
+body.force-vertical .intro-panel {
+  position: relative;
+  order: 1;
+  flex: 1 0 auto;
+  inset: auto;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  max-height: none;
+  min-height: 100vh;
+  overflow: visible;
+  clip-path: none;
+  filter: none;
+}
+
+body.force-vertical.night-mode .intro-panel {
+  background: #171615;
+}
+
+body.force-vertical .visual-canvas {
+  position: relative;
+  order: 3;
+  flex: 0 0 var(--mobile-map-height);
+  width: 100%;
+  height: var(--mobile-map-height);
+  min-height: var(--mobile-map-height);
+  cursor: default;
+  touch-action: auto;
+}
+
+body.force-vertical .map-pause-toggle,
+body.force-vertical .map-speed-toggle {
+  display: none;
+}
+
+body.force-vertical .map-plane {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-attachment: scroll;
+  transform: none !important;
+}
+
+body.force-vertical .map-reveal-plane,
+body.force-vertical .flow-overlay {
+  display: none;
+}
+
+body.force-vertical .site-footer-panel {
+  display: none;
+}
+
+body.force-vertical .site-footer-mobile {
+  display: flex;
+  order: 2;
+  width: 100%;
+  margin: 0;
+  padding: 7px var(--edge-gap) 8px;
+}
+
+body.force-vertical .site-footer-mobile .site-footer__bar {
+  width: auto;
+  margin: 0 auto;
+}
+
+body.force-vertical .portrait-zone {
+  align-self: center;
+  width: min(78%, 390px);
+  margin: clamp(18px, 2.8vh, 34px) auto clamp(28px, 4vh, 46px);
+}
+
+body.force-vertical .portrait-field {
+  width: min(82%, 350px);
+  max-height: 34vh;
+}
+
+body.force-vertical .contact-dock {
+  margin-top: 0;
+}
+
+body.force-vertical .intro-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 98px 28px 0;
+}
+
+body.force-vertical .intro-content::before {
+  display: none;
+}
+
+body.force-vertical h1 {
+  max-width: 8em;
+  font-size: clamp(2.25rem, 8.5vw, 3.2rem);
+  margin-left: 0;
+}
+
+body.force-vertical .lede {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+body.force-vertical .research-content {
+  padding: 96px 28px 42px;
+}
+
+body.force-vertical .research-list {
+  width: 100%;
+  margin-left: 0;
 }
 
 .research-list {
@@ -1910,10 +2296,10 @@ body.night-mode .research-entry p.paper-abstract {
 
   body[data-section="teaching"] .hero {
     position: relative;
-    display: block;
+    display: flex;
     min-height: 100vh;
-    padding-bottom: var(--mobile-map-height);
-    overflow: hidden;
+    padding-bottom: 0;
+    overflow: visible;
     background: var(--paper);
   }
 
@@ -1932,7 +2318,7 @@ body.night-mode .research-entry p.paper-abstract {
 
   .visual-canvas {
     position: relative;
-    order: 2;
+    order: 3;
     flex: 0 0 var(--mobile-map-height);
     height: var(--mobile-map-height);
     min-height: var(--mobile-map-height);
@@ -1946,6 +2332,10 @@ body.night-mode .research-entry p.paper-abstract {
   }
 
   .map-speed-toggle {
+    display: none;
+  }
+
+  .layout-toggle {
     display: none;
   }
 
@@ -1977,7 +2367,7 @@ body.night-mode .research-entry p.paper-abstract {
     max-width: none;
     height: auto;
     max-height: none;
-    min-height: calc(100vh - var(--mobile-map-height));
+    min-height: 100vh;
     grid-template-rows: minmax(0, 410px) minmax(250px, 310px);
     overflow: visible;
     clip-path: none;
@@ -1993,13 +2383,10 @@ body.night-mode .research-entry p.paper-abstract {
   }
 
   body[data-section="teaching"] .visual-canvas {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
+    position: relative;
     z-index: 0;
-    width: 100vw;
+    order: 3;
+    width: 100%;
     height: var(--mobile-map-height);
     min-height: var(--mobile-map-height);
   }
@@ -2008,6 +2395,51 @@ body.night-mode .research-entry p.paper-abstract {
     align-self: center;
     width: min(78%, 390px);
     margin: clamp(18px, 2.8vh, 34px) auto clamp(28px, 4vh, 46px);
+  }
+
+  .site-footer {
+    width: 100%;
+    margin: clamp(24px, 4vh, 42px) 0 0;
+    padding-left: 0;
+  }
+
+  .site-footer-panel {
+    display: none;
+  }
+
+  .site-footer-mobile {
+    display: flex;
+    order: 2;
+    width: 100%;
+    margin: 0;
+    padding: 7px var(--edge-gap) 8px;
+  }
+
+  .site-footer-mobile .site-footer__bar {
+    width: auto;
+    margin: 0 auto;
+  }
+
+  body[data-section="home"] .site-footer {
+    margin-top: clamp(96px, 16vh, 170px);
+  }
+
+  body[data-section="home"] .site-footer__bar {
+    width: min(78%, 390px);
+    margin-right: auto;
+  }
+
+  body[data-section="home"] .site-footer-mobile,
+  body[data-section="research"] .site-footer-mobile,
+  body[data-section="teaching"] .site-footer-mobile {
+    margin: 0;
+  }
+
+  body[data-section="home"] .site-footer-mobile .site-footer__bar,
+  body[data-section="research"] .site-footer-mobile .site-footer__bar,
+  body[data-section="teaching"] .site-footer-mobile .site-footer__bar {
+    width: auto;
+    margin: 0 auto;
   }
 
   .portrait-field {
@@ -2073,7 +2505,7 @@ body.night-mode .research-entry p.paper-abstract {
   }
 
   .intro-panel {
-    min-height: calc(100vh - var(--mobile-map-height));
+    min-height: 100vh;
     grid-template-rows: minmax(0, 380px) minmax(230px, 310px);
   }
 
@@ -2088,6 +2520,28 @@ body.night-mode .research-entry p.paper-abstract {
     margin-top: 14px;
     margin-right: auto;
     margin-left: auto;
+  }
+
+  .site-footer,
+  body[data-section="home"] .site-footer {
+    width: 100%;
+  }
+
+  body[data-section="home"] .site-footer__bar {
+    width: min(86%, 350px);
+  }
+
+  body[data-section="home"] .site-footer-mobile,
+  body[data-section="research"] .site-footer-mobile,
+  body[data-section="teaching"] .site-footer-mobile {
+    margin: 0;
+  }
+
+  body[data-section="home"] .site-footer-mobile .site-footer__bar,
+  body[data-section="research"] .site-footer-mobile .site-footer__bar,
+  body[data-section="teaching"] .site-footer-mobile .site-footer__bar {
+    width: auto;
+    margin: 0 auto;
   }
 
   .portrait-field {
