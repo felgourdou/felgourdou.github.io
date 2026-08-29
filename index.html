@@ -1014,14 +1014,6 @@
       const introTitle = document.querySelector("#intro-title");
       const typedTitle = introTitle?.querySelector(".typed-text");
       const flowingParagraphs = [...document.querySelectorAll(".intro-content .lede")];
-      const updateHomeFooterReveal = () => {
-        const shouldReveal =
-          document.body.dataset.section === "home" &&
-          Boolean(introPanel) &&
-          introPanel.scrollTop > 56 &&
-          !isStaticMapMode();
-        document.body.classList.toggle("home-footer-visible", shouldReveal);
-      };
       const captureSourceParagraphs = () => flowingParagraphs.map((paragraph) => ({
         paragraph,
         nodes: [...paragraph.childNodes].map((node) => node.cloneNode(true)),
@@ -1037,7 +1029,6 @@
             mapDriftActive = false;
             setMapTransform(mapPanX, mapPanY, 0, false);
           }
-          updateHomeFooterReveal();
         },
         { passive: true }
       );
@@ -1493,8 +1484,6 @@
         if (introPanel) {
           introPanel.scrollTop = 0;
         }
-        document.body.classList.remove("home-footer-visible");
-        updateHomeFooterReveal();
         clampMapPan();
         setMapTransform(mapPanX, mapPanY);
         scheduleDiagonalLayout();
@@ -1504,7 +1493,6 @@
       };
 
       window.addEventListener("hashchange", setActiveSection);
-      window.addEventListener("resize", updateHomeFooterReveal);
       setActiveSection();
 
       document.querySelectorAll(".abstract-button").forEach((button) => {

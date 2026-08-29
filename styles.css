@@ -1662,26 +1662,17 @@ body[data-section="teaching"] .site-footer {
   margin-top: 0;
 }
 
-body[data-section="home"] .site-footer-panel {
-  position: fixed;
-  right: 0;
+body[data-section="research"] .site-footer-panel,
+body[data-section="teaching"] .site-footer-panel {
+  position: sticky;
   bottom: 0;
-  left: calc(100vw - var(--panel-width));
-  width: auto;
-  margin: 0;
-  padding-right: 0;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(100%);
-  transition:
-    opacity 180ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-body[data-section="home"].home-footer-visible .site-footer-panel {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
+body[data-section="home"] .site-footer-panel {
+  position: sticky;
+  bottom: 0;
+  margin-top: clamp(120px, 18vh, 220px);
+  padding-right: 0;
 }
 
 body[data-section="home"] .site-footer__bar {
@@ -1692,7 +1683,7 @@ body[data-section="home"] .site-footer__bar {
 
 @media (min-width: 981px) and (orientation: landscape) {
   body[data-section="home"] .portrait-zone {
-    margin-bottom: max(150px, 24vh);
+    margin-bottom: max(220px, 34vh);
   }
 }
 
