@@ -1012,6 +1012,8 @@
       const introPanel = document.querySelector(".intro-panel");
       const introContent = document.querySelector(".intro-content");
       const introTitle = document.querySelector("#intro-title");
+      const panelFooter = document.querySelector(".site-footer-panel");
+      const mobileFooter = document.querySelector(".site-footer-mobile");
       const typedTitle = introTitle?.querySelector(".typed-text");
       const flowingParagraphs = [...document.querySelectorAll(".intro-content .lede")];
       const captureSourceParagraphs = () => flowingParagraphs.map((paragraph) => ({
@@ -1020,6 +1022,47 @@
       }));
       let sourceParagraphs = captureSourceParagraphs();
       const measureLine = document.createElement("span");
+
+      const activeFooter = () => (isStaticMapMode() ? mobileFooter : panelFooter);
+
+      const footerRevealTarget = () => {
+        if (isStaticMapMode()) {
+          return document.scrollingElement || document.documentElement;
+        }
+        return introPanel;
+      };
+
+      const isAtFooterRevealPoint = (target) => {
+        if (!target) {
+          return false;
+        }
+
+        const footerHeight = activeFooter()?.offsetHeight || 0;
+        const revealPoint = Math.max(0, target.scrollHeight - target.clientHeight - footerHeight);
+        return target.scrollTop >= revealPoint - 3;
+      };
+
+      const revealFooterFromWheel = (event) => {
+        if (event.deltaY <= 0 || document.body.classList.contains("footer-revealed")) {
+          return;
+        }
+
+        const target = footerRevealTarget();
+        if (isAtFooterRevealPoint(target)) {
+          document.body.classList.add("footer-revealed");
+        }
+      };
+
+      introPanel?.addEventListener("wheel", revealFooterFromWheel, { passive: true });
+      window.addEventListener(
+        "wheel",
+        (event) => {
+          if (isStaticMapMode()) {
+            revealFooterFromWheel(event);
+          }
+        },
+        { passive: true }
+      );
 
       introPanel?.addEventListener(
         "scroll",
@@ -1468,6 +1511,7 @@
         const panelSection = section === "research" || section === "teaching" ? section : "home";
 
         document.body.dataset.section = panelSection;
+        document.body.classList.remove("footer-revealed");
         navLinks.forEach((link) => {
           const isCurrent = link.getAttribute("href") === `#${section || "home"}`;
           if (isCurrent) {
