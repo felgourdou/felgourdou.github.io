@@ -164,6 +164,22 @@ a {
   white-space: nowrap;
 }
 
+.site-nav-transition-clone {
+  position: fixed;
+  z-index: 80;
+  margin: 0;
+  pointer-events: none;
+  color: rgba(24, 32, 36, 0.84);
+}
+
+body.night-mode .site-nav-transition-clone {
+  color: rgba(213, 205, 188, 0.76);
+}
+
+body.nav-transition-lock .top-bar .site-nav {
+  visibility: hidden;
+}
+
 .site-nav a {
   position: relative;
   display: inline-flex;
@@ -608,12 +624,8 @@ body.night-mode .layout-toggle[aria-pressed="true"] {
 }
 
 @supports (view-transition-name: none) {
-  .top-bar {
-    view-transition-name: site-top-bar;
-  }
-
-  .visual-canvas {
-    view-transition-name: site-map;
+  .site-nav-transition-clone {
+    view-transition-name: locked-site-nav;
   }
 
   .intro-panel {
@@ -632,15 +644,39 @@ body.night-mode .layout-toggle[aria-pressed="true"] {
     view-transition-name: layout-toggle;
   }
 
+  ::view-transition {
+    background: transparent;
+  }
+
   ::view-transition-group(*) {
     animation-duration: 680ms;
     animation-timing-function: cubic-bezier(0.2, 0.86, 0.22, 1);
   }
 
+  ::view-transition-group(locked-site-nav),
+  ::view-transition-old(locked-site-nav),
+  ::view-transition-new(locked-site-nav) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(locked-site-nav),
+  ::view-transition-new(locked-site-nav) {
+    opacity: 1;
+  }
+
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 680ms;
-    animation-timing-function: cubic-bezier(0.2, 0.86, 0.22, 1);
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    opacity: 0;
+  }
+
+  ::view-transition-new(root) {
+    opacity: 1;
   }
 }
 
