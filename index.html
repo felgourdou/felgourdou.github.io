@@ -13,12 +13,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/feg-32.png?v=1">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/feg-180.png?v=1">
     <link rel="preload" as="image" href="assets/map/mediterranean-network-map.webp?v=1">
-    <link rel="stylesheet" href="styles.css?v=281">
+    <link rel="stylesheet" href="styles.css?v=303">
   </head>
   <body>
     <script>
       (() => {
         document.body.classList.add("day-clouds-active");
+        const hash = window.location.hash || "";
+        if (
+          /^(#(?:about|home|research|teaching)-full)$/.test(hash) &&
+          !window.matchMedia("(max-width: 980px), (orientation: portrait)").matches
+        ) {
+          document.body.classList.add("force-vertical");
+        }
       })();
     </script>
     <header class="top-bar">
@@ -72,7 +79,7 @@
       </div>
 
       <nav class="site-nav" aria-label="Primary navigation">
-        <a href="#home" aria-current="page"><span class="nav-text">about</span></a>
+        <a href="#about" aria-current="page"><span class="nav-text">about</span></a>
         <a href="#research"><span class="nav-text">research</span></a>
         <a href="#teaching"><span class="nav-text">teaching</span></a>
         <button class="nav-icon-button language-toggle" type="button" aria-label="Translate site to French" aria-pressed="false" data-nav-label="french">
@@ -111,7 +118,7 @@
     <div class="side-polygons side-polygons-right" aria-hidden="true"></div>
 
     <main class="page-shell">
-      <section class="hero" id="home" aria-labelledby="intro-title">
+      <section class="hero" id="about" aria-labelledby="intro-title">
         <div
           class="visual-canvas"
           role="img"
@@ -302,7 +309,7 @@
                       <p class="publication-note">Master's thesis, Paris School of Economics</p>
                       <div class="paper-actions">
                         <div class="paper-action-row">
-                          <button class="abstract-button is-disabled" type="button" disabled aria-disabled="true">abstract</button>
+                          <button class="abstract-button" type="button" aria-expanded="false" aria-controls="abstract-strategic-data-regulation">abstract</button>
                           <a class="paper-resource-link" href="assets/docs/strategic-data-regulation-international-trade-master-thesis.pdf" target="_blank" rel="noopener noreferrer">
                             <svg class="paper-resource-icon" viewBox="0 0 24 24" aria-hidden="true">
                               <path d="M12 15V3"></path>
@@ -312,6 +319,40 @@
                             download
                           </a>
                         </div>
+                        <p class="paper-abstract" id="abstract-strategic-data-regulation" hidden>
+                          This paper studies how trade openness shapes the incentives
+                          to regulate data use. We develop a two-country, two-sector
+                          New Trade Theory model in which data is a production input
+                          that feeds back from consumption. Firms in a monopolistically
+                          competitive Tech sector harvest data from sales to fine-tune
+                          products by destination, while consumers incur rising privacy
+                          costs as data usage intensifies. We characterise optimal
+                          unilateral regulation under a commitment to uniform standards
+                          and identify two key distortions under limited extraterritorial
+                          reach. First, countries have a strategic disincentive to
+                          protect foreign consumers. Second, trade openness creates a
+                          regulation&ndash;retention trade-off: governments scale back
+                          ambition to retain firm presence, manipulate terms of trade,
+                          and strengthen oversight. We then analyse a non-cooperative
+                          policy game and show that regulatory asymmetries crowd out
+                          both regulation and welfare in the symmetric Nash equilibrium.
+                          In relevant parameter regions, the model features strategic
+                          complementarities that generate regulatory spillovers. Greater
+                          privacy awareness supports standards diffusion, while mistrust
+                          of foreign data processing can trigger a race to the bottom.
+                          Relaxing the non-discrimination constraint, we show how the
+                          same strategic distortions underpin incentives for
+                          origin-contingent measures, which we link to the growing
+                          prevalence of data localisation. Maximal restrictions on
+                          outbound data flows emerge as optimal under a wide range of
+                          normatively distinct objectives, though typically at the cost
+                          of short-run welfare losses. Introducing asymmetric political
+                          constraints, we analyse a dynamic policy game and show how weak
+                          accountability may allow a strategically motivated government
+                          to escalate first and secure lasting gains in consumer surplus,
+                          as firm relocation amplifies the cost of retaliation for its
+                          opponent.
+                        </p>
                       </div>
                     </div>
                   </article>
@@ -411,8 +452,9 @@
                 <article class="research-paper teaching-paper trade-course">
                   <h3>
                     <a class="paper-title-link" href="https://cours.univ-paris1.fr/course/view.php?id=44057" target="_blank" rel="noopener noreferrer">
-                      International Trade <span class="course-level">3<sup>rd</sup> year undergraduate</span>
+                      International Trade
                     </a>
+                    <span class="course-level">3<sup>rd</sup> year undergraduate</span>
                   </h3>
                   <p class="paper-authors">
                     Teaching assistant for
@@ -423,8 +465,9 @@
                 <article class="research-paper teaching-paper monetary-course">
                   <h3>
                     <a class="paper-title-link" href="https://cours.univ-paris1.fr/course/view.php?id=49059" target="_blank" rel="noopener noreferrer">
-                      International Monetary Economics <span class="course-level">3<sup>rd</sup> year undergraduate</span>
+                      International Monetary Economics
                     </a>
+                    <span class="course-level">3<sup>rd</sup> year undergraduate</span>
                   </h3>
                   <p class="paper-authors">
                     Teaching assistant for
@@ -451,6 +494,35 @@
       const layoutToggle = document.querySelector(".layout-toggle");
       const mapExploreToggle = document.querySelector(".map-explore-toggle");
       let currentLanguage = "en";
+      const sectionIds = new Set(["about", "research", "teaching"]);
+      const sectionViewByRoute = {
+        about: "home",
+        research: "research",
+        teaching: "teaching",
+      };
+      const fullScreenHashSuffix = "-full";
+      const parseRouteHash = () => {
+        const rawHash = (window.location.hash || "#about").slice(1);
+        const fullScreen = rawHash.endsWith(fullScreenHashSuffix);
+        let section = fullScreen
+          ? rawHash.slice(0, -fullScreenHashSuffix.length)
+          : rawHash;
+        if (section === "home") {
+          section = "about";
+        }
+        if (!sectionIds.has(section)) {
+          section = "about";
+        }
+        return {
+          fullScreen,
+          section,
+          panelSection: sectionViewByRoute[section] || "home",
+        };
+      };
+      const routeHash = (section, fullScreen = document.body.classList.contains("force-vertical")) => {
+        const routeSection = section === "home" ? "about" : section;
+        return `#${sectionIds.has(routeSection) ? routeSection : "about"}${fullScreen ? fullScreenHashSuffix : ""}`;
+      };
       const shouldUseNightModeByClock = () => {
         const hour = new Date().getHours();
         return hour >= 19 || hour < 7;
@@ -478,6 +550,9 @@
         document.body.classList.contains("layout-transition-to-vertical");
       const isMapExploreMode = () => document.body.classList.contains("map-explore");
       const sidePolygonClearance = 36;
+      const sidePolygonReferenceWidth = 980;
+      const sidePolygonVisualEdgeRatio = 0.44;
+      const sidePolygonSnapOutEdge = 64;
       const mapBaseZoom = 1.28;
       const mapMaxZoom = 2.12;
       let mapPanX = 0;
@@ -495,6 +570,8 @@
       let cloudAnimationFrame = 0;
       let cloudCanvasActive = false;
       let layoutTransitionTimer = 0;
+      let sidePolygonRetreatValue = "";
+      let syncLayoutControls = () => {};
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
       const currentPanelCut = () => {
@@ -1005,25 +1082,30 @@
         }
 
         if (!document.body.classList.contains("force-vertical")) {
-          document.documentElement.style.setProperty("--side-polygons-retreat", "0px");
+          document.body.classList.remove("side-polygons-snapped-out");
+          if (sidePolygonRetreatValue !== "0px") {
+            sidePolygonRetreatValue = "0px";
+            document.documentElement.style.setProperty("--side-polygons-retreat", sidePolygonRetreatValue);
+          }
           return;
         }
 
-        const section = document.body.dataset.section || "home";
-        const visibleView = document.querySelector(`[data-section-view="${section}"]:not([hidden])`);
-        const content = visibleView?.querySelector(".research-list, .teaching-list, .intro-content") || visibleView;
-        if (!(content instanceof Element)) {
-          document.documentElement.style.setProperty("--side-polygons-retreat", "0px");
-          return;
-        }
-
-        const contentRect = content.getBoundingClientRect();
         const leftWidth = leftPolygons.getBoundingClientRect().width;
         const rightWidth = rightPolygons.getBoundingClientRect().width;
-        const leftOverlap = Math.max(0, leftWidth - (contentRect.left - sidePolygonClearance));
-        const rightOverlap = Math.max(0, rightWidth - (window.innerWidth - contentRect.right - sidePolygonClearance));
-        const retreat = Math.min(360, Math.ceil(Math.max(leftOverlap, rightOverlap)));
-        document.documentElement.style.setProperty("--side-polygons-retreat", `${retreat}px`);
+        const maxPolygonWidth = Math.max(leftWidth, rightWidth);
+        const visualEdge = maxPolygonWidth * sidePolygonVisualEdgeRatio;
+        const referenceWidth = Math.min(sidePolygonReferenceWidth, window.innerWidth - 56);
+        const referenceSideGap = Math.max(0, (window.innerWidth - referenceWidth) / 2);
+        const overlap = Math.max(0, visualEdge - (referenceSideGap - sidePolygonClearance));
+        const retreat = Math.min(180, Math.ceil(overlap));
+        const shouldSnapOut = overlap > 0 && visualEdge - retreat <= sidePolygonSnapOutEdge;
+        document.body.classList.toggle("side-polygons-snapped-out", shouldSnapOut);
+        const finalRetreat = shouldSnapOut ? Math.ceil(maxPolygonWidth + 8) : retreat;
+        const nextRetreat = `${finalRetreat}px`;
+        if (sidePolygonRetreatValue !== nextRetreat) {
+          sidePolygonRetreatValue = nextRetreat;
+          document.documentElement.style.setProperty("--side-polygons-retreat", sidePolygonRetreatValue);
+        }
       };
 
       const restoreMapBaseLayer = () => {
@@ -1308,12 +1390,22 @@
 
         layoutToggle?.addEventListener("click", () => {
           const forced = document.body.classList.contains("force-vertical");
+          const route = parseRouteHash();
+          history.replaceState(null, "", routeHash(route.section, !forced));
           setForcedVerticalLayout(!forced, true);
         });
         mapExploreToggle?.addEventListener("click", () => {
           setMapExploreMode(!isMapExploreMode());
         });
 
+        const initialRoute = parseRouteHash();
+        if (initialRoute.fullScreen && !staticMapLayout.matches) {
+          document.body.classList.add("force-vertical");
+        }
+        syncLayoutControls = () => {
+          updateLayoutToggle();
+          updateMapExploreToggle();
+        };
         updateLayoutToggle();
         updateMapExploreToggle();
       }
@@ -1634,7 +1726,10 @@
       let titleTypingTimers = [];
 
       const clearTitleTypingTimers = () => {
-        titleTypingTimers.forEach((timer) => window.clearTimeout(timer));
+        titleTypingTimers.forEach((timer) => {
+          window.clearTimeout(timer);
+          window.clearInterval(timer);
+        });
         titleTypingTimers = [];
       };
 
@@ -1658,34 +1753,46 @@
           "\u03c0", "\u2211", "\u25c7", "\u25c8", "\u2736", "\u2022",
           "0", "1", "#", "%"
         ];
-        const preludeGlyphs = Array.from({ length: 7 }, () => (
-          cipherGlyphs[Math.floor(Math.random() * cipherGlyphs.length)]
-        ));
-        const preludeDelay = 230;
-        const glyphSpeed = 34;
-        const typingStart = preludeDelay + preludeGlyphs.length * glyphSpeed + 70;
-        typedTitle.textContent = "";
-        introTitle.classList.remove("is-typed");
-
-        preludeGlyphs.forEach((glyph, index) => {
-          queueTitleTimer(() => {
-            typedTitle.textContent = glyph;
-          }, preludeDelay + index * glyphSpeed);
+        const letters = [...phrase];
+        const glyphFor = (slot, turn) => cipherGlyphs[(slot * 5 + turn * 7) % cipherGlyphs.length];
+        const glyphWaveStart = 120;
+        const glyphStep = 76;
+        const firstGlyphHold = 170;
+        const firstLetterPrelude = 500;
+        const glyphSwapDelay = 46;
+        const slots = letters.map((_, index) => {
+          const slot = document.createElement("span");
+          slot.className = "title-char";
+          slot.setAttribute("aria-hidden", "true");
+          slot.textContent = "\u00a0";
+          return slot;
         });
 
-        queueTitleTimer(() => {
-          typedTitle.textContent = "";
-        }, typingStart - 50);
+        typedTitle.replaceChildren(...slots);
+        introTitle.classList.remove("is-typed");
 
-        [...phrase].forEach((letter, index) => {
+        slots.forEach((slot, index) => {
+          const waveDelay = index === 0 ? 0 : firstGlyphHold + index * glyphStep;
+          const glyphTime = glyphWaveStart + waveDelay;
+          const letterTime = glyphWaveStart + firstLetterPrelude + index * glyphStep;
           queueTitleTimer(() => {
-            typedTitle.textContent += letter;
+            slot.classList.add("is-cipher");
+            slot.textContent = glyphFor(index, 0);
+          }, glyphTime);
+          for (let turn = 1; glyphTime + glyphSwapDelay * turn < letterTime - 18; turn += 1) {
+            queueTitleTimer(() => {
+              slot.textContent = glyphFor(index, turn);
+            }, glyphTime + glyphSwapDelay * turn);
+          }
+          queueTitleTimer(() => {
+            slot.replaceWith(document.createTextNode(letters[index]));
             if (index === phrase.length - 1) {
               queueTitleTimer(() => {
+                typedTitle.textContent = phrase;
                 introTitle.classList.add("is-typed");
               }, 1450);
             }
-          }, typingStart + index * 145);
+          }, letterTime);
         });
       };
 
@@ -1693,7 +1800,7 @@
         en: {
           lang: "en",
           nav: {
-            home: "about",
+            about: "about",
             research: "research",
             teaching: "teaching",
           },
@@ -1717,6 +1824,7 @@
             "French Environment and Energy Management Agency (ADEME)",
           ],
           abstracts: {
+            thesis: `Cet article &eacute;tudie la mani&egrave;re dont l'ouverture commerciale fa&ccedil;onne les incitations &agrave; r&eacute;guler l'usage des donn&eacute;es. Nous d&eacute;veloppons un mod&egrave;le de nouvelle th&eacute;orie du commerce &agrave; deux pays et deux secteurs, dans lequel les donn&eacute;es sont un intrant de production issu de la consommation. Dans un secteur technologique en concurrence monopolistique, les entreprises collectent les donn&eacute;es tir&eacute;es des ventes afin d'ajuster plus finement leurs produits selon les destinations, tandis que les consommateurs supportent des co&ucirc;ts de vie priv&eacute;e croissants lorsque l'usage des donn&eacute;es s'intensifie. Nous caract&eacute;risons la r&eacute;gulation unilat&eacute;rale optimale sous engagement &agrave; des standards uniformes et identifions deux distorsions cl&eacute;s lorsque la port&eacute;e extraterritoriale de la r&eacute;gulation est limit&eacute;e. Premi&egrave;rement, les pays ont une incitation strat&eacute;gique insuffisante &agrave; prot&eacute;ger les consommateurs &eacute;trangers. Deuxi&egrave;mement, l'ouverture commerciale cr&eacute;e un arbitrage entre ambition r&eacute;glementaire et maintien des entreprises sur le territoire : les gouvernements r&eacute;duisent leur ambition afin de retenir les entreprises, manipuler les termes de l'&eacute;change et renforcer leur capacit&eacute; de contr&ocirc;le. Nous analysons ensuite un jeu de politique non coop&eacute;ratif et montrons que les asym&eacute;tries r&eacute;glementaires r&eacute;duisent &agrave; la fois la r&eacute;gulation et le bien-&ecirc;tre dans l'&eacute;quilibre de Nash sym&eacute;trique. Dans certaines r&eacute;gions pertinentes de l'espace des param&egrave;tres, le mod&egrave;le fait appara&icirc;tre des compl&eacute;mentarit&eacute;s strat&eacute;giques qui engendrent des externalit&eacute;s r&eacute;glementaires. Une plus forte sensibilit&eacute; &agrave; la vie priv&eacute;e favorise la diffusion des standards, tandis que la d&eacute;fiance envers le traitement &eacute;tranger des donn&eacute;es peut d&eacute;clencher une course vers le bas. En rel&acirc;chant la contrainte de non-discrimination, nous montrons comment les m&ecirc;mes distorsions strat&eacute;giques fondent des incitations &agrave; adopter des mesures contingentes &agrave; l'origine, que nous relions &agrave; la progression de la localisation des donn&eacute;es. Des restrictions maximales sur les flux sortants de donn&eacute;es apparaissent comme optimales pour un large ensemble d'objectifs normativement distincts, mais g&eacute;n&egrave;rent g&eacute;n&eacute;ralement des pertes de bien-&ecirc;tre &agrave; court terme. Enfin, en introduisant des contraintes politiques asym&eacute;triques, nous analysons un jeu dynamique de politique publique et montrons qu'une responsabilisation politique faible peut permettre &agrave; un gouvernement strat&eacute;gique d'escalader en premier et d'obtenir des gains durables de surplus des consommateurs, la relocalisation des entreprises amplifiant le co&ucirc;t d'une riposte pour son adversaire.`,
             focus: `This Focus provides a causal evaluation of competitive support granted by Bpifrance to firms under the PIA programs and France 2030. Using a new panel that matches applications filed since 2010 with administrative firm data, it compares funded firms with non-selected applicants within the same calls for projects. The results show persistent gains in employment, research effort, patenting, capital accumulation, sales, and value added. Additional tax and social security revenues generated by funded firms exceed the committed public support within three years, although the findings apply only to competitively awarded funding.`,
             decarbonation: `This public summary assesses how France 2030 contributes to decarbonizing the French economy. It reviews the first stage of deployment, characterizes supported decarbonization solutions, examines impact measurement practices for greenhouse-gas reductions, and evaluates the strategic positioning of the project portfolio.`,
           },
@@ -1735,7 +1843,7 @@
         fr: {
           lang: "fr",
           nav: {
-            home: "à propos",
+            about: "à propos",
             research: "recherche",
             teaching: "cours",
           },
@@ -1749,7 +1857,7 @@
           paperTitles: [
             "Les rendements de la politique industrielle : enseignements des programmes orient&eacute;s mission en France",
             "L'incidence mondiale de la r&eacute;gulation des donn&eacute;es",
-            "Strategic Data Regulation in International Trade",
+            "Enjeux strat&eacute;giques de la r&eacute;gulation des donn&eacute;es dans le commerce international",
             "Du PIA &agrave; France 2030 : &eacute;valuer le soutien comp&eacute;titif &agrave; la croissance des entreprises",
             "&Eacute;valuation de l'impact de France 2030 sur la d&eacute;carbonation de l'&eacute;conomie",
           ],
@@ -1759,6 +1867,7 @@
             "Agence de la transition &eacute;cologique (ADEME)",
           ],
           abstracts: {
+            thesis: `This paper studies how trade openness shapes the incentives to regulate data use. We develop a two-country, two-sector New Trade Theory model in which data is a production input that feeds back from consumption. Firms in a monopolistically competitive Tech sector harvest data from sales to fine-tune products by destination, while consumers incur rising privacy costs as data usage intensifies. We characterise optimal unilateral regulation under a commitment to uniform standards and identify two key distortions under limited extraterritorial reach. First, countries have a strategic disincentive to protect foreign consumers. Second, trade openness creates a regulation&ndash;retention trade-off: governments scale back ambition to retain firm presence, manipulate terms of trade, and strengthen oversight. We then analyse a non-cooperative policy game and show that regulatory asymmetries crowd out both regulation and welfare in the symmetric Nash equilibrium. In relevant parameter regions, the model features strategic complementarities that generate regulatory spillovers. Greater privacy awareness supports standards diffusion, while mistrust of foreign data processing can trigger a race to the bottom. Relaxing the non-discrimination constraint, we show how the same strategic distortions underpin incentives for origin-contingent measures, which we link to the growing prevalence of data localisation. Maximal restrictions on outbound data flows emerge as optimal under a wide range of normatively distinct objectives, though typically at the cost of short-run welfare losses. Introducing asymmetric political constraints, we analyse a dynamic policy game and show how weak accountability may allow a strategically motivated government to escalate first and secure lasting gains in consumer surplus, as firm relocation amplifies the cost of retaliation for its opponent.`,
             focus: `Ce Focus propose une &eacute;valuation causale du soutien comp&eacute;titif accord&eacute; par Bpifrance aux entreprises dans le cadre des programmes PIA et France 2030. &Agrave; partir d'un nouveau panel associant les candidatures d&eacute;pos&eacute;es depuis 2010 &agrave; des donn&eacute;es administratives d'entreprises, il compare les entreprises financ&eacute;es aux candidates non retenues au sein des m&ecirc;mes appels &agrave; projets. Les r&eacute;sultats montrent des gains persistants en emploi, effort de recherche, brevets, accumulation de capital, chiffre d'affaires et valeur ajout&eacute;e. Les recettes fiscales et sociales suppl&eacute;mentaires g&eacute;n&eacute;r&eacute;es par les entreprises financ&eacute;es d&eacute;passent le soutien public engag&eacute; en moins de trois ans, m&ecirc;me si ces r&eacute;sultats ne concernent que les financements attribu&eacute;s sur une base comp&eacute;titive.`,
             decarbonation: `Cette synth&egrave;se publique &eacute;value la contribution de France 2030 &agrave; la d&eacute;carbonation de l'&eacute;conomie fran&ccedil;aise. Elle examine la premi&egrave;re phase de d&eacute;ploiement, caract&eacute;rise les solutions de d&eacute;carbonation soutenues, analyse les pratiques de mesure d'impact sur les r&eacute;ductions d'&eacute;missions de gaz &agrave; effet de serre et &eacute;value le positionnement strat&eacute;gique du portefeuille de projets.`,
           },
@@ -1808,7 +1917,7 @@
         document.documentElement.lang = copy.lang;
 
         navLinks.forEach((link) => {
-          const key = (link.getAttribute("href") || "#home").replace("#", "");
+          const key = (link.getAttribute("href") || "#about").replace("#", "");
           const label = copy.nav[key];
           const labelNode = link.querySelector(".nav-text");
           if (labelNode && label) {
@@ -1851,6 +1960,7 @@
           note.innerHTML = copy.publicationNotes[index] || note.innerHTML;
         });
 
+        setHtmlContent("#abstract-strategic-data-regulation", copy.abstracts.thesis);
         setHtmlContent("#abstract-focus-france-2030", copy.abstracts.focus);
         setHtmlContent("#abstract-decarbonation-report", copy.abstracts.decarbonation);
 
@@ -1873,7 +1983,12 @@
 
         const courseLinks = [...document.querySelectorAll('[data-section-view="teaching"] .paper-title-link')];
         courseLinks.forEach((link, index) => {
-          link.innerHTML = `${copy.courseTitles[index] || ""} <span class="course-level">${copy.courseLevel}</span>`;
+          link.innerHTML = copy.courseTitles[index] || link.innerHTML;
+        });
+
+        const courseLevels = [...document.querySelectorAll('[data-section-view="teaching"] .course-level')];
+        courseLevels.forEach((level) => {
+          level.innerHTML = copy.courseLevel;
         });
         const teachingAuthors = [...document.querySelectorAll('[data-section-view="teaching"] .paper-authors')];
         teachingAuthors.forEach((authors, index) => {
@@ -1922,8 +2037,25 @@
       };
 
       const setActiveSection = () => {
-        const section = (window.location.hash || "#home").slice(1);
-        const panelSection = section === "research" || section === "teaching" ? section : "home";
+        const route = parseRouteHash();
+        const canonicalHash = routeHash(route.section, route.fullScreen);
+        if ((window.location.hash || "") !== canonicalHash) {
+          history.replaceState(null, "", canonicalHash);
+        }
+        const panelSection = route.panelSection;
+        const shouldForceVertical = route.fullScreen && !staticMapLayout.matches;
+        const forced = document.body.classList.contains("force-vertical");
+        if (forced !== shouldForceVertical) {
+          document.body.classList.toggle("force-vertical", shouldForceVertical);
+          if (!shouldForceVertical) {
+            document.body.classList.remove(
+              "layout-decor-ready",
+              "layout-polygons-entering",
+              "layout-transition-to-vertical"
+            );
+          }
+          syncLayoutControls();
+        }
 
         footerRevealBlockedUntil = performance.now() + 360;
         document.body.classList.remove("map-explore");
@@ -1935,7 +2067,8 @@
           closeMailContact();
         }
         navLinks.forEach((link) => {
-          const isCurrent = link.getAttribute("href") === `#${section || "home"}`;
+          const linkSection = (link.getAttribute("href") || "#about").slice(1);
+          const isCurrent = linkSection === route.section;
           if (isCurrent) {
             link.setAttribute("aria-current", "page");
           } else {
@@ -1970,6 +2103,23 @@
           startTitleTyping();
         }
       };
+
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const section = (link.getAttribute("href") || "#about").slice(1);
+          if (!document.body.classList.contains("force-vertical") || !sectionIds.has(section)) {
+            return;
+          }
+
+          event.preventDefault();
+          const nextHash = routeHash(section, true);
+          if (window.location.hash === nextHash) {
+            setActiveSection();
+          } else {
+            window.location.hash = nextHash;
+          }
+        });
+      });
 
       window.addEventListener("hashchange", setActiveSection);
       setActiveSection();
