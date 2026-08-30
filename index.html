@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/feg-32.png?v=1">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/feg-180.png?v=1">
     <link rel="preload" as="image" href="assets/map/mediterranean-network-map.webp?v=1">
-    <link rel="stylesheet" href="styles.css?v=303">
+    <link rel="stylesheet" href="styles.css?v=312">
   </head>
   <body>
     <script>
@@ -164,6 +164,7 @@
           </span>
         </button>
         <article class="intro-panel">
+          <div class="intro-panel-scroll-mask" aria-hidden="true"></div>
           <div class="portrait-zone" data-section-view="home">
             <div class="portrait-frame" aria-hidden="true">
               <img
@@ -564,7 +565,7 @@
       let flowPulseSlots = [];
       let flowRouteCursor = 0;
       let flowRouteStep = 47;
-      const flowPulseCount = 15;
+      const flowPulseCount = 30;
       let flowAnimationFrame = 0;
       let flowCanvasActive = false;
       let cloudAnimationFrame = 0;
@@ -993,8 +994,8 @@
         themeToggle.setAttribute(
           "data-nav-label",
           enabled
-            ? (currentLanguage === "fr" ? "day mode" : "day mode")
-            : (currentLanguage === "fr" ? "night mode" : "night mode")
+            ? (currentLanguage === "fr" ? "mode jour" : "day mode")
+            : (currentLanguage === "fr" ? "mode nuit" : "night mode")
         );
       };
 
@@ -1277,7 +1278,9 @@
           layoutToggle?.setAttribute("aria-pressed", String(forced));
           layoutToggle?.setAttribute(
             "aria-label",
-            forced ? "Exit full screen" : "Enter full screen"
+            forced
+              ? (currentLanguage === "fr" ? "Quitter le plein &eacute;cran" : "Exit full screen")
+              : (currentLanguage === "fr" ? "Passer en plein &eacute;cran" : "Enter full screen")
           );
           layoutToggle?.setAttribute(
             "data-nav-label",
@@ -1290,7 +1293,9 @@
           mapExploreToggle?.setAttribute("aria-pressed", String(explored));
           mapExploreToggle?.setAttribute(
             "aria-label",
-            explored ? "Show panel" : "Hide panel to explore the map"
+            explored
+              ? (currentLanguage === "fr" ? "Afficher le panneau" : "Show panel")
+              : (currentLanguage === "fr" ? "Masquer le panneau pour explorer la carte" : "Hide panel to explore the map")
           );
           mapExploreToggle?.removeAttribute("data-nav-label");
         };
@@ -1423,6 +1428,7 @@
       }));
       let sourceParagraphs = captureSourceParagraphs();
       const measureLine = document.createElement("span");
+      let flowLinkGroupCounter = 0;
 
       const activeFooter = () => (isStaticMapMode() ? mobileFooter : panelFooter);
 
@@ -1626,8 +1632,8 @@
         }
 
         const wrapper = node.cloneNode(false);
-        if (node.matches("a, .accent-name")) {
-          return [{ text: (node.textContent || "").replace(/\s+/g, " ").trim(), wrappers: [...wrappers, wrapper] }];
+        if (node.matches("a")) {
+          wrapper.dataset.flowLinkGroup = `link-${flowLinkGroupCounter += 1}`;
         }
 
         return [...node.childNodes].flatMap((child) => tokenize(child, [...wrappers, wrapper]));
@@ -1660,6 +1666,7 @@
 
         try {
           const metrics = diagonalMetrics();
+          flowLinkGroupCounter = 0;
           if (introTitle) {
             const titleY = panelContentY(introTitle);
             introTitle.style.setProperty("--diagonal-title-offset", `${Math.round(diagonalOffsetAt(titleY, metrics))}px`);
@@ -1721,6 +1728,53 @@
       document.fonts?.ready?.then(scheduleDiagonalLayout);
       new ResizeObserver(scheduleDiagonalLayout).observe(introPanel);
       scheduleDiagonalLayout();
+
+      let activeFlowLinkGroup = "";
+      const setFlowLinkGroupActive = (group, active) => {
+        if (!group) {
+          return;
+        }
+        document.querySelectorAll(`[data-flow-link-group="${group}"]`).forEach((link) => {
+          link.classList.toggle("is-flow-link-active", active);
+        });
+      };
+      const flowLinkFromTarget = (target) => (
+        target instanceof Element ? target.closest("a[data-flow-link-group]") : null
+      );
+      const activateFlowLinkGroup = (group) => {
+        if (!group || activeFlowLinkGroup === group) {
+          return;
+        }
+        setFlowLinkGroupActive(activeFlowLinkGroup, false);
+        activeFlowLinkGroup = group;
+        setFlowLinkGroupActive(activeFlowLinkGroup, true);
+      };
+      const clearFlowLinkGroup = (relatedTarget = null) => {
+        const relatedLink = flowLinkFromTarget(relatedTarget);
+        if (relatedLink?.dataset.flowLinkGroup === activeFlowLinkGroup) {
+          return;
+        }
+        setFlowLinkGroupActive(activeFlowLinkGroup, false);
+        activeFlowLinkGroup = "";
+      };
+      introContent?.addEventListener("pointerover", (event) => {
+        const link = flowLinkFromTarget(event.target);
+        activateFlowLinkGroup(link?.dataset.flowLinkGroup || "");
+      });
+      introContent?.addEventListener("pointerout", (event) => {
+        if (activeFlowLinkGroup) {
+          clearFlowLinkGroup(event.relatedTarget);
+        }
+      });
+      introContent?.addEventListener("focusin", (event) => {
+        const link = flowLinkFromTarget(event.target);
+        activateFlowLinkGroup(link?.dataset.flowLinkGroup || "");
+      });
+      introContent?.addEventListener("focusout", (event) => {
+        if (activeFlowLinkGroup) {
+          clearFlowLinkGroup(event.relatedTarget);
+        }
+      });
 
       let titleTypingStarted = false;
       let titleTypingTimers = [];
@@ -1808,7 +1862,7 @@
           languageLabel: "Translate site to French",
           homeParagraphs: [
             `My name is <span class="accent-name">Florian El Gourdou</span>. I am a first-year PhD candidate in economics at <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, under the supervision of <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a> and <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, and a research affiliate at the <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a>, Coll&egrave;ge de France.`,
-            `My research interests lie at the intersection of technological change and international trade, with a particular interest in how openness reshapes governments' industrial policy choices.`,
+            `My research interests lie in <span class="accent-name">international trade</span> and <span class="accent-name">technological change</span>, with a particular focus on how international openness shapes the diffusion and distribution of the gains from technological progress, as well as policy trade-offs with industrial implications.`,
           ],
           sectionHeadings: ["Work in progress", "Predoctoral work", "Policy reports", "Paris 1 Panth&eacute;on-Sorbonne"],
           paperTitles: [
@@ -1818,13 +1872,17 @@
             "From PIA to France 2030: Evaluating Competitive Support for Firm Growth",
             "Evaluation of the Impact of France 2030 on the Decarbonization of the Economy",
           ],
+          researchAuthors: [
+            `with <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a>, <a href="https://sites.google.com/view/simon-bunel/home" target="_blank" rel="noopener noreferrer">Simon Bunel</a>, <a href="https://www.xavierjaravel.com/" target="_blank" rel="noopener noreferrer">Xavier Jaravel</a>, and <a href="https://www.insead.edu/faculty-personal-site/alexandra-roulet" target="_blank" rel="noopener noreferrer">Alexandra Roulet</a>`,
+            `with <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a>, <a href="https://sites.google.com/view/simon-bunel/home" target="_blank" rel="noopener noreferrer">Simon Bunel</a>, <a href="https://www.xavierjaravel.com/" target="_blank" rel="noopener noreferrer">Xavier Jaravel</a>, and <a href="https://www.insead.edu/faculty-personal-site/alexandra-roulet" target="_blank" rel="noopener noreferrer">Alexandra Roulet</a>`,
+          ],
           publicationNotes: [
             "Master's thesis, Paris School of Economics",
             "French Council of Economic Analysis (CAE)",
             "French Environment and Energy Management Agency (ADEME)",
           ],
           abstracts: {
-            thesis: `Cet article &eacute;tudie la mani&egrave;re dont l'ouverture commerciale fa&ccedil;onne les incitations &agrave; r&eacute;guler l'usage des donn&eacute;es. Nous d&eacute;veloppons un mod&egrave;le de nouvelle th&eacute;orie du commerce &agrave; deux pays et deux secteurs, dans lequel les donn&eacute;es sont un intrant de production issu de la consommation. Dans un secteur technologique en concurrence monopolistique, les entreprises collectent les donn&eacute;es tir&eacute;es des ventes afin d'ajuster plus finement leurs produits selon les destinations, tandis que les consommateurs supportent des co&ucirc;ts de vie priv&eacute;e croissants lorsque l'usage des donn&eacute;es s'intensifie. Nous caract&eacute;risons la r&eacute;gulation unilat&eacute;rale optimale sous engagement &agrave; des standards uniformes et identifions deux distorsions cl&eacute;s lorsque la port&eacute;e extraterritoriale de la r&eacute;gulation est limit&eacute;e. Premi&egrave;rement, les pays ont une incitation strat&eacute;gique insuffisante &agrave; prot&eacute;ger les consommateurs &eacute;trangers. Deuxi&egrave;mement, l'ouverture commerciale cr&eacute;e un arbitrage entre ambition r&eacute;glementaire et maintien des entreprises sur le territoire : les gouvernements r&eacute;duisent leur ambition afin de retenir les entreprises, manipuler les termes de l'&eacute;change et renforcer leur capacit&eacute; de contr&ocirc;le. Nous analysons ensuite un jeu de politique non coop&eacute;ratif et montrons que les asym&eacute;tries r&eacute;glementaires r&eacute;duisent &agrave; la fois la r&eacute;gulation et le bien-&ecirc;tre dans l'&eacute;quilibre de Nash sym&eacute;trique. Dans certaines r&eacute;gions pertinentes de l'espace des param&egrave;tres, le mod&egrave;le fait appara&icirc;tre des compl&eacute;mentarit&eacute;s strat&eacute;giques qui engendrent des externalit&eacute;s r&eacute;glementaires. Une plus forte sensibilit&eacute; &agrave; la vie priv&eacute;e favorise la diffusion des standards, tandis que la d&eacute;fiance envers le traitement &eacute;tranger des donn&eacute;es peut d&eacute;clencher une course vers le bas. En rel&acirc;chant la contrainte de non-discrimination, nous montrons comment les m&ecirc;mes distorsions strat&eacute;giques fondent des incitations &agrave; adopter des mesures contingentes &agrave; l'origine, que nous relions &agrave; la progression de la localisation des donn&eacute;es. Des restrictions maximales sur les flux sortants de donn&eacute;es apparaissent comme optimales pour un large ensemble d'objectifs normativement distincts, mais g&eacute;n&egrave;rent g&eacute;n&eacute;ralement des pertes de bien-&ecirc;tre &agrave; court terme. Enfin, en introduisant des contraintes politiques asym&eacute;triques, nous analysons un jeu dynamique de politique publique et montrons qu'une responsabilisation politique faible peut permettre &agrave; un gouvernement strat&eacute;gique d'escalader en premier et d'obtenir des gains durables de surplus des consommateurs, la relocalisation des entreprises amplifiant le co&ucirc;t d'une riposte pour son adversaire.`,
+            thesis: `This paper studies how trade openness shapes the incentives to regulate data use. We develop a two-country, two-sector New Trade Theory model in which data is a production input that feeds back from consumption. Firms in a monopolistically competitive Tech sector harvest data from sales to fine-tune products by destination, while consumers incur rising privacy costs as data usage intensifies. We characterise optimal unilateral regulation under a commitment to uniform standards and identify two key distortions under limited extraterritorial reach. First, countries have a strategic disincentive to protect foreign consumers. Second, trade openness creates a regulation&ndash;retention trade-off: governments scale back ambition to retain firm presence, manipulate terms of trade, and strengthen oversight. We then analyse a non-cooperative policy game and show that regulatory asymmetries crowd out both regulation and welfare in the symmetric Nash equilibrium. In relevant parameter regions, the model features strategic complementarities that generate regulatory spillovers. Greater privacy awareness supports standards diffusion, while mistrust of foreign data processing can trigger a race to the bottom. Relaxing the non-discrimination constraint, we show how the same strategic distortions underpin incentives for origin-contingent measures, which we link to the growing prevalence of data localisation. Maximal restrictions on outbound data flows emerge as optimal under a wide range of normatively distinct objectives, though typically at the cost of short-run welfare losses. Introducing asymmetric political constraints, we analyse a dynamic policy game and show how weak accountability may allow a strategically motivated government to escalate first and secure lasting gains in consumer surplus, as firm relocation amplifies the cost of retaliation for its opponent.`,
             focus: `This Focus provides a causal evaluation of competitive support granted by Bpifrance to firms under the PIA programs and France 2030. Using a new panel that matches applications filed since 2010 with administrative firm data, it compares funded firms with non-selected applicants within the same calls for projects. The results show persistent gains in employment, research effort, patenting, capital accumulation, sales, and value added. Additional tax and social security revenues generated by funded firms exceed the committed public support within three years, although the findings apply only to competitively awarded funding.`,
             decarbonation: `This public summary assesses how France 2030 contributes to decarbonizing the French economy. It reviews the first stage of deployment, characterizes supported decarbonization solutions, examines impact measurement practices for greenhouse-gas reductions, and evaluates the strategic positioning of the project portfolio.`,
           },
@@ -1850,8 +1908,8 @@
           title: "Bonjour!",
           languageLabel: "Revenir au site en anglais",
           homeParagraphs: [
-            `Je m'appelle <span class="accent-name">Florian El Gourdou</span>. Je suis doctorant de premi&egrave;re ann&eacute;e en &eacute;conomie &agrave; <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, sous la direction de <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a> et <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, et chercheur affili&eacute; au <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a>, Coll&egrave;ge de France.`,
-            `Mes int&eacute;r&ecirc;ts de recherche se situent &agrave; l'intersection du changement technologique et du commerce international, avec un int&eacute;r&ecirc;t particulier pour la mani&egrave;re dont l'ouverture recompose les choix de politique industrielle des gouvernements.`,
+            `Je m'appelle <span class="accent-name">Florian El Gourdou</span>. Je suis doctorant en &eacute;conomie &agrave; <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, sous la direction de <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a> et <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, et affili&eacute; au <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a> du Coll&egrave;ge de France.`,
+            `Mes int&eacute;r&ecirc;ts de recherche portent sur le <span class="accent-name">commerce international</span> et le <span class="accent-name">changement technologique</span>, avec un int&eacute;r&ecirc;t particulier pour la mani&egrave;re dont l'ouverture internationale fa&ccedil;onne la diffusion et la r&eacute;partition des gains du progr&egrave;s technique, ainsi que les arbitrages de politique &eacute;conomique aux implications industrielles.`,
           ],
           sectionHeadings: ["Travaux en cours", "Travail pr&eacute;doctoral", "Rapports de politique publique", "Paris 1 Panth&eacute;on-Sorbonne"],
           paperTitles: [
@@ -1861,13 +1919,17 @@
             "Du PIA &agrave; France 2030 : &eacute;valuer le soutien comp&eacute;titif &agrave; la croissance des entreprises",
             "&Eacute;valuation de l'impact de France 2030 sur la d&eacute;carbonation de l'&eacute;conomie",
           ],
+          researchAuthors: [
+            `avec <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a>, <a href="https://sites.google.com/view/simon-bunel/home" target="_blank" rel="noopener noreferrer">Simon Bunel</a>, <a href="https://www.xavierjaravel.com/" target="_blank" rel="noopener noreferrer">Xavier Jaravel</a> et <a href="https://www.insead.edu/faculty-personal-site/alexandra-roulet" target="_blank" rel="noopener noreferrer">Alexandra Roulet</a>`,
+            `avec <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a>, <a href="https://sites.google.com/view/simon-bunel/home" target="_blank" rel="noopener noreferrer">Simon Bunel</a>, <a href="https://www.xavierjaravel.com/" target="_blank" rel="noopener noreferrer">Xavier Jaravel</a> et <a href="https://www.insead.edu/faculty-personal-site/alexandra-roulet" target="_blank" rel="noopener noreferrer">Alexandra Roulet</a>`,
+          ],
           publicationNotes: [
             "M&eacute;moire de master, Paris School of Economics",
             "Conseil d'analyse &eacute;conomique (CAE)",
             "Agence de la transition &eacute;cologique (ADEME)",
           ],
           abstracts: {
-            thesis: `This paper studies how trade openness shapes the incentives to regulate data use. We develop a two-country, two-sector New Trade Theory model in which data is a production input that feeds back from consumption. Firms in a monopolistically competitive Tech sector harvest data from sales to fine-tune products by destination, while consumers incur rising privacy costs as data usage intensifies. We characterise optimal unilateral regulation under a commitment to uniform standards and identify two key distortions under limited extraterritorial reach. First, countries have a strategic disincentive to protect foreign consumers. Second, trade openness creates a regulation&ndash;retention trade-off: governments scale back ambition to retain firm presence, manipulate terms of trade, and strengthen oversight. We then analyse a non-cooperative policy game and show that regulatory asymmetries crowd out both regulation and welfare in the symmetric Nash equilibrium. In relevant parameter regions, the model features strategic complementarities that generate regulatory spillovers. Greater privacy awareness supports standards diffusion, while mistrust of foreign data processing can trigger a race to the bottom. Relaxing the non-discrimination constraint, we show how the same strategic distortions underpin incentives for origin-contingent measures, which we link to the growing prevalence of data localisation. Maximal restrictions on outbound data flows emerge as optimal under a wide range of normatively distinct objectives, though typically at the cost of short-run welfare losses. Introducing asymmetric political constraints, we analyse a dynamic policy game and show how weak accountability may allow a strategically motivated government to escalate first and secure lasting gains in consumer surplus, as firm relocation amplifies the cost of retaliation for its opponent.`,
+            thesis: `Cet article &eacute;tudie la mani&egrave;re dont l'ouverture commerciale fa&ccedil;onne les incitations &agrave; r&eacute;guler l'usage des donn&eacute;es. Nous d&eacute;veloppons un mod&egrave;le de nouvelle th&eacute;orie du commerce &agrave; deux pays et deux secteurs, dans lequel les donn&eacute;es sont un intrant de production issu de la consommation. Dans un secteur technologique en concurrence monopolistique, les entreprises collectent les donn&eacute;es tir&eacute;es des ventes afin d'ajuster plus finement leurs produits selon les destinations, tandis que les consommateurs supportent des co&ucirc;ts de vie priv&eacute;e croissants lorsque l'usage des donn&eacute;es s'intensifie. Nous caract&eacute;risons la r&eacute;gulation unilat&eacute;rale optimale sous engagement &agrave; des standards uniformes et identifions deux distorsions cl&eacute;s lorsque la port&eacute;e extraterritoriale de la r&eacute;gulation est limit&eacute;e. Premi&egrave;rement, les pays ont une incitation strat&eacute;gique insuffisante &agrave; prot&eacute;ger les consommateurs &eacute;trangers. Deuxi&egrave;mement, l'ouverture commerciale cr&eacute;e un arbitrage entre ambition r&eacute;glementaire et maintien des entreprises sur le territoire : les gouvernements r&eacute;duisent leur ambition afin de retenir les entreprises, manipuler les termes de l'&eacute;change et renforcer leur capacit&eacute; de contr&ocirc;le. Nous analysons ensuite un jeu de politique non coop&eacute;ratif et montrons que les asym&eacute;tries r&eacute;glementaires r&eacute;duisent &agrave; la fois la r&eacute;gulation et le bien-&ecirc;tre dans l'&eacute;quilibre de Nash sym&eacute;trique. Dans certaines r&eacute;gions pertinentes de l'espace des param&egrave;tres, le mod&egrave;le fait appara&icirc;tre des compl&eacute;mentarit&eacute;s strat&eacute;giques qui engendrent des externalit&eacute;s r&eacute;glementaires. Une plus forte sensibilit&eacute; &agrave; la vie priv&eacute;e favorise la diffusion des standards, tandis que la d&eacute;fiance envers le traitement &eacute;tranger des donn&eacute;es peut d&eacute;clencher une course vers le bas. En rel&acirc;chant la contrainte de non-discrimination, nous montrons comment les m&ecirc;mes distorsions strat&eacute;giques fondent des incitations &agrave; adopter des mesures contingentes &agrave; l'origine, que nous relions &agrave; la progression de la localisation des donn&eacute;es. Des restrictions maximales sur les flux sortants de donn&eacute;es apparaissent comme optimales pour un large ensemble d'objectifs normativement distincts, mais g&eacute;n&egrave;rent g&eacute;n&eacute;ralement des pertes de bien-&ecirc;tre &agrave; court terme. Enfin, en introduisant des contraintes politiques asym&eacute;triques, nous analysons un jeu dynamique de politique publique et montrons qu'une responsabilisation politique faible peut permettre &agrave; un gouvernement strat&eacute;gique d'escalader en premier et d'obtenir des gains durables de surplus des consommateurs, la relocalisation des entreprises amplifiant le co&ucirc;t d'une riposte pour son adversaire.`,
             focus: `Ce Focus propose une &eacute;valuation causale du soutien comp&eacute;titif accord&eacute; par Bpifrance aux entreprises dans le cadre des programmes PIA et France 2030. &Agrave; partir d'un nouveau panel associant les candidatures d&eacute;pos&eacute;es depuis 2010 &agrave; des donn&eacute;es administratives d'entreprises, il compare les entreprises financ&eacute;es aux candidates non retenues au sein des m&ecirc;mes appels &agrave; projets. Les r&eacute;sultats montrent des gains persistants en emploi, effort de recherche, brevets, accumulation de capital, chiffre d'affaires et valeur ajout&eacute;e. Les recettes fiscales et sociales suppl&eacute;mentaires g&eacute;n&eacute;r&eacute;es par les entreprises financ&eacute;es d&eacute;passent le soutien public engag&eacute; en moins de trois ans, m&ecirc;me si ces r&eacute;sultats ne concernent que les financements attribu&eacute;s sur une base comp&eacute;titive.`,
             decarbonation: `Cette synth&egrave;se publique &eacute;value la contribution de France 2030 &agrave; la d&eacute;carbonation de l'&eacute;conomie fran&ccedil;aise. Elle examine la premi&egrave;re phase de d&eacute;ploiement, caract&eacute;rise les solutions de d&eacute;carbonation soutenues, analyse les pratiques de mesure d'impact sur les r&eacute;ductions d'&eacute;missions de gaz &agrave; effet de serre et &eacute;value le positionnement strat&eacute;gique du portefeuille de projets.`,
           },
@@ -1960,6 +2022,11 @@
           note.innerHTML = copy.publicationNotes[index] || note.innerHTML;
         });
 
+        const researchAuthors = [...document.querySelectorAll('[data-section-view="research"] .paper-authors')];
+        researchAuthors.forEach((authors, index) => {
+          authors.innerHTML = copy.researchAuthors[index] || authors.innerHTML;
+        });
+
         setHtmlContent("#abstract-strategic-data-regulation", copy.abstracts.thesis);
         setHtmlContent("#abstract-focus-france-2030", copy.abstracts.focus);
         setHtmlContent("#abstract-decarbonation-report", copy.abstracts.decarbonation);
@@ -2000,6 +2067,7 @@
         });
 
         setNightMode(document.body.classList.contains("night-mode"));
+        syncLayoutControls();
         const copyCueElement = document.querySelector(".email-copy-cue");
         if (copyCueElement && !document.querySelector(".mail-contact")?.classList.contains("is-copied")) {
           copyCueElement.innerHTML = copy.copyCue;
