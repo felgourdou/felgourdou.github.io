@@ -22,6 +22,7 @@
   --fullscreen-bar-height: clamp(58px, 4.2vw, 72px);
   --side-polygons-top: var(--fullscreen-bar-height);
   --side-polygons-height: clamp(1160px, 142vh, 1480px);
+  --side-polygons-retreat: 0px;
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-serif: Georgia, "Times New Roman", serif;
 }
@@ -295,6 +296,13 @@ a {
 .nav-icon-button[data-nav-label]:focus-visible::before {
   opacity: 0.84;
   transform: translate(-50%, 0) rotate(90deg);
+}
+
+.theme-toggle[aria-pressed="true"][data-nav-label]:hover::before,
+.theme-toggle[aria-pressed="true"][data-nav-label]:focus-visible::before,
+.language-toggle[aria-pressed="true"][data-nav-label]:hover::before,
+.language-toggle[aria-pressed="true"][data-nav-label]:focus-visible::before {
+  opacity: 0;
 }
 
 .nav-icon-button[data-nav-label]:hover .nav-tool-mark,
@@ -581,12 +589,12 @@ body.night-mode .hero::after {
 
   body.force-vertical .side-polygons-left,
   body.layout-polygons-entering .side-polygons-left {
-    transform: translateX(0);
+    transform: translateX(calc(-1 * var(--side-polygons-retreat)));
   }
 
   body.force-vertical .side-polygons-right,
   body.layout-polygons-entering .side-polygons-right {
-    transform: translateX(0) scaleX(-1);
+    transform: translateX(var(--side-polygons-retreat)) scaleX(-1);
   }
 
   body.night-mode .side-polygons {
@@ -943,12 +951,9 @@ body.map-explore .map-explore-icon-exit {
     view-transition-name: home-copy;
   }
 
-  .portrait-field-day {
-    view-transition-name: home-portrait-day;
-  }
-
+  .portrait-field-day,
   .portrait-field-night {
-    view-transition-name: home-portrait-night;
+    view-transition-name: none;
   }
 
   .mail-toggle {
@@ -1365,13 +1370,23 @@ body.night-mode .intro-panel::after {
   margin-right: clamp(34px, 8vw, 118px);
   margin-bottom: clamp(36px, 6vh, 64px);
   isolation: isolate;
-  --portrait-size: min(82%, 382px, 43vh);
+  --portrait-size: clamp(220px, 43vh, 382px);
+}
+
+.portrait-frame {
+  position: relative;
+  display: grid;
+  width: var(--portrait-size);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
 }
 
 .portrait-field {
-  width: var(--portrait-size);
+  position: relative;
+  grid-area: 1 / 1;
+  width: 100%;
   max-height: none;
-  height: var(--portrait-size);
+  height: 100%;
   aspect-ratio: 1;
   object-fit: contain;
   object-position: center bottom;
@@ -1384,13 +1399,9 @@ body.night-mode .intro-panel::after {
 }
 
 .portrait-field-night {
-  position: absolute;
-  top: 0;
-  left: 50%;
   z-index: 1;
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-50%);
   filter: none;
 }
 
@@ -1413,8 +1424,8 @@ body.night-mode .portrait-zone {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  margin-top: -4px;
+  gap: 9px;
+  margin-top: 8px;
   color: rgba(24, 32, 36, 0.82);
 }
 
@@ -1426,9 +1437,9 @@ body.night-mode .contact-dock {
   display: inline-flex;
   position: relative;
   width: max-content;
-  max-width: 28px;
-  min-width: 28px;
-  height: 28px;
+  max-width: 32px;
+  min-width: 32px;
+  height: 32px;
   margin-right: 0;
   align-items: center;
   overflow: visible;
@@ -1449,9 +1460,9 @@ body.night-mode .contact-dock {
 
 .contact-action {
   position: relative;
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2336,11 +2347,16 @@ body.force-vertical .portrait-zone {
   align-self: center;
   width: min(78%, 390px);
   margin: clamp(18px, 2.8vh, 34px) auto clamp(28px, 4vh, 46px);
-  --portrait-size: min(82%, 350px, 34vh);
+  --portrait-size: clamp(200px, 34vh, 350px);
+}
+
+body.force-vertical .portrait-frame {
+  width: var(--portrait-size);
+  flex-basis: auto;
 }
 
 body.force-vertical .portrait-field {
-  width: var(--portrait-size);
+  width: 100%;
   max-height: none;
 }
 
@@ -2992,9 +3008,14 @@ body.night-mode .research-entry p.paper-abstract {
     margin: 0 auto;
   }
 
-  .portrait-field {
+  .portrait-frame {
     width: min(82%, 350px);
-    max-height: 34vh;
+    flex-basis: auto;
+  }
+
+  .portrait-field {
+    width: 100%;
+    max-height: none;
   }
 
   .contact-dock {
@@ -3099,9 +3120,14 @@ body.night-mode .research-entry p.paper-abstract {
     margin: 0 auto;
   }
 
-  .portrait-field {
+  .portrait-frame {
     width: min(82%, 340px);
-    max-height: 286px;
+    flex-basis: auto;
+  }
+
+  .portrait-field {
+    width: 100%;
+    max-height: none;
     opacity: 0.94;
   }
 

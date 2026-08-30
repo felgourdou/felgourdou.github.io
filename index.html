@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/feg-32.png?v=1">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/feg-180.png?v=1">
     <link rel="preload" as="image" href="assets/map/mediterranean-network-map.webp?v=1">
-    <link rel="stylesheet" href="styles.css?v=270">
+    <link rel="stylesheet" href="styles.css?v=281">
   </head>
   <body>
     <script>
@@ -72,7 +72,7 @@
       </div>
 
       <nav class="site-nav" aria-label="Primary navigation">
-        <a href="#home" aria-current="page"><span class="nav-text">home</span></a>
+        <a href="#home" aria-current="page"><span class="nav-text">about</span></a>
         <a href="#research"><span class="nav-text">research</span></a>
         <a href="#teaching"><span class="nav-text">teaching</span></a>
         <button class="nav-icon-button language-toggle" type="button" aria-label="Translate site to French" aria-pressed="false" data-nav-label="french">
@@ -158,20 +158,22 @@
         </button>
         <article class="intro-panel">
           <div class="portrait-zone" data-section-view="home">
-            <img
-              class="portrait-field portrait-field-day"
-              data-src="assets/map/network-portrait-selected-ink-768.webp?v=1"
-              decoding="async"
-              alt=""
-              aria-hidden="true"
-            >
-            <img
-              class="portrait-field portrait-field-night"
-              data-src="assets/map/network-portrait-night-generated-aligned-768.webp?v=1"
-              decoding="async"
-              alt=""
-              aria-hidden="true"
-            >
+            <div class="portrait-frame" aria-hidden="true">
+              <img
+                class="portrait-field portrait-field-day"
+                src="assets/map/network-portrait-selected-ink-768.webp?v=1"
+                data-src="assets/map/network-portrait-selected-ink-768.webp?v=1"
+                decoding="async"
+                alt=""
+              >
+              <img
+                class="portrait-field portrait-field-night"
+                src="assets/map/network-portrait-night-generated-aligned-768.webp?v=1"
+                data-src="assets/map/network-portrait-night-generated-aligned-768.webp?v=1"
+                decoding="async"
+                alt=""
+              >
+            </div>
             <div class="contact-dock" aria-label="Contact links">
               <div class="mail-contact">
                 <button
@@ -283,6 +285,37 @@
                     </div>
                   </div>
                 </article>
+              </section>
+              <section class="research-entry predoctoral-entry">
+                <h2>Predoctoral work</h2>
+                <div class="published-list">
+                  <article class="research-paper published-paper predoctoral-paper">
+                    <div class="publication-marker" aria-label="Publication details">
+                      <span class="publication-date">2025</span>
+                    </div>
+                    <div class="paper-main">
+                      <h3>
+                        <a class="paper-title-link" href="assets/docs/strategic-data-regulation-international-trade-master-thesis.pdf" target="_blank" rel="noopener noreferrer">
+                          Strategic Data Regulation in International Trade
+                        </a>
+                      </h3>
+                      <p class="publication-note">Master's thesis, Paris School of Economics</p>
+                      <div class="paper-actions">
+                        <div class="paper-action-row">
+                          <button class="abstract-button is-disabled" type="button" disabled aria-disabled="true">abstract</button>
+                          <a class="paper-resource-link" href="assets/docs/strategic-data-regulation-international-trade-master-thesis.pdf" target="_blank" rel="noopener noreferrer">
+                            <svg class="paper-resource-icon" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M12 15V3"></path>
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                              <path d="m7 10 5 5 5-5"></path>
+                            </svg>
+                            download
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
               </section>
               <section class="research-entry published-entry">
                 <h2>Policy reports</h2>
@@ -444,6 +477,7 @@
         document.body.classList.contains("force-vertical") ||
         document.body.classList.contains("layout-transition-to-vertical");
       const isMapExploreMode = () => document.body.classList.contains("map-explore");
+      const sidePolygonClearance = 36;
       const mapBaseZoom = 1.28;
       const mapMaxZoom = 2.12;
       let mapPanX = 0;
@@ -857,8 +891,8 @@
         const visible = !document.hidden;
 
         setLazyImageSource(mapRevealPlane, visible && nightMode && !staticMode);
-        setLazyImageSource(portraitFieldDay, visible && homeView && !nightMode);
-        setLazyImageSource(portraitFieldNight, visible && homeView && nightMode);
+        setLazyImageSource(portraitFieldDay, true);
+        setLazyImageSource(portraitFieldNight, true);
         updateFlowOverlaySources();
       };
 
@@ -961,6 +995,35 @@
         mapLayers.forEach((layer) => {
           layer.style.transform = transform;
         });
+      };
+
+      const updateSidePolygonRetreat = () => {
+        const leftPolygons = document.querySelector(".side-polygons-left");
+        const rightPolygons = document.querySelector(".side-polygons-right");
+        if (!leftPolygons || !rightPolygons) {
+          return;
+        }
+
+        if (!document.body.classList.contains("force-vertical")) {
+          document.documentElement.style.setProperty("--side-polygons-retreat", "0px");
+          return;
+        }
+
+        const section = document.body.dataset.section || "home";
+        const visibleView = document.querySelector(`[data-section-view="${section}"]:not([hidden])`);
+        const content = visibleView?.querySelector(".research-list, .teaching-list, .intro-content") || visibleView;
+        if (!(content instanceof Element)) {
+          document.documentElement.style.setProperty("--side-polygons-retreat", "0px");
+          return;
+        }
+
+        const contentRect = content.getBoundingClientRect();
+        const leftWidth = leftPolygons.getBoundingClientRect().width;
+        const rightWidth = rightPolygons.getBoundingClientRect().width;
+        const leftOverlap = Math.max(0, leftWidth - (contentRect.left - sidePolygonClearance));
+        const rightOverlap = Math.max(0, rightWidth - (window.innerWidth - contentRect.right - sidePolygonClearance));
+        const retreat = Math.min(360, Math.ceil(Math.max(leftOverlap, rightOverlap)));
+        document.documentElement.style.setProperty("--side-polygons-retreat", `${retreat}px`);
       };
 
       const restoreMapBaseLayer = () => {
@@ -1086,6 +1149,7 @@
         window.addEventListener("resize", () => {
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
+          updateSidePolygonRetreat();
           updateOptionalVisualSources();
         });
         staticMapLayout.addEventListener?.("change", () => {
@@ -1094,6 +1158,7 @@
           }
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
+          updateSidePolygonRetreat();
           updateOptionalVisualSources();
         });
         mapPlane?.addEventListener("error", () => {
@@ -1118,8 +1183,6 @@
             setLazyImageSource(flowOverlayDay, false);
             setLazyImageSource(flowOverlayNight, false);
             setLazyImageSource(flowOverlayNightStatic, false);
-            setLazyImageSource(portraitFieldDay, false);
-            setLazyImageSource(portraitFieldNight, false);
             return;
           }
 
@@ -1173,6 +1236,7 @@
           updateLayoutToggle();
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
+          updateSidePolygonRetreat();
           updateOptionalVisualSources();
         };
 
@@ -1187,6 +1251,7 @@
             setMapTransform(mapPanX, mapPanY);
           }
           updateLayoutToggle();
+          updateSidePolygonRetreat();
           updateOptionalVisualSources();
         };
 
@@ -1319,10 +1384,7 @@
         }
 
         if (event.deltaY < 0) {
-          const target = footerRevealTarget();
-          if (target && target.scrollTop < footerRevealPoint(target) - 12) {
-            document.body.classList.remove("footer-revealed");
-          }
+          document.body.classList.remove("footer-revealed");
           return;
         }
 
@@ -1364,7 +1426,7 @@
 
         const scrollTop = target.scrollTop;
         const revealPoint = footerRevealPoint(target);
-        if (scrollTop < lastFooterScrollTop - 2 && scrollTop < revealPoint - 12) {
+        if (scrollTop < lastFooterScrollTop - 2) {
           document.body.classList.remove("footer-revealed");
         } else if (scrollTop > lastFooterScrollTop + 2 && scrollTop >= revealPoint - 3) {
           document.body.classList.add("footer-revealed");
@@ -1631,7 +1693,7 @@
         en: {
           lang: "en",
           nav: {
-            home: "home",
+            home: "about",
             research: "research",
             teaching: "teaching",
           },
@@ -1641,14 +1703,16 @@
             `My name is <span class="accent-name">Florian El Gourdou</span>. I am a first-year PhD candidate in economics at <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, under the supervision of <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a> and <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, and a research affiliate at the <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a>, Coll&egrave;ge de France.`,
             `My research interests lie at the intersection of technological change and international trade, with a particular interest in how openness reshapes governments' industrial policy choices.`,
           ],
-          sectionHeadings: ["Work in progress", "Policy reports", "Paris 1 Panth&eacute;on-Sorbonne"],
+          sectionHeadings: ["Work in progress", "Predoctoral work", "Policy reports", "Paris 1 Panth&eacute;on-Sorbonne"],
           paperTitles: [
             "The Returns to Industrial Policy: Evidence From France's Mission-Oriented Programs",
             "The Global Incidence of Data Regulation",
+            "Strategic Data Regulation in International Trade",
             "From PIA to France 2030: Evaluating Competitive Support for Firm Growth",
             "Evaluation of the Impact of France 2030 on the Decarbonization of the Economy",
           ],
           publicationNotes: [
+            "Master's thesis, Paris School of Economics",
             "French Council of Economic Analysis (CAE)",
             "French Environment and Energy Management Agency (ADEME)",
           ],
@@ -1671,9 +1735,9 @@
         fr: {
           lang: "fr",
           nav: {
-            home: "accueil",
+            home: "à propos",
             research: "recherche",
-            teaching: "enseignement",
+            teaching: "cours",
           },
           title: "Bonjour!",
           languageLabel: "Revenir au site en anglais",
@@ -1681,14 +1745,16 @@
             `Je m'appelle <span class="accent-name">Florian El Gourdou</span>. Je suis doctorant de premi&egrave;re ann&eacute;e en &eacute;conomie &agrave; <a href="https://www.sciencespo.fr/department-economics/" target="_blank" rel="noopener noreferrer">Sciences Po</a>, sous la direction de <a href="https://www.philippeaghion.com/" target="_blank" rel="noopener noreferrer">Philippe Aghion</a> et <a href="https://www.isabellemejean.com/index.html" target="_blank" rel="noopener noreferrer">Isabelle M&eacute;jean</a>, et chercheur affili&eacute; au <a href="https://www.farhi-innovation-lab.fr/" target="_blank" rel="noopener noreferrer">Farhi Innovation Lab</a>, Coll&egrave;ge de France.`,
             `Mes int&eacute;r&ecirc;ts de recherche se situent &agrave; l'intersection du changement technologique et du commerce international, avec un int&eacute;r&ecirc;t particulier pour la mani&egrave;re dont l'ouverture recompose les choix de politique industrielle des gouvernements.`,
           ],
-          sectionHeadings: ["Travaux en cours", "Rapports de politique publique", "Paris 1 Panth&eacute;on-Sorbonne"],
+          sectionHeadings: ["Travaux en cours", "Travail pr&eacute;doctoral", "Rapports de politique publique", "Paris 1 Panth&eacute;on-Sorbonne"],
           paperTitles: [
             "Les rendements de la politique industrielle : enseignements des programmes orient&eacute;s mission en France",
             "L'incidence mondiale de la r&eacute;gulation des donn&eacute;es",
+            "Strategic Data Regulation in International Trade",
             "Du PIA &agrave; France 2030 : &eacute;valuer le soutien comp&eacute;titif &agrave; la croissance des entreprises",
             "&Eacute;valuation de l'impact de France 2030 sur la d&eacute;carbonation de l'&eacute;conomie",
           ],
           publicationNotes: [
+            "M&eacute;moire de master, Paris School of Economics",
             "Conseil d'analyse &eacute;conomique (CAE)",
             "Agence de la transition &eacute;cologique (ADEME)",
           ],
@@ -1704,7 +1770,7 @@
             `Charg&eacute; de TD pour <a href="https://leamarchal.fr/" target="_blank" rel="noopener noreferrer">L&eacute;a Marchal</a>`,
             `Charg&eacute; de TD pour Omar Joya et <a href="https://ferdi.fr/en/biographies/sandra-poncet" target="_blank" rel="noopener noreferrer">Sandra Poncet</a>`,
           ],
-          teachingDates: ["&Eacute;t&eacute; 2026", "Printemps 2025"],
+          teachingDates: ["S2 2025-2026", "S2 2024-2025"],
           copyCue: "cliquer pour copier",
           copiedCue: "copi&eacute;!",
         },
@@ -1778,7 +1844,7 @@
         researchHeadings.forEach((heading, index) => {
           heading.innerHTML = copy.sectionHeadings[index] || heading.innerHTML;
         });
-        setHtmlContent('[data-section-view="teaching"] .research-entry > h2', copy.sectionHeadings[2]);
+        setHtmlContent('[data-section-view="teaching"] .research-entry > h2', copy.sectionHeadings[3]);
 
         const publicationNotes = [...document.querySelectorAll('[data-section-view="research"] .published-paper .publication-note')];
         publicationNotes.forEach((note, index) => {
@@ -1880,6 +1946,7 @@
         pageViews.forEach((view) => {
           view.hidden = view.dataset.sectionView !== panelSection;
         });
+        updateSidePolygonRetreat();
 
         if (introPanel) {
           introPanel.scrollTop = 0;
@@ -1893,6 +1960,7 @@
           }
           window.scrollTo(0, 0);
           lastFooterScrollTop = footerRevealTarget()?.scrollTop || 0;
+          updateSidePolygonRetreat();
         });
         clampMapPan();
         setMapTransform(mapPanX, mapPanY);
