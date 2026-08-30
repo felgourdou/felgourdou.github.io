@@ -12,22 +12,13 @@
     <link rel="icon" href="favicon.ico?v=1" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/feg-32.png?v=1">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/feg-180.png?v=1">
-    <link rel="preload" as="image" href="assets/map/mediterranean-network-map.png">
-    <link rel="preload" as="image" href="assets/map/night-map-reveal.png?v=4">
-    <link rel="preload" as="image" href="assets/map/network-portrait-selected-ink.png?v=2">
-    <link rel="preload" as="image" href="assets/map/network-portrait-night-generated-aligned.png?v=1">
-    <link rel="preload" as="image" href="assets/patterns/irregular-network-tile.svg">
-    <link rel="preload" as="image" href="assets/patterns/irregular-network-tile-night.svg">
-    <link rel="stylesheet" href="styles.css?v=221">
+    <link rel="preload" as="image" href="assets/map/mediterranean-network-map.webp?v=1">
+    <link rel="stylesheet" href="styles.css?v=270">
   </head>
   <body>
     <script>
       (() => {
-        const hour = new Date().getHours();
-        if (hour >= 19 || hour < 7) {
-          document.body.classList.add("night-mode");
-        }
-        document.body.classList.add("animations-paused");
+        document.body.classList.add("day-clouds-active");
       })();
     </script>
     <header class="top-bar">
@@ -84,19 +75,6 @@
         <a href="#home" aria-current="page"><span class="nav-text">home</span></a>
         <a href="#research"><span class="nav-text">research</span></a>
         <a href="#teaching"><span class="nav-text">teaching</span></a>
-        <button class="nav-icon-button theme-toggle" type="button" aria-label="Switch to night mode" aria-pressed="false" data-nav-label="night mode">
-          <span class="nav-tool-mark" aria-hidden="true">
-            <svg class="nav-tool-icon nav-tool-icon-moon" viewBox="0 0 24 24">
-              <path d="M12 3a9 9 0 1 0 8.2 12.7A7 7 0 0 1 12 3Z"></path>
-              <g class="moon-stars">
-                <path d="M18.2 4.4v3.2"></path>
-                <path d="M16.6 6h3.2"></path>
-                <path d="M20 10.8v2.4"></path>
-                <path d="M18.8 12h2.4"></path>
-              </g>
-            </svg>
-          </span>
-        </button>
         <button class="nav-icon-button language-toggle" type="button" aria-label="Translate site to French" aria-pressed="false" data-nav-label="french">
           <span class="nav-tool-mark" aria-hidden="true">
             <svg class="nav-tool-icon nav-tool-icon-baguette" viewBox="0 0 24 24">
@@ -110,6 +88,19 @@
                 <path class="flag-blue" d="M13.65 .55h2.1V4.9h-2.1Z"></path>
                 <path class="flag-white" d="M15.75 .55h2.1V4.9h-2.1Z"></path>
                 <path class="flag-red" d="M17.85 .55h2.1V4.9h-2.1Z"></path>
+              </g>
+            </svg>
+          </span>
+        </button>
+        <button class="nav-icon-button theme-toggle" type="button" aria-label="Switch to night mode" aria-pressed="false" data-nav-label="night mode">
+          <span class="nav-tool-mark" aria-hidden="true">
+            <svg class="nav-tool-icon nav-tool-icon-moon" viewBox="0 0 24 24">
+              <path d="M12 3a9 9 0 1 0 8.2 12.7A7 7 0 0 1 12 3Z"></path>
+              <g class="moon-stars">
+                <path d="M18.2 4.4v3.2"></path>
+                <path d="M16.6 6h3.2"></path>
+                <path d="M20 10.8v2.4"></path>
+                <path d="M18.8 12h2.4"></path>
               </g>
             </svg>
           </span>
@@ -128,44 +119,56 @@
         >
           <img
             class="map-plane map-base-plane"
-            src="assets/map/mediterranean-network-map.png?v=1"
+            src="assets/map/mediterranean-network-map.webp?v=1"
+            decoding="async"
+            fetchpriority="high"
             alt=""
             aria-hidden="true"
           >
           <img
             class="map-reveal-plane"
-            src="assets/map/night-map-reveal.png?v=4"
+            data-src="assets/map/night-map-reveal.webp?v=10"
+            decoding="async"
             alt=""
             aria-hidden="true"
           >
           <img
-            class="flow-overlay flow-overlay-day"
-            src="assets/map/animated-route-network.svg?v=43"
+            class="flow-overlay flow-overlay-night-static"
+            data-src="assets/map/animated-route-network-night-static.svg?v=12"
+            decoding="async"
             alt=""
             aria-hidden="true"
           >
-          <img
-            class="flow-overlay flow-overlay-night"
-            src="assets/map/animated-route-network-night.svg?v=4"
-            alt=""
-            aria-hidden="true"
-          >
-          <button class="map-pause-toggle" type="button" aria-label="Resume map flows" aria-pressed="true">
-            <span class="map-animation-dot" aria-hidden="true"></span>
-          </button>
+          <canvas class="flow-canvas" width="1536" height="1024" aria-hidden="true"></canvas>
+          <canvas class="map-cloud-shadows" width="1536" height="1024" aria-hidden="true"></canvas>
         </div>
-
+        <button class="nav-icon-button map-explore-toggle" type="button" aria-label="Hide panel to explore the map" aria-pressed="false">
+          <span class="nav-tool-mark map-explore-toggle-mark" aria-hidden="true">
+            <svg class="nav-tool-icon nav-tool-icon-map-explore" viewBox="0 0 24 24">
+              <g class="map-explore-icon-enter">
+                <path class="map-explore-corner-a" d="M13 21h8v-8"></path>
+                <path class="map-explore-diagonal-a" d="M5 5 21 21"></path>
+              </g>
+              <g class="map-explore-icon-exit">
+                <path class="map-explore-corner-b" d="M11 3H3v8"></path>
+                <path class="map-explore-diagonal-b" d="M19 19 3 3"></path>
+              </g>
+            </svg>
+          </span>
+        </button>
         <article class="intro-panel">
           <div class="portrait-zone" data-section-view="home">
             <img
               class="portrait-field portrait-field-day"
-              src="assets/map/network-portrait-selected-ink.png?v=2"
+              data-src="assets/map/network-portrait-selected-ink-768.webp?v=1"
+              decoding="async"
               alt=""
               aria-hidden="true"
             >
             <img
               class="portrait-field portrait-field-night"
-              src="assets/map/network-portrait-night-generated-aligned.png?v=1"
+              data-src="assets/map/network-portrait-night-generated-aligned-768.webp?v=1"
+              decoding="async"
               alt=""
               aria-hidden="true"
             >
@@ -413,6 +416,7 @@
       const themeToggle = document.querySelector(".theme-toggle");
       const languageToggle = document.querySelector(".language-toggle");
       const layoutToggle = document.querySelector(".layout-toggle");
+      const mapExploreToggle = document.querySelector(".map-explore-toggle");
       let currentLanguage = "en";
       const shouldUseNightModeByClock = () => {
         const hour = new Date().getHours();
@@ -420,12 +424,18 @@
       };
 
       const visualCanvas = document.querySelector(".visual-canvas");
-      const mapLayers = [...document.querySelectorAll(".map-plane, .map-reveal-plane, .flow-overlay")];
+      const mapLayers = [...document.querySelectorAll(".map-plane, .map-reveal-plane, .flow-overlay, .flow-canvas, .map-cloud-shadows")];
       const mapPlane = document.querySelector(".map-plane");
-      const mapBaseSrc = "assets/map/mediterranean-network-map.png?v=1";
-      const flowOverlays = [...document.querySelectorAll(".flow-overlay")];
-      const flowOverlay = document.querySelector(".flow-overlay");
-      const mapPauseToggle = document.querySelector(".map-pause-toggle");
+      const mapRevealPlane = document.querySelector(".map-reveal-plane");
+      const mapBaseSrc = "assets/map/mediterranean-network-map.webp?v=1";
+      const cloudCanvas = document.querySelector(".map-cloud-shadows");
+      const flowCanvas = document.querySelector(".flow-canvas");
+      const flowRouteDataSrc = "assets/map/animated-route-network-data.json?v=4";
+      const flowOverlayDay = document.querySelector(".flow-overlay-day");
+      const flowOverlayNight = document.querySelector(".flow-overlay-night");
+      const flowOverlayNightStatic = document.querySelector(".flow-overlay-night-static");
+      const portraitFieldDay = document.querySelector(".portrait-field-day");
+      const portraitFieldNight = document.querySelector(".portrait-field-night");
       const introPanelForMap = document.querySelector(".intro-panel");
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const staticMapLayout = window.matchMedia("(max-width: 980px), (orientation: portrait)");
@@ -433,15 +443,23 @@
         staticMapLayout.matches ||
         document.body.classList.contains("force-vertical") ||
         document.body.classList.contains("layout-transition-to-vertical");
+      const isMapExploreMode = () => document.body.classList.contains("map-explore");
       const mapBaseZoom = 1.28;
       const mapMaxZoom = 2.12;
       let mapPanX = 0;
       let mapPanY = 0;
       let mapZoom = mapBaseZoom;
       let dragOrigin = null;
-      let mapDriftActive = false;
-      let mapAnimationsPaused = true;
-      let panelScrollHoldUntil = 0;
+      let flowRouteDataPromise = null;
+      let flowRoutes = [];
+      let flowPulseSlots = [];
+      let flowRouteCursor = 0;
+      let flowRouteStep = 47;
+      const flowPulseCount = 15;
+      let flowAnimationFrame = 0;
+      let flowCanvasActive = false;
+      let cloudAnimationFrame = 0;
+      let cloudCanvasActive = false;
       let layoutTransitionTimer = 0;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -464,26 +482,392 @@
         };
       };
 
-      const setFlowOverlayFrozen = (enabled) => {
-        flowOverlays.forEach((overlay) => {
-          overlay.classList.toggle("is-soft-paused", enabled);
+      const setLazyImageSource = (image, enabled) => {
+        if (!(image instanceof HTMLImageElement)) {
+          return;
+        }
+
+        const source = image.dataset.src;
+        if (enabled) {
+          if (source && image.getAttribute("src") !== source) {
+            image.src = source;
+          }
+          return;
+        }
+
+        image.removeAttribute("src");
+      };
+
+      const prepareFlowRoute = (route) => {
+        const points = route.points || [];
+        const cumulative = [0];
+        for (let index = 1; index < points.length; index += 1) {
+          const previous = points[index - 1];
+          const current = points[index];
+          cumulative[index] = cumulative[index - 1] + Math.hypot(
+            current[0] - previous[0],
+            current[1] - previous[1]
+          );
+        }
+
+        return {
+          ...route,
+          points,
+          cumulative,
+          total: cumulative[cumulative.length - 1] || 1,
+        };
+      };
+
+      const loadFlowRoutes = () => {
+        if (flowRouteDataPromise) {
+          return flowRouteDataPromise;
+        }
+
+        flowRouteDataPromise = fetch(flowRouteDataSrc)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Route data failed: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((payload) => {
+            flowRoutes = (payload.routes || [])
+              .map(prepareFlowRoute)
+              .filter((route) => route.points.length > 1 && route.total > 0);
+            flowPulseSlots = [];
+            flowRouteCursor = 0;
+            flowRouteStep = [47, 53, 43, 59, 41, 37, 31, 29].find((step) => {
+              let a = step;
+              let b = flowRoutes.length;
+              while (b) {
+                [a, b] = [b, a % b];
+              }
+              return a === 1;
+            }) || 1;
+            return flowRoutes;
+          })
+          .catch(() => {
+            flowRoutes = [];
+            return flowRoutes;
+          });
+
+        return flowRouteDataPromise;
+      };
+
+      const pointOnRoute = (route, distance) => {
+        const clampedDistance = clamp(distance, 0, route.total);
+        for (let index = 1; index < route.cumulative.length; index += 1) {
+          const startDistance = route.cumulative[index - 1];
+          const endDistance = route.cumulative[index];
+          if (clampedDistance <= endDistance) {
+            const start = route.points[index - 1];
+            const end = route.points[index];
+            const span = Math.max(0.001, endDistance - startDistance);
+            const t = (clampedDistance - startDistance) / span;
+            return [
+              start[0] + (end[0] - start[0]) * t,
+              start[1] + (end[1] - start[1]) * t,
+            ];
+          }
+        }
+        return route.points[route.points.length - 1];
+      };
+
+      const drawRouteSegment = (context, route, fromDistance, toDistance) => {
+        const startDistance = clamp(Math.min(fromDistance, toDistance), 0, route.total);
+        const endDistance = clamp(Math.max(fromDistance, toDistance), 0, route.total);
+        if (endDistance <= startDistance) {
+          return;
+        }
+
+        const startPoint = pointOnRoute(route, startDistance);
+        context.beginPath();
+        context.moveTo(startPoint[0], startPoint[1]);
+        for (let index = 1; index < route.cumulative.length; index += 1) {
+          const segmentStart = route.cumulative[index - 1];
+          const segmentEnd = route.cumulative[index];
+          if (segmentEnd < startDistance || segmentStart > endDistance) {
+            continue;
+          }
+          if (segmentStart >= startDistance && segmentEnd <= endDistance) {
+            context.lineTo(route.points[index][0], route.points[index][1]);
+          } else {
+            const clipped = pointOnRoute(route, clamp(segmentEnd, startDistance, endDistance));
+            context.lineTo(clipped[0], clipped[1]);
+          }
+        }
+        context.stroke();
+      };
+
+      const drawFlowDot = (context, point, radius) => {
+        context.beginPath();
+        context.arc(point[0], point[1], radius, 0, Math.PI * 2);
+        context.fill();
+      };
+
+      const drawFlowComet = (context, route, distance, direction, radius, spacing, alpha, color) => {
+        context.fillStyle = color;
+        for (let index = 0; index < 5; index += 1) {
+          const tailProgress = index / 4;
+          const dotDistance = distance - spacing * index * direction;
+          if (dotDistance < 0 || dotDistance > route.total) {
+            continue;
+          }
+
+          const tailFade = Math.pow(1 - tailProgress, 1.95);
+          const dotRadius = radius * (0.34 + 0.66 * tailFade);
+          context.globalAlpha = alpha * tailFade;
+          drawFlowDot(context, pointOnRoute(route, dotDistance), dotRadius);
+        }
+      };
+
+      const nextFlowRouteIndex = () => {
+        if (!flowRoutes.length) {
+          return 0;
+        }
+        const index = flowRouteCursor % flowRoutes.length;
+        flowRouteCursor = (flowRouteCursor + flowRouteStep) % flowRoutes.length;
+        return index;
+      };
+
+      const assignFlowPulse = (slot, now, slotIndex, immediate = false) => {
+        const routeIndex = nextFlowRouteIndex();
+        const route = flowRoutes[routeIndex];
+        const baseDuration = 880 + Math.min(820, route.total * 2.55);
+        const duration = route.color === "red" ? baseDuration * 1.22 : baseDuration;
+        const gap = immediate ? 0 : 80 + ((routeIndex * 29 + slotIndex * 71) % 210);
+        slot.routeIndex = routeIndex;
+        slot.direction = (routeIndex + slotIndex) % 2 === 0 ? 1 : -1;
+        slot.duration = duration;
+        slot.start = now + gap;
+      };
+
+      const resetFlowPulses = (now = performance.now()) => {
+        flowPulseSlots = Array.from({ length: flowPulseCount }, (_, index) => {
+          const slot = {};
+          assignFlowPulse(slot, now + index * 34, index, true);
+          return slot;
         });
       };
 
-      const setMapAnimationsPaused = (enabled) => {
-        mapAnimationsPaused = enabled;
-        document.body.classList.toggle("animations-paused", enabled);
-        setFlowOverlayFrozen(enabled);
-        mapPauseToggle?.setAttribute("aria-pressed", String(enabled));
-        mapPauseToggle?.setAttribute(
-          "aria-label",
-          enabled ? "Resume map flows" : "Pause map flows"
-        );
+      const clearFlowCanvas = () => {
+        if (!(flowCanvas instanceof HTMLCanvasElement)) {
+          return;
+        }
+        const context = flowCanvas.getContext("2d");
+        context?.clearRect(0, 0, flowCanvas.width, flowCanvas.height);
+      };
+
+      const cloudShapes = [
+        { x: 120, y: 190, rx: 620, ry: 260, alpha: 0.27, speed: 0.00034 },
+        { x: 610, y: 120, rx: 560, ry: 230, alpha: 0.235, speed: 0.00039 },
+        { x: 1040, y: 585, rx: 720, ry: 310, alpha: 0.255, speed: 0.00031 },
+        { x: 410, y: 820, rx: 520, ry: 230, alpha: 0.2, speed: 0.00042 },
+        { x: 1380, y: 330, rx: 450, ry: 190, alpha: 0.175, speed: 0.00036 },
+        { x: 790, y: 435, rx: 610, ry: 255, alpha: 0.22, speed: 0.00035 },
+      ];
+
+      const clearCloudCanvas = () => {
+        if (!(cloudCanvas instanceof HTMLCanvasElement)) {
+          return;
+        }
+        const context = cloudCanvas.getContext("2d");
+        context?.clearRect(0, 0, cloudCanvas.width, cloudCanvas.height);
+      };
+
+      const drawCloudFrame = (now) => {
+        if (!cloudCanvasActive || !(cloudCanvas instanceof HTMLCanvasElement)) {
+          cloudAnimationFrame = 0;
+          return;
+        }
+
+        const context = cloudCanvas.getContext("2d");
+        if (!context) {
+          cloudAnimationFrame = window.requestAnimationFrame(drawCloudFrame);
+          return;
+        }
+
+        context.clearRect(0, 0, cloudCanvas.width, cloudCanvas.height);
+        const nightMode = document.body.classList.contains("night-mode");
+        const cloudRgb = nightMode ? "232,221,195" : "24,32,36";
+        const cloudAlpha = nightMode ? 0.22 : 1;
+        cloudShapes.forEach((cloud, index) => {
+          const drift = now * cloud.speed + index * 1.7;
+          const x = cloud.x + Math.sin(drift) * 260 + Math.cos(drift * 0.57) * 115;
+          const y = cloud.y + Math.cos(drift * 0.82) * 135 + Math.sin(drift * 0.39) * 72;
+          const gradient = context.createRadialGradient(x, y, 0, x, y, cloud.rx);
+          gradient.addColorStop(0, `rgba(${cloudRgb},${cloud.alpha * cloudAlpha})`);
+          gradient.addColorStop(0.34, `rgba(${cloudRgb},${cloud.alpha * cloudAlpha * 0.68})`);
+          gradient.addColorStop(0.62, `rgba(${cloudRgb},${cloud.alpha * cloudAlpha * 0.28})`);
+          gradient.addColorStop(1, `rgba(${cloudRgb},0)`);
+
+          context.save();
+          context.translate(x, y);
+          context.rotate(-0.28 + index * 0.11);
+          context.scale(1, cloud.ry / cloud.rx);
+          context.translate(-x, -y);
+          context.fillStyle = gradient;
+          context.beginPath();
+          context.arc(x, y, cloud.rx, 0, Math.PI * 2);
+          context.fill();
+          context.restore();
+        });
+
+        cloudAnimationFrame = window.requestAnimationFrame(drawCloudFrame);
+      };
+
+      const updateCloudCanvasState = () => {
+        const shouldRun = !document.hidden && !isStaticMapMode();
+        cloudCanvas?.classList.toggle("is-soft-paused", !shouldRun);
+        if (shouldRun && !cloudCanvasActive) {
+          cloudCanvasActive = true;
+          cloudAnimationFrame = window.requestAnimationFrame(drawCloudFrame);
+        } else if (!shouldRun) {
+          cloudCanvasActive = false;
+          if (cloudAnimationFrame) {
+            window.cancelAnimationFrame(cloudAnimationFrame);
+            cloudAnimationFrame = 0;
+          }
+          clearCloudCanvas();
+        }
+      };
+
+      const drawFlowFrame = (now) => {
+        if (!flowCanvasActive || !(flowCanvas instanceof HTMLCanvasElement)) {
+          flowAnimationFrame = 0;
+          return;
+        }
+
+        const context = flowCanvas.getContext("2d");
+        if (!context || !flowRoutes.length) {
+          flowAnimationFrame = window.requestAnimationFrame(drawFlowFrame);
+          return;
+        }
+
+        const nightMode = document.body.classList.contains("night-mode");
+        context.clearRect(0, 0, flowCanvas.width, flowCanvas.height);
+        context.lineCap = "round";
+        context.lineJoin = "round";
+
+        flowPulseSlots.forEach((slot, index) => {
+          if (now < slot.start) {
+            return;
+          }
+
+          let progress = (now - slot.start) / slot.duration;
+          if (progress >= 1) {
+            assignFlowPulse(slot, now, index);
+            progress = 0;
+          }
+
+          const route = flowRoutes[slot.routeIndex];
+          const eased = progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+          const travel = slot.direction > 0
+            ? eased * route.total
+            : (1 - eased) * route.total;
+          const isBlue = route.color === "blue";
+          const cometRadius = (isBlue ? 2.05 : 1.92) + (route.hub ? 0.24 : 0);
+          const cometSpacing = route.hub ? 4.85 : 4.25;
+          const fade = Math.sin(Math.PI * progress);
+          const alphaBase = nightMode
+            ? (route.priority ? 0.56 : 0.45)
+            : (route.priority ? 0.74 : 0.62);
+          const alpha = alphaBase * fade;
+          const color = nightMode
+            ? (isBlue ? "rgba(92,207,244,0.96)" : "rgba(255,136,91,0.94)")
+            : (isBlue ? "rgba(47,147,178,0.98)" : "rgba(205,88,48,0.96)");
+
+          context.shadowBlur = nightMode ? (route.hub ? 3.2 : 2.1) : (route.hub ? 1.45 : 0.9);
+          context.shadowColor = color;
+          drawFlowComet(context, route, travel, slot.direction, cometRadius * 1.42, cometSpacing, alpha * (nightMode ? 0.24 : 0.27), color);
+
+          context.shadowBlur = nightMode ? (route.hub ? 0.65 : 0.35) : 0;
+          drawFlowComet(context, route, travel, slot.direction, cometRadius, cometSpacing, nightMode ? alpha * 0.92 : alpha, color);
+        });
+
+        context.globalAlpha = 1;
+        context.shadowBlur = 0;
+        flowAnimationFrame = window.requestAnimationFrame(drawFlowFrame);
+      };
+
+      const stopFlowCanvas = () => {
+        flowCanvasActive = false;
+        if (flowAnimationFrame) {
+          window.cancelAnimationFrame(flowAnimationFrame);
+          flowAnimationFrame = 0;
+        }
+        clearFlowCanvas();
+      };
+
+      const startFlowCanvas = () => {
+        if (!(flowCanvas instanceof HTMLCanvasElement) || flowCanvasActive) {
+          return;
+        }
+
+        flowCanvasActive = true;
+        loadFlowRoutes().then((routes) => {
+          if (!flowCanvasActive || !routes.length) {
+            stopFlowCanvas();
+            return;
+          }
+          if (flowAnimationFrame) {
+            window.cancelAnimationFrame(flowAnimationFrame);
+          }
+          resetFlowPulses();
+          flowAnimationFrame = window.requestAnimationFrame(drawFlowFrame);
+        });
+      };
+
+      const updateFlowCanvasState = () => {
+        const shouldRun = !document.hidden && !isStaticMapMode();
+        flowCanvas?.classList.toggle("is-soft-paused", !shouldRun);
+        if (shouldRun) {
+          startFlowCanvas();
+        } else {
+          stopFlowCanvas();
+        }
+      };
+
+      const updateFlowOverlaySources = () => {
+        if (document.hidden) {
+          setLazyImageSource(flowOverlayDay, false);
+          setLazyImageSource(flowOverlayNight, false);
+          setLazyImageSource(flowOverlayNightStatic, false);
+          updateCloudCanvasState();
+          updateFlowCanvasState();
+          return;
+        }
+
+        const nightMode = document.body.classList.contains("night-mode");
+        const staticMode = isStaticMapMode();
+
+        setLazyImageSource(flowOverlayDay, false);
+        setLazyImageSource(flowOverlayNight, false);
+        setLazyImageSource(flowOverlayNightStatic, nightMode && !staticMode);
+        updateCloudCanvasState();
+        updateFlowCanvasState();
+      };
+
+      const updateOptionalVisualSources = () => {
+        const nightMode = document.body.classList.contains("night-mode");
+        const staticMode = isStaticMapMode();
+        const homeView = (document.body.dataset.section || "home") === "home";
+        const visible = !document.hidden;
+
+        setLazyImageSource(mapRevealPlane, visible && nightMode && !staticMode);
+        setLazyImageSource(portraitFieldDay, visible && homeView && !nightMode);
+        setLazyImageSource(portraitFieldNight, visible && homeView && nightMode);
+        updateFlowOverlaySources();
       };
 
       const setNightMode = (enabled) => {
         document.body.classList.toggle("night-mode", enabled);
-        setFlowOverlayFrozen(mapAnimationsPaused);
+        document.body.classList.toggle("day-clouds-active", !enabled);
+        visualCanvas?.classList.toggle("day-clouds-active", !enabled);
+        updateOptionalVisualSources();
+        updateCloudCanvasState();
         if (!themeToggle) {
           return;
         }
@@ -506,7 +890,7 @@
       themeToggle?.addEventListener("click", () => {
         setNightMode(!document.body.classList.contains("night-mode"));
       });
-      setNightMode(document.body.classList.contains("night-mode") || shouldUseNightModeByClock());
+      setNightMode(false);
 
       const mapPanLimits = () => {
         if (!visualCanvas || !mapPlane) {
@@ -523,7 +907,9 @@
         const scaledHeight = mapHeight * mapZoom;
         const zoomBleedX = (scaledWidth - mapWidth) / 2;
         const zoomBleedY = (scaledHeight - mapHeight) / 2;
-        const visibleRight = panelBounds
+        const visibleRight = isMapExploreMode()
+          ? canvasBounds.width
+          : panelBounds
           ? Math.min(canvasBounds.width, panelBounds.left - canvasBounds.left + 34)
           : canvasBounds.width;
         const guardX = Math.max(178, Math.min(canvasBounds.width, canvasBounds.height) * 0.16);
@@ -589,40 +975,6 @@
         }
         clampMapPan();
         setMapTransform(mapPanX, mapPanY);
-      };
-
-      const animateMap = (time) => {
-        const drifting =
-          time > panelScrollHoldUntil &&
-          !dragOrigin &&
-          !reducedMotion.matches &&
-          !isStaticMapMode();
-
-        if (!drifting) {
-          if (mapDriftActive) {
-            mapDriftActive = false;
-            setMapTransform(mapPanX, mapPanY, 0, false);
-          }
-          window.requestAnimationFrame(animateMap);
-          return;
-        }
-
-        mapDriftActive = true;
-        const seconds = time * 0.001;
-        const driftX =
-          Math.sin(seconds * 0.54) * 7.2 +
-          Math.sin(seconds * 0.31 + 1.8) * 4.8 +
-          Math.sin(seconds * 0.13 + 4.2) * 3.2;
-        const driftY =
-          Math.cos(seconds * 0.47 + 0.6) * 5.8 +
-          Math.sin(seconds * 0.26 + 2.4) * 4.2 +
-          Math.cos(seconds * 0.16 + 3.1) * 2.8;
-        const liquidTilt =
-          Math.sin(seconds * 0.22 + 1.1) * 0.035 +
-          Math.sin(seconds * 0.39 + 3.7) * 0.022;
-
-        setMapTransform(mapPanX + driftX, mapPanY + driftY, liquidTilt, false);
-        window.requestAnimationFrame(animateMap);
       };
 
       if (visualCanvas) {
@@ -734,10 +1086,15 @@
         window.addEventListener("resize", () => {
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
+          updateOptionalVisualSources();
         });
         staticMapLayout.addEventListener?.("change", () => {
+          if (staticMapLayout.matches) {
+            setMapExploreMode(false);
+          }
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
+          updateOptionalVisualSources();
         });
         mapPlane?.addEventListener("error", () => {
           if (mapPlane instanceof HTMLImageElement) {
@@ -746,11 +1103,28 @@
         });
         window.addEventListener("pageshow", () => {
           restoreMapBaseLayer();
+          updateOptionalVisualSources();
         });
         document.addEventListener("visibilitychange", () => {
-          if (!document.hidden) {
-            restoreMapBaseLayer();
+          if (document.hidden) {
+            stopFlowCanvas();
+            cloudCanvasActive = false;
+            if (cloudAnimationFrame) {
+              window.cancelAnimationFrame(cloudAnimationFrame);
+              cloudAnimationFrame = 0;
+            }
+            clearCloudCanvas();
+            setLazyImageSource(mapRevealPlane, false);
+            setLazyImageSource(flowOverlayDay, false);
+            setLazyImageSource(flowOverlayNight, false);
+            setLazyImageSource(flowOverlayNightStatic, false);
+            setLazyImageSource(portraitFieldDay, false);
+            setLazyImageSource(portraitFieldNight, false);
+            return;
           }
+
+          restoreMapBaseLayer();
+          updateOptionalVisualSources();
         });
 
         const updateLayoutToggle = () => {
@@ -766,6 +1140,28 @@
           );
         };
 
+        const updateMapExploreToggle = () => {
+          const explored = isMapExploreMode();
+          mapExploreToggle?.setAttribute("aria-pressed", String(explored));
+          mapExploreToggle?.setAttribute(
+            "aria-label",
+            explored ? "Show panel" : "Hide panel to explore the map"
+          );
+          mapExploreToggle?.removeAttribute("data-nav-label");
+        };
+
+        const setMapExploreMode = (enabled) => {
+          if (enabled && isStaticMapMode()) {
+            return;
+          }
+
+          document.body.classList.toggle("map-explore", enabled);
+          document.body.classList.remove("footer-revealed");
+          updateMapExploreToggle();
+          clampMapPan();
+          setMapTransform(mapPanX, mapPanY);
+        };
+
         const finishLayoutTransition = () => {
           window.clearTimeout(layoutTransitionTimer);
           window.cancelAnimationFrame(layoutTransitionFrame);
@@ -777,12 +1173,21 @@
           updateLayoutToggle();
           clampMapPan();
           setMapTransform(mapPanX, mapPanY);
+          updateOptionalVisualSources();
         };
 
         let layoutTransitionFrame = 0;
         const applyForcedVerticalLayout = (enabled) => {
+          if (enabled) {
+            setMapExploreMode(false);
+          }
           document.body.classList.toggle("force-vertical", enabled);
+          if (!enabled) {
+            clampMapPan();
+            setMapTransform(mapPanX, mapPanY);
+          }
           updateLayoutToggle();
+          updateOptionalVisualSources();
         };
 
         const setForcedVerticalLayout = (enabled, animate = false) => {
@@ -840,23 +1245,13 @@
           const forced = document.body.classList.contains("force-vertical");
           setForcedVerticalLayout(!forced, true);
         });
+        mapExploreToggle?.addEventListener("click", () => {
+          setMapExploreMode(!isMapExploreMode());
+        });
 
         updateLayoutToggle();
-        window.requestAnimationFrame(animateMap);
+        updateMapExploreToggle();
       }
-
-      ["pointerdown", "pointerup", "pointercancel", "click", "wheel"].forEach((eventName) => {
-        mapPauseToggle?.addEventListener(
-          eventName,
-          (event) => {
-            event.stopPropagation();
-            if (eventName === "click") {
-              setMapAnimationsPaused(!mapAnimationsPaused);
-            }
-          },
-          eventName === "wheel" ? { passive: true } : undefined
-        );
-      });
 
       const introPanel = document.querySelector(".intro-panel");
       const introContent = document.querySelector(".intro-content");
@@ -883,9 +1278,9 @@
 
       const isHomeSection = () => document.body.dataset.section === "home";
 
-      const isAtFooterRevealPoint = (target) => {
+      const footerRevealPoint = (target) => {
         if (!target) {
-          return false;
+          return 0;
         }
 
         const footerHeight = activeFooter()?.offsetHeight || 0;
@@ -903,12 +1298,31 @@
             : target.scrollHeight;
           revealPoint = Math.max(0, Math.min(revealPoint, contentBottom - target.clientHeight + 18));
         }
-        return target.scrollTop >= revealPoint - 3;
+        return revealPoint;
       };
 
+      const isAtFooterRevealPoint = (target) => {
+        if (!target) {
+          return false;
+        }
+        return target.scrollTop >= footerRevealPoint(target) - 3;
+      };
+
+      let footerRevealBlockedUntil = 0;
       const revealFooterFromWheel = (event) => {
+        if (performance.now() < footerRevealBlockedUntil) {
+          return;
+        }
+
+        if (event.target instanceof Node && visualCanvas?.contains(event.target)) {
+          return;
+        }
+
         if (event.deltaY < 0) {
-          document.body.classList.remove("footer-revealed");
+          const target = footerRevealTarget();
+          if (target && target.scrollTop < footerRevealPoint(target) - 12) {
+            document.body.classList.remove("footer-revealed");
+          }
           return;
         }
 
@@ -927,25 +1341,39 @@
               });
             });
           }
+          return;
         }
+
+        window.requestAnimationFrame(() => {
+          if (!document.body.classList.contains("footer-revealed") && isAtFooterRevealPoint(target)) {
+            document.body.classList.add("footer-revealed");
+          }
+        });
       };
 
       let lastFooterScrollTop = 0;
-      const hideFooterOnScrollUp = () => {
+      const syncFooterWithScroll = () => {
+        if (performance.now() < footerRevealBlockedUntil) {
+          return;
+        }
+
         const target = footerRevealTarget();
         if (!target) {
           return;
         }
 
         const scrollTop = target.scrollTop;
-        if (scrollTop < lastFooterScrollTop - 2) {
+        const revealPoint = footerRevealPoint(target);
+        if (scrollTop < lastFooterScrollTop - 2 && scrollTop < revealPoint - 12) {
           document.body.classList.remove("footer-revealed");
+        } else if (scrollTop > lastFooterScrollTop + 2 && scrollTop >= revealPoint - 3) {
+          document.body.classList.add("footer-revealed");
         }
         lastFooterScrollTop = scrollTop;
       };
 
       introPanel?.addEventListener("wheel", revealFooterFromWheel, { passive: true });
-      introPanel?.addEventListener("scroll", hideFooterOnScrollUp, { passive: true });
+      introPanel?.addEventListener("scroll", syncFooterWithScroll, { passive: true });
       document.addEventListener("wheel", revealFooterFromWheel, { passive: true, capture: true });
       window.addEventListener(
         "keydown",
@@ -965,19 +1393,8 @@
         },
         { passive: true, capture: true }
       );
-      window.addEventListener("scroll", hideFooterOnScrollUp, { passive: true });
+      window.addEventListener("scroll", syncFooterWithScroll, { passive: true });
 
-      introPanel?.addEventListener(
-        "scroll",
-        () => {
-          panelScrollHoldUntil = performance.now() + 260;
-          if (mapDriftActive) {
-            mapDriftActive = false;
-            setMapTransform(mapPanX, mapPanY, 0, false);
-          }
-        },
-        { passive: true }
-      );
       measureLine.className = "lede lede-line";
       measureLine.style.cssText = "position:absolute;left:-9999px;top:0;visibility:hidden;margin:0;padding:0;max-width:none;width:max-content;white-space:nowrap;";
       document.body.appendChild(measureLine);
@@ -1442,6 +1859,10 @@
         const section = (window.location.hash || "#home").slice(1);
         const panelSection = section === "research" || section === "teaching" ? section : "home";
 
+        footerRevealBlockedUntil = performance.now() + 360;
+        document.body.classList.remove("map-explore");
+        mapExploreToggle?.setAttribute("aria-pressed", "false");
+        mapExploreToggle?.setAttribute("aria-label", "Hide panel to explore the map");
         document.body.dataset.section = panelSection;
         document.body.classList.remove("footer-revealed");
         if (panelSection !== "home") {
@@ -1463,8 +1884,19 @@
         if (introPanel) {
           introPanel.scrollTop = 0;
         }
+        window.scrollTo(0, 0);
+        lastFooterScrollTop = footerRevealTarget()?.scrollTop || 0;
+        window.requestAnimationFrame(() => {
+          document.body.classList.remove("footer-revealed");
+          if (introPanel) {
+            introPanel.scrollTop = 0;
+          }
+          window.scrollTo(0, 0);
+          lastFooterScrollTop = footerRevealTarget()?.scrollTop || 0;
+        });
         clampMapPan();
         setMapTransform(mapPanX, mapPanY);
+        updateOptionalVisualSources();
         scheduleDiagonalLayout();
         if (panelSection === "home") {
           startTitleTyping();
