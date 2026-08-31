@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/feg-32.png?v=1">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/feg-180.png?v=1">
     <link rel="preload" as="image" href="assets/map/mediterranean-network-map.webp?v=1">
-    <link rel="stylesheet" href="styles.css?v=312">
+    <link rel="stylesheet" href="styles.css?v=332">
   </head>
   <body>
     <script>
@@ -566,6 +566,12 @@
       let flowRouteCursor = 0;
       let flowRouteStep = 47;
       const flowPulseCount = 30;
+      let dayGlowRoutes = [];
+      let dayGlowSlots = [];
+      let dayGlowCursor = 0;
+      const dayGlowSlotCount = 3;
+      const dayGlowInterval = 5000;
+      const dayGlowDuration = 1900;
       let flowAnimationFrame = 0;
       let flowCanvasActive = false;
       let cloudAnimationFrame = 0;
@@ -630,6 +636,21 @@
         };
       };
 
+      const buildDayGlowRoutes = (routes) => routes
+        .map((route, index) => ({
+          index,
+          route,
+          score:
+            route.total +
+            route.points.length * 3 +
+            (route.hub ? 64 : 0) +
+            (route.priority ? 46 : 0),
+        }))
+        .filter(({ route }) => route.total >= 120 && route.points.length >= 8)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 32)
+        .map(({ route }) => route);
+
       const loadFlowRoutes = () => {
         if (flowRouteDataPromise) {
           return flowRouteDataPromise;
@@ -646,6 +667,9 @@
             flowRoutes = (payload.routes || [])
               .map(prepareFlowRoute)
               .filter((route) => route.points.length > 1 && route.total > 0);
+            dayGlowRoutes = buildDayGlowRoutes(flowRoutes);
+            dayGlowSlots = [];
+            dayGlowCursor = 0;
             flowPulseSlots = [];
             flowRouteCursor = 0;
             flowRouteStep = [47, 53, 43, 59, 41, 37, 31, 29].find((step) => {
@@ -731,6 +755,78 @@
           context.globalAlpha = alpha * tailFade;
           drawFlowDot(context, pointOnRoute(route, dotDistance), dotRadius);
         }
+      };
+
+      const nextDayGlowRoute = () => {
+        if (!dayGlowRoutes.length) {
+          return null;
+        }
+        const route = dayGlowRoutes[dayGlowCursor % dayGlowRoutes.length];
+        dayGlowCursor = (dayGlowCursor + 7) % dayGlowRoutes.length;
+        return route;
+      };
+
+      const assignDayGlow = (slot, start) => {
+        slot.route = nextDayGlowRoute();
+        slot.start = start;
+        slot.duration = dayGlowDuration;
+      };
+
+      const resetDayGlows = (now = performance.now()) => {
+        dayGlowSlots = Array.from({ length: dayGlowSlotCount }, (_, index) => {
+          const slot = {};
+          assignDayGlow(slot, now + index * dayGlowInterval);
+          return slot;
+        });
+      };
+
+      const drawRouteGlows = (context, now, nightMode) => {
+        if (!dayGlowRoutes.length || !dayGlowSlots.length) {
+          return;
+        }
+
+        dayGlowSlots.forEach((slot) => {
+          if (!slot.route || now < slot.start) {
+            return;
+          }
+
+          let progress = (now - slot.start) / slot.duration;
+          if (progress >= 1) {
+            const cycle = dayGlowInterval * dayGlowSlotCount;
+            const skippedCycles = Math.max(1, Math.ceil((now - slot.start - slot.duration) / cycle));
+            assignDayGlow(slot, slot.start + skippedCycles * cycle);
+            progress = (now - slot.start) / slot.duration;
+          }
+
+          if (progress < 0 || progress > 1 || !slot.route) {
+            return;
+          }
+
+          const fade = Math.sin(Math.PI * progress);
+          const route = slot.route;
+          const isBlue = route.color === "blue";
+          const color = nightMode
+            ? (isBlue ? "rgba(92,207,244,0.82)" : "rgba(255,136,91,0.78)")
+            : (isBlue ? "rgba(55,146,171,0.9)" : "rgba(190,84,48,0.86)");
+          const glowAlpha = nightMode
+            ? 0.06 + fade * (route.priority ? 0.2 : 0.15)
+            : 0.1 + fade * (route.priority ? 0.34 : 0.26);
+          const coreAlpha = nightMode
+            ? fade * (route.priority ? 0.14 : 0.1)
+            : fade * (route.priority ? 0.28 : 0.2);
+          context.save();
+          context.globalAlpha = glowAlpha;
+          context.lineWidth = nightMode ? (route.hub ? 2.15 : 1.72) : (route.hub ? 1.85 : 1.5);
+          context.shadowBlur = nightMode ? (route.hub ? 8 : 5.5) : (route.hub ? 5 : 3.2);
+          context.shadowColor = color;
+          context.strokeStyle = color;
+          drawRouteSegment(context, route, 0, route.total);
+          context.globalAlpha = coreAlpha;
+          context.lineWidth = nightMode ? (route.hub ? 0.72 : 0.56) : (route.hub ? 0.88 : 0.72);
+          context.shadowBlur = 0;
+          drawRouteSegment(context, route, 0, route.total);
+          context.restore();
+        });
       };
 
       const nextFlowRouteIndex = () => {
@@ -860,6 +956,7 @@
         context.clearRect(0, 0, flowCanvas.width, flowCanvas.height);
         context.lineCap = "round";
         context.lineJoin = "round";
+        drawRouteGlows(context, now, nightMode);
 
         flowPulseSlots.forEach((slot, index) => {
           if (now < slot.start) {
@@ -927,6 +1024,7 @@
           if (flowAnimationFrame) {
             window.cancelAnimationFrame(flowAnimationFrame);
           }
+          resetDayGlows();
           resetFlowPulses();
           flowAnimationFrame = window.requestAnimationFrame(drawFlowFrame);
         });

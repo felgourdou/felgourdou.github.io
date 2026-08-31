@@ -24,8 +24,6 @@
   --side-polygons-top: var(--fullscreen-bar-height);
   --side-polygons-height: clamp(1160px, 142vh, 1480px);
   --side-polygons-retreat: 0px;
-  --side-polygons-left-drift: -12px;
-  --side-polygons-right-drift: -24px;
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-serif: Georgia, "Times New Roman", serif;
 }
@@ -578,7 +576,7 @@ body.night-mode .hero::after {
     min-height: 0;
     pointer-events: none;
     background-color: transparent;
-    background-image: url("assets/patterns/irregular-network-tile.svg");
+    background-image: url("assets/patterns/irregular-network-tile.svg?v=325");
     background-repeat: repeat-y;
     background-size: clamp(430px, 34vw, 640px) var(--side-polygons-height);
     background-position: left -176px top;
@@ -591,12 +589,12 @@ body.night-mode .hero::after {
 
   .side-polygons-left {
     left: 0;
-    transform: translateX(calc(-52% + var(--side-polygons-left-drift)));
+    transform: translateX(-52%);
   }
 
   .side-polygons-right {
     right: 0;
-    transform: translateX(calc(52% + var(--side-polygons-right-drift))) scale(-1, -1);
+    transform: translateX(52%) scaleX(-1);
     transform-origin: center;
   }
 
@@ -619,16 +617,16 @@ body.night-mode .hero::after {
 
   body.force-vertical .side-polygons-left,
   body.layout-polygons-entering .side-polygons-left {
-    transform: translateX(calc((-1 * var(--side-polygons-retreat)) + var(--side-polygons-left-drift)));
+    transform: translateX(calc(-1 * var(--side-polygons-retreat)));
   }
 
   body.force-vertical .side-polygons-right,
   body.layout-polygons-entering .side-polygons-right {
-    transform: translateX(calc(var(--side-polygons-retreat) + var(--side-polygons-right-drift))) scale(-1, -1);
+    transform: translateX(var(--side-polygons-retreat)) scaleX(-1);
   }
 
   body.night-mode .side-polygons {
-    background-image: url("assets/patterns/irregular-network-tile-night.svg");
+    background-image: url("assets/patterns/irregular-network-tile-night.svg?v=325");
     opacity: 0.88;
     filter: none;
     mix-blend-mode: screen;
@@ -1293,11 +1291,11 @@ body.night-mode .flow-canvas.is-soft-paused {
     top: 0;
     right: 0;
     left: 0;
-    height: calc(var(--intro-top) - 8px);
+    height: calc(var(--intro-top) - 28px);
     background:
       radial-gradient(circle at 18% 16%, rgba(115, 82, 48, 0.026) 0 1px, transparent 1.5px),
       radial-gradient(circle at 72% 42%, rgba(255, 246, 214, 0.05) 0 1px, transparent 1.7px),
-      linear-gradient(180deg, var(--paper) 0%, var(--paper) 78%, rgba(228, 209, 172, 0) 100%);
+      linear-gradient(180deg, var(--paper) 0%, var(--paper) 88%, rgba(228, 209, 172, 0) 100%);
     background-size: 31px 29px, 43px 37px, auto;
     background-position: 0 0, 13px 9px, 0 0;
   }
@@ -1306,7 +1304,7 @@ body.night-mode .flow-canvas.is-soft-paused {
     background:
       radial-gradient(circle at 22% 20%, rgba(232, 221, 195, 0.014) 0 1px, transparent 1.6px),
       radial-gradient(circle at 68% 54%, rgba(232, 221, 195, 0.01) 0 1px, transparent 1.8px),
-      linear-gradient(180deg, #171615 0%, #171615 78%, rgba(23, 22, 21, 0) 100%);
+      linear-gradient(180deg, #171615 0%, #171615 88%, rgba(23, 22, 21, 0) 100%);
     background-size: 36px 32px, 58px 46px, auto;
     background-position: 0 0, 19px 14px, 0 0;
   }
@@ -1608,15 +1606,15 @@ body.night-mode .contact-dock {
 .contact-dock > a.contact-action::after {
   content: "visit";
   left: 50%;
-  top: calc(100% - 1px);
-  transform: translate(-50%, -4px);
+  top: calc(100% + 6px);
+  transform: translate(-50%, -2px);
 }
 
 .contact-dock > a.contact-action::before {
   left: 50%;
-  top: calc(100% - 15px);
+  top: calc(100% - 8px);
   font-size: 1.22rem;
-  transform: translate(-50%, -4px) rotate(90deg);
+  transform: translate(-50%, -2px) rotate(90deg);
   transform-origin: center;
 }
 
@@ -1652,12 +1650,12 @@ body.night-mode .contact-dock {
 
 .contact-dock > a.contact-action:hover::after,
 .contact-dock > a.contact-action:focus-visible::after {
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 2px);
 }
 
 .contact-dock > a.contact-action:hover::before,
 .contact-dock > a.contact-action:focus-visible::before {
-  transform: translate(-50%, 0) rotate(90deg);
+  transform: translate(-50%, 2px) rotate(90deg);
 }
 
 .mail-contact:not(.is-open):hover .mail-toggle::after,
@@ -2256,12 +2254,19 @@ body.layout-transition-to-vertical .site-nav {
     top: 0;
     left: 0;
     right: 0;
+    height: var(--fullscreen-bar-height);
     min-height: var(--fullscreen-bar-height);
     padding: 0 clamp(34px, 4.7vw, 76px);
     z-index: 30;
+    overflow: visible;
     background: transparent;
     border-bottom: 0;
     box-shadow: none;
+  }
+
+  body.force-vertical .site-nav,
+  body.layout-transition-to-vertical .site-nav {
+    flex-wrap: nowrap;
   }
 
   body.force-vertical .top-bar::after,
@@ -2896,12 +2901,12 @@ body.night-mode .research-entry p.paper-abstract {
 @keyframes side-polygons-right-enter {
   from {
     opacity: 0;
-    transform: translateX(42%) scale(-1, -1);
+    transform: translateX(42%) scaleX(-1);
   }
 
   to {
     opacity: 0.9;
-    transform: translateX(0) scale(-1, -1);
+    transform: translateX(0) scaleX(-1);
   }
 }
 
